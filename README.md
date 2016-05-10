@@ -1,5 +1,7 @@
 # Google App Engine Maven plugin
 
+**Alpha. For development only. Documentation incomplete. You will encounter bugs.**
+
 This Maven plugin allows you to perform Java app management operations.
 
 # Requirements
