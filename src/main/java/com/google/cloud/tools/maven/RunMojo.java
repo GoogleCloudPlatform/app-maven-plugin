@@ -20,8 +20,6 @@ package com.google.cloud.tools.maven;
 import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.app.api.devserver.RunConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDevServer;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -32,8 +30,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Run App Engine Development App Server synchronously.
@@ -199,51 +195,12 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       property = "app.devserver.defaultGcsBucketName")
   protected String defaultGcsBucketName;
 
-  private CountDownLatch waitStartedLatch;
-
-  /**
-   * Sets up a process runner for synchronous execution and creates a listener for waiting for Dev
-   * App Server to start.
-   */
-  public RunMojo() {
-    super();
-
-    processRunner = new DefaultProcessRunner(
-        new ProcessBuilder().redirectErrorStream(true));
-    processRunner.setAsync(false);
-
-    ProcessOutputLineListener listener = new ProcessOutputLineListener() {
-      @Override
-      public void outputLine(String line) {
-        if (line.contains("Dev App Server is now running")) {
-          getLog().info("Dev App Server started.");
-          waitStartedLatch.countDown();
-        }
-        getLog().info(line);
-      }
-    };
-    processRunner.setStdOutLineListener(listener);
-  }
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    super.execute();
+    AppEngineDevServer devServer = new CloudSdkAppEngineDevServer(getCloudSdk());
 
-    waitStartedLatch = new CountDownLatch(1);
-
-    AppEngineDevServer devServer = new CloudSdkAppEngineDevServer(cloudSdk);
-
-    try {
-      devServer.run(this);
-      if (!waitStartedLatch.await(10, TimeUnit.SECONDS)) {
-        getLog().error("Timed out waiting to start App Engine Development server");
-      }
-    } catch (InterruptedException e) {
-      throw new MojoExecutionException("Failed to start the App Engine Development server.", e);
-    } finally {
-      waitStartedLatch.countDown();
-    }
-
+    devServer.run(this);
   }
 
   @Override

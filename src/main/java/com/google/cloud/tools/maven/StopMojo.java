@@ -45,9 +45,7 @@ public class StopMojo extends CloudSdkMojo implements StopConfiguration {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    super.execute();
-
-    AppEngineDevServer devServer = new CloudSdkAppEngineDevServer(cloudSdk);
+    AppEngineDevServer devServer = new CloudSdkAppEngineDevServer(getCloudSdk());
 
     devServer.stop(this);
   }

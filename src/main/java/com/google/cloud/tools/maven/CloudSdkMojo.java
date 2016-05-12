@@ -18,11 +18,10 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
@@ -38,15 +37,28 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(property = "cloudSdkPath", required = false)
   protected File cloudSdkPath;
 
-  protected CloudSdk cloudSdk;
+  protected CloudSdk.Builder cloudSdkBuilder;
+  protected DefaultProcessRunner.Builder processRunnerBuilder;
 
-  protected DefaultProcessRunner processRunner;
+  final private ProcessOutputLineListener gcloudOutputListener = new ProcessOutputLineListener() {
+    @Override
+    public void outputLine(String line) {
+      System.out.println("GCLOUD: " + line);
+    }
+  };
 
-  @Override
-  public void execute() throws MojoExecutionException, MojoFailureException {
-    this.cloudSdk = new CloudSdk.Builder()
-        .processRunner(processRunner)
-        .sdkPath(cloudSdkPath)
+  protected CloudSdkMojo() {
+    super();
+
+    cloudSdkBuilder = new CloudSdk.Builder().sdkPath(cloudSdkPath);
+    processRunnerBuilder = new DefaultProcessRunner.Builder()
+        .stdOutLineListener(gcloudOutputListener)
+        .stdErrLineListener(gcloudOutputListener);
+  }
+
+  protected CloudSdk getCloudSdk() {
+    return new CloudSdk.Builder()
+        .processRunner(processRunnerBuilder.build())
         .build();
   }
 }

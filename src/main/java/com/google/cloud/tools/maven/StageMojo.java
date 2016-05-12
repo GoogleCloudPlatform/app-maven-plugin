@@ -162,7 +162,6 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    super.execute();
 
     // delete staging directory if it exists
     if (stagingDirectory.exists()) {
@@ -187,7 +186,7 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   }
 
   private void stageStandard() {
-    CloudSdkAppEngineStandardStaging staging = new CloudSdkAppEngineStandardStaging(cloudSdk);
+    CloudSdkAppEngineStandardStaging staging = new CloudSdkAppEngineStandardStaging(getCloudSdk());
 
     // execute the staging
     staging.stageStandard(this);

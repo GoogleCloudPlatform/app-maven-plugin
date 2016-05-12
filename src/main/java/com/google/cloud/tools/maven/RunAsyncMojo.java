@@ -16,11 +16,12 @@
 
 package com.google.cloud.tools.maven;
 
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-
-import java.util.concurrent.CountDownLatch;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Starts running App Engine Development App Server asynchronously.
@@ -29,14 +30,22 @@ import java.util.concurrent.CountDownLatch;
 @Execute(phase = LifecyclePhase.PACKAGE)
 public class RunAsyncMojo extends RunMojo {
 
-  private CountDownLatch waitStartedLatch;
-
   /**
-   * Configures an asynchronous process runner for running server.
+   * Number of seconds to wait for the server to start. Set to 0 to not wait.
    */
-  public RunAsyncMojo() {
-    super();
-    processRunner.setAsync(true);
-  }
+  @Parameter(defaultValue = "30",
+      alias = "devserver.startSuccessTimeout", property = "app.devserver.startSuccessTimeout")
+  protected int startSuccessTimeout;
 
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    processRunnerBuilder
+        .async(true)
+        .waitSuccessMessage("Dev App Server is now running")
+        .waitSuccessTimeoutSeconds(startSuccessTimeout);
+
+    super.execute();
+
+    getLog().info("Dev App Server started.");
+  }
 }
