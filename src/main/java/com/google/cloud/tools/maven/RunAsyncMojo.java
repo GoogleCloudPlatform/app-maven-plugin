@@ -39,7 +39,7 @@ public class RunAsyncMojo extends RunMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    processRunnerBuilder
+    cloudSdkBuilder
         .async(true)
         .waitSuccessMessage("Dev App Server is now running")
         .waitSuccessTimeoutSeconds(startSuccessTimeout);

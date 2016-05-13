@@ -17,7 +17,6 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
@@ -38,9 +37,8 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   protected File cloudSdkPath;
 
   protected CloudSdk.Builder cloudSdkBuilder;
-  protected DefaultProcessRunner.Builder processRunnerBuilder;
 
-  final private ProcessOutputLineListener gcloudOutputListener = new ProcessOutputLineListener() {
+  private final ProcessOutputLineListener gcloudOutputListener = new ProcessOutputLineListener() {
     @Override
     public void outputLine(String line) {
       System.out.println("GCLOUD: " + line);
@@ -50,15 +48,13 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   protected CloudSdkMojo() {
     super();
 
-    cloudSdkBuilder = new CloudSdk.Builder().sdkPath(cloudSdkPath);
-    processRunnerBuilder = new DefaultProcessRunner.Builder()
+    cloudSdkBuilder = new CloudSdk.Builder()
+        .sdkPath(cloudSdkPath)
         .stdOutLineListener(gcloudOutputListener)
         .stdErrLineListener(gcloudOutputListener);
   }
 
   protected CloudSdk getCloudSdk() {
-    return new CloudSdk.Builder()
-        .processRunner(processRunnerBuilder.build())
-        .build();
+    return cloudSdkBuilder.build();
   }
 }
