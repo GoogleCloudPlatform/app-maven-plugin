@@ -50,8 +50,8 @@ public abstract class CloudSdkMojo extends AbstractMojo {
 
     cloudSdkBuilder = new CloudSdk.Builder()
         .sdkPath(cloudSdkPath)
-        .stdOutLineListener(gcloudOutputListener)
-        .stdErrLineListener(gcloudOutputListener);
+        .addStdOutLineListener(gcloudOutputListener)
+        .addStdErrLineListener(gcloudOutputListener);
   }
 
   protected CloudSdk getCloudSdk() {

@@ -16,6 +16,9 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.WaitingProcessOutputLineListener;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -39,13 +42,23 @@ public class RunAsyncMojo extends RunMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    WaitingProcessOutputLineListener startListener =
+        new WaitingProcessOutputLineListener("Dev App Server is now running", startSuccessTimeout);
+
     cloudSdkBuilder
         .async(true)
-        .waitSuccessMessage("Dev App Server is now running")
-        .waitSuccessTimeoutSeconds(startSuccessTimeout);
+        .addStdErrLineListener(startListener)
+        .addStdOutLineListener(startListener);
 
     super.execute();
 
-    getLog().info("Dev App Server started.");
+    // wait for the server to start
+    try {
+      getLog().info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server to start.");
+      startListener.await();
+      getLog().info("Dev App Server started.");
+    } catch (ProcessRunnerException | InterruptedException e) {
+      throw new MojoExecutionException("Dev App Server failed to start.", e);
+    }
   }
 }
