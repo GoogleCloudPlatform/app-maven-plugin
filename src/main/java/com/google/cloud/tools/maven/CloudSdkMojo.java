@@ -41,7 +41,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   private final ProcessOutputLineListener gcloudOutputListener = new ProcessOutputLineListener() {
     @Override
     public void outputLine(String line) {
-      System.out.println("GCLOUD: " + line);
+      getLog().info("GCLOUD: " + line);
     }
   };
 
