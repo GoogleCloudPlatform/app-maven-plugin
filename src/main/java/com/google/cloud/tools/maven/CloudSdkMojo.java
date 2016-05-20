@@ -22,7 +22,6 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
@@ -47,20 +46,20 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     }
   };
 
-  @Component
+  @Parameter(defaultValue = "${pluginDescriptor}", readonly = true)
   private PluginDescriptor pluginDescriptor;
 
   protected CloudSdkMojo() {
     super();
 
     cloudSdkBuilder = new CloudSdk.Builder()
-        .sdkPath(cloudSdkPath)
         .addStdOutLineListener(gcloudOutputListener)
         .addStdErrLineListener(gcloudOutputListener);
   }
 
   protected CloudSdk getCloudSdk() {
     return cloudSdkBuilder
+        .sdkPath(cloudSdkPath)
         .appCommandMetricsEnvironment(pluginDescriptor.getArtifactId())
         .appCommandMetricsEnvironmentVersion(pluginDescriptor.getVersion())
         .build();

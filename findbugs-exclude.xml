@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <Match>
+    <Or>
+      <Bug pattern="DM_STRING_CTOR"/>
+    </Or>
+  </Match>
+</FindBugsFilter>

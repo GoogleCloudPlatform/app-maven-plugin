@@ -169,10 +169,12 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       try {
         FileUtils.deleteDirectory(stagingDirectory);
       } catch (IOException e) {
-        new MojoFailureException("Unable to delete staging directory.", e);
+        throw new MojoFailureException("Unable to delete staging directory.", e);
       }
     }
-    stagingDirectory.mkdir();
+    if (!stagingDirectory.mkdir()) {
+      throw new MojoExecutionException("Unable to create staging directory");
+    }
 
     getLog().info("Staging the application to: " + stagingDirectory);
 
