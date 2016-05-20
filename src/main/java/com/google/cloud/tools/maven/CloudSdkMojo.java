@@ -60,7 +60,6 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   }
 
   protected CloudSdk getCloudSdk() {
-    System.out.println(pluginDescriptor.getArtifactId() + " : " + pluginDescriptor.getVersion());
     return cloudSdkBuilder
         .appCommandMetricsEnvironment(pluginDescriptor.getArtifactId())
         .appCommandMetricsEnvironmentVersion(pluginDescriptor.getVersion())
