@@ -50,6 +50,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
 
     cloudSdkBuilder = new CloudSdk.Builder()
         .sdkPath(cloudSdkPath)
+        .appCommandMetricsEnvironment("app-maven-plugin")
         .addStdOutLineListener(gcloudOutputListener)
         .addStdErrLineListener(gcloudOutputListener);
   }
