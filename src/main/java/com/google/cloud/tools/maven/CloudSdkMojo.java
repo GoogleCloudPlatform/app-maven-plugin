@@ -36,9 +36,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(property = "cloudSdkPath", required = false)
   protected File cloudSdkPath;
 
-  protected CloudSdk.Builder cloudSdkBuilder;
-
-  private final ProcessOutputLineListener gcloudOutputListener = new ProcessOutputLineListener() {
+  protected final ProcessOutputLineListener gcloudOutputListener = new ProcessOutputLineListener() {
     @Override
     public void outputLine(String line) {
       getLog().info("GCLOUD: " + line);
@@ -48,19 +46,17 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(defaultValue = "${pluginDescriptor}", readonly = true)
   private PluginDescriptor pluginDescriptor;
 
-  protected CloudSdkMojo() {
-    super();
-
-    cloudSdkBuilder = new CloudSdk.Builder()
-        .addStdOutLineListener(gcloudOutputListener)
-        .addStdErrLineListener(gcloudOutputListener);
-  }
-
-  protected CloudSdk getCloudSdk() {
+  protected CloudSdk.Builder configureCloudSdkBuilder(CloudSdk.Builder cloudSdkBuilder) {
     return cloudSdkBuilder
         .sdkPath(cloudSdkPath)
+        .addStdOutLineListener(gcloudOutputListener)
+        .addStdErrLineListener(gcloudOutputListener)
         .appCommandMetricsEnvironment(pluginDescriptor.getArtifactId())
-        .appCommandMetricsEnvironmentVersion(pluginDescriptor.getVersion())
-        .build();
+        .appCommandMetricsEnvironmentVersion(pluginDescriptor.getVersion());
   }
+
+  protected CloudSdk.Builder createCloudSdkBuilder() {
+    return new CloudSdk.Builder();
+  }
+
 }
