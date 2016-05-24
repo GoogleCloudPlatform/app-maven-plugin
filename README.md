@@ -1,6 +1,5 @@
+[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 # Google App Engine Maven plugin
-
-**Alpha. For development only. Documentation incomplete. You will encounter bugs.**
 
 This Maven plugin allows you to perform Java app management operations.
 
