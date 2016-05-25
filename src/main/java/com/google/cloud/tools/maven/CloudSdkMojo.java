@@ -44,7 +44,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   };
 
   @Parameter(defaultValue = "${pluginDescriptor}", readonly = true)
-  private PluginDescriptor pluginDescriptor;
+  protected PluginDescriptor pluginDescriptor;
 
   protected CloudSdk.Builder configureCloudSdkBuilder(CloudSdk.Builder cloudSdkBuilder) {
     return cloudSdkBuilder
