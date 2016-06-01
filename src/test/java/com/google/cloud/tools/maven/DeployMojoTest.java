@@ -18,10 +18,9 @@ package com.google.cloud.tools.maven;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Answers.RETURNS_SELF;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineFlexibleStaging;
@@ -58,37 +57,38 @@ public class DeployMojoTest {
     Log logMock = mock(Log.class);
     CloudSdk.Builder cloudSdkStageBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
     CloudSdk.Builder cloudSdkDeployBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
+    Factory factoryMock = mock(Factory.class);
 
-    // create spies
-    DeployMojo deployMojoSpy = spy(DeployMojo.class);
+    // create mojo
+    DeployMojo deployMojo = new DeployMojo();
+    deployMojo.factory = factoryMock;
+    deployMojo.pluginDescriptor = pluginDescriptorMock;
+    deployMojo.deployables = new ArrayList<>();
+    deployMojo.stagingDirectory = tempFolder.newFolder("staging");
+    deployMojo.sourceDirectory = tempFolder.newFolder("source");
 
     // wire up
-    doReturn(standardStagingMock).when(deployMojoSpy).getStandardStaging(cloudSdkMock);
-    doReturn(deploymentMock).when(deployMojoSpy).getDeployment(cloudSdkMock);
-    doReturn(cloudSdkMock).when(cloudSdkStageBuilderMock).build();
-    doReturn(cloudSdkMock).when(cloudSdkDeployBuilderMock).build();
-    doReturn(cloudSdkStageBuilderMock).doReturn(cloudSdkDeployBuilderMock)
-        .when(deployMojoSpy).createCloudSdkBuilder();
-    doReturn(logMock).when(deployMojoSpy).getLog();
-    deployMojoSpy.pluginDescriptor = pluginDescriptorMock;
-    deployMojoSpy.deployables = new ArrayList<>();
-    deployMojoSpy.stagingDirectory = tempFolder.newFolder("staging");
-    deployMojoSpy.sourceDirectory = tempFolder.newFolder("source");
+    when(factoryMock.standardStaging(cloudSdkMock)).thenReturn(standardStagingMock);
+    when(factoryMock.deployment(cloudSdkMock)).thenReturn(deploymentMock);
+    when(factoryMock.logger(deployMojo)).thenReturn(logMock);
+    when(factoryMock.cloudSdkBuilder())
+        .thenReturn(cloudSdkStageBuilderMock, cloudSdkDeployBuilderMock);
+    when(cloudSdkStageBuilderMock.build()).thenReturn(cloudSdkMock);
+    when(cloudSdkDeployBuilderMock.build()).thenReturn(cloudSdkMock);
 
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
     appengineWebXml.createNewFile();
 
     // invoke
-    deployMojoSpy.execute();
+    deployMojo.execute();
 
     // verify
-    assertEquals(1, deployMojoSpy.deployables.size());
-    //   verify(deployMojoSpy, times(2)).createCloudSdk();
-    verify(standardStagingMock).stageStandard(deployMojoSpy);
-    verify(deploymentMock).deploy(deployMojoSpy);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkStageBuilderMock);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkDeployBuilderMock);
+    assertEquals(1, deployMojo.deployables.size());
+    verify(standardStagingMock).stageStandard(deployMojo);
+    verify(deploymentMock).deploy(deployMojo);
+    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojo, cloudSdkStageBuilderMock);
+    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojo, cloudSdkDeployBuilderMock);
   }
 
   @Test
@@ -102,28 +102,29 @@ public class DeployMojoTest {
     CloudSdk cloudSdkMock = mock(CloudSdk.class);
     Log logMock = mock(Log.class);
     CloudSdk.Builder cloudSdkDeployBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
+    Factory factoryMock = mock(Factory.class);
 
-    // create spies
-    DeployMojo deployMojoSpy = spy(DeployMojo.class);
+    // create mojo
+    DeployMojo deployMojo = new DeployMojo();
+    deployMojo.factory = factoryMock;
+    deployMojo.pluginDescriptor = pluginDescriptorMock;
+    deployMojo.deployables = new ArrayList<>();
+    deployMojo.stagingDirectory = tempFolder.newFolder("staging");
+    deployMojo.sourceDirectory = tempFolder.newFolder("source");
 
     // wire up
-    doReturn(deploymentMock).when(deployMojoSpy).getDeployment(cloudSdkMock);
-    doReturn(flexibleStagingMock).when(deployMojoSpy).getFlexibleStaging();
-    doReturn(cloudSdkMock).when(cloudSdkDeployBuilderMock).build();
-    doReturn(cloudSdkDeployBuilderMock).doReturn(cloudSdkDeployBuilderMock)
-        .when(deployMojoSpy).createCloudSdkBuilder();
-    doReturn(logMock).when(deployMojoSpy).getLog();
-    deployMojoSpy.pluginDescriptor = pluginDescriptorMock;
-    deployMojoSpy.deployables = new ArrayList<>();
-    deployMojoSpy.stagingDirectory = tempFolder.newFolder("staging");
-    deployMojoSpy.sourceDirectory = tempFolder.newFolder("source");
+    when(factoryMock.deployment(cloudSdkMock)).thenReturn(deploymentMock);
+    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
+    when(factoryMock.cloudSdkBuilder()).thenReturn(cloudSdkDeployBuilderMock);
+    when(factoryMock.logger(deployMojo)).thenReturn(logMock);
+    when(cloudSdkDeployBuilderMock.build()).thenReturn(cloudSdkMock);
 
     // invoke
-    deployMojoSpy.execute();
+    deployMojo.execute();
 
     // verify
-    assertEquals(1, deployMojoSpy.deployables.size());
-    verify(flexibleStagingMock).stageFlexible(deployMojoSpy);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkDeployBuilderMock);
+    assertEquals(1, deployMojo.deployables.size());
+    verify(flexibleStagingMock).stageFlexible(deployMojo);
+    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojo, cloudSdkDeployBuilderMock);
   }
 }

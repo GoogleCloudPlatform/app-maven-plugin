@@ -41,11 +41,12 @@ public class RunAsyncMojo extends RunMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getLog().info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server to start.");
+    factory.logger(this)
+        .info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server to start.");
 
     super.execute();
 
-    getLog().info("Dev App Server started.");
+    factory.logger(this).info("Dev App Server started.");
   }
 
   @Override

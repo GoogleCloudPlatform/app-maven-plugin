@@ -21,8 +21,6 @@ package com.google.cloud.tools.maven;
  */
 
 import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -117,11 +115,7 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
           new File(getStagingDirectory() + "/app.yaml"));
     }
 
-    getDeployment(configureCloudSdkBuilder(createCloudSdkBuilder()).build()).deploy(this);
-  }
-
-  protected CloudSdkAppEngineDeployment getDeployment(CloudSdk cloudSdk) {
-    return new CloudSdkAppEngineDeployment(cloudSdk);
+    factory.deployment(configureCloudSdkBuilder(factory.cloudSdkBuilder()).build()).deploy(this);
   }
 
   @Override

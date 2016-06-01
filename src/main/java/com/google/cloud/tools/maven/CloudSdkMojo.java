@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -36,27 +35,19 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(property = "cloudSdkPath", required = false)
   protected File cloudSdkPath;
 
-  protected final ProcessOutputLineListener gcloudOutputListener = new ProcessOutputLineListener() {
-    @Override
-    public void outputLine(String line) {
-      getLog().info("GCLOUD: " + line);
-    }
-  };
-
   @Parameter(defaultValue = "${pluginDescriptor}", readonly = true)
   protected PluginDescriptor pluginDescriptor;
+
+  protected Factory factory = new Factory();
 
   protected CloudSdk.Builder configureCloudSdkBuilder(CloudSdk.Builder cloudSdkBuilder) {
     return cloudSdkBuilder
         .sdkPath(cloudSdkPath)
-        .addStdOutLineListener(gcloudOutputListener)
-        .addStdErrLineListener(gcloudOutputListener)
+        .addStdOutLineListener(factory.gcloudOutputListener(this))
+        .addStdErrLineListener(factory.gcloudOutputListener(this))
         .appCommandMetricsEnvironment(pluginDescriptor.getArtifactId())
         .appCommandMetricsEnvironmentVersion(pluginDescriptor.getVersion());
   }
 
-  protected CloudSdk.Builder createCloudSdkBuilder() {
-    return new CloudSdk.Builder();
-  }
 
 }

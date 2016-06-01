@@ -17,10 +17,9 @@
 package com.google.cloud.tools.maven;
 
 import static org.mockito.Answers.RETURNS_SELF;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
@@ -39,21 +38,23 @@ public class RunMojoTest {
     AppEngineDevServer devServerMock = mock(AppEngineDevServer.class);
     PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
     CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
+    Factory factoryMock = mock(Factory.class);
 
-    // create spies
-    RunMojo runMojoSpy = spy(RunMojo.class);
+    // create mojo
+    RunMojo runMojo = new RunMojo();
+    runMojo.factory = factoryMock;
+    runMojo.pluginDescriptor = pluginDescriptorMock;
 
     // wire up
-    doReturn(devServerMock).when(runMojoSpy).getDevServer(cloudSdkMock);
-    doReturn(cloudSdkMock).when(cloudSdkBuilderMock).build();
-    doReturn(cloudSdkBuilderMock).when(runMojoSpy).createCloudSdkBuilder();
-    runMojoSpy.pluginDescriptor = pluginDescriptorMock;
+    when(factoryMock.devServer(cloudSdkMock)).thenReturn(devServerMock);
+    when(factoryMock.cloudSdkBuilder()).thenReturn(cloudSdkBuilderMock);
+    when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
 
     // invoke
-    runMojoSpy.execute();
+    runMojo.execute();
 
     // verify
-    verify(devServerMock).run(runMojoSpy);
-    CloudSdkMojoTest.verifyCloudSdkCommon(runMojoSpy, cloudSdkBuilderMock);
+    verify(devServerMock).run(runMojo);
+    CloudSdkMojoTest.verifyCloudSdkCommon(runMojo, cloudSdkBuilderMock);
   }
 }

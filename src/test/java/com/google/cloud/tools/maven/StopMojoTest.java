@@ -16,10 +16,9 @@
 
 package com.google.cloud.tools.maven;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 
@@ -33,17 +32,21 @@ public class StopMojoTest {
   public void testStop() throws MojoFailureException, MojoExecutionException {
     // create mocks
     AppEngineDevServer devServerMock = mock(AppEngineDevServer.class);
+    Factory factoryMock = mock(Factory.class);
 
-    // create spies
-    StopMojo stopMojoSpy = spy(StopMojo.class);
+    // create mojo
+    StopMojo stopMojo = new StopMojo();
+    stopMojo.factory = factoryMock;
 
     // wire up
-    doReturn(devServerMock).when(stopMojoSpy).getDevServer();
+    when(factoryMock.devServer()).thenReturn(devServerMock);
 
     // invoke
-    stopMojoSpy.execute();
+    stopMojo.execute();
 
     // verify
-    verify(devServerMock).stop(stopMojoSpy);
+    verify(devServerMock).stop(stopMojo);
   }
+
+
 }

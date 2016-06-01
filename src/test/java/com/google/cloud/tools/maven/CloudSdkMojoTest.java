@@ -16,13 +16,13 @@
 
 package com.google.cloud.tools.maven;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Answers.RETURNS_SELF;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -44,18 +44,20 @@ public class CloudSdkMojoTest {
     PluginDescriptor pluginDescriptorMock = createPluginDescriptorMock();
     CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
 
-    // create spies
-    CloudSdkMojo mojoSpy = spy(CloudSdkMojo.class);
-
-    // wire up
-    mojoSpy.pluginDescriptor = pluginDescriptorMock;
-    mojoSpy.cloudSdkPath = new File("google-cloud-sdk");
+    // create mojo
+    CloudSdkMojo mojo = new CloudSdkMojo() {
+      @Override
+      public void execute() throws MojoExecutionException, MojoFailureException {
+      }
+    };
+    mojo.pluginDescriptor = pluginDescriptorMock;
+    mojo.cloudSdkPath = new File("google-cloud-sdk");
 
     // invoke
-    mojoSpy.configureCloudSdkBuilder(cloudSdkBuilderMock).build();
+    mojo.configureCloudSdkBuilder(cloudSdkBuilderMock).build();
 
     // verify
-    verifyCloudSdkCommon(mojoSpy, cloudSdkBuilderMock);
+    verifyCloudSdkCommon(mojo, cloudSdkBuilderMock);
   }
 
   public static PluginDescriptor createPluginDescriptorMock() {
@@ -66,16 +68,12 @@ public class CloudSdkMojoTest {
   }
 
   public static void verifyCloudSdkCommon(CloudSdkMojo mojo, CloudSdk.Builder cloudSdkBuilderMock) {
-    assertNotNull(mojo.gcloudOutputListener);
     verify(cloudSdkBuilderMock).sdkPath(mojo.cloudSdkPath);
-    verify(cloudSdkBuilderMock).addStdOutLineListener(mojo.gcloudOutputListener);
-    verify(cloudSdkBuilderMock).addStdErrLineListener(mojo.gcloudOutputListener);
+    verify(cloudSdkBuilderMock).addStdOutLineListener(any(ProcessOutputLineListener.class));
+    verify(cloudSdkBuilderMock).addStdErrLineListener(any(ProcessOutputLineListener.class));
     verify(cloudSdkBuilderMock).appCommandMetricsEnvironment(ARTIFACT_ID);
     verify(cloudSdkBuilderMock).appCommandMetricsEnvironmentVersion(ARTIFACT_VERSION);
     verify(cloudSdkBuilderMock).build();
   }
 
-  public void testCreateCloudSdkBuilder() {
-    CloudSdkMojo mojoSpy = spy(CloudSdkMojo.class);
-  }
 }

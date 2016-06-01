@@ -17,10 +17,7 @@
 package com.google.cloud.tools.maven;
 
 
-import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.app.api.devserver.RunConfiguration;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDevServer;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -199,11 +196,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getDevServer(configureCloudSdkBuilder(createCloudSdkBuilder()).build()).run(this);
-  }
-
-  protected AppEngineDevServer getDevServer(CloudSdk cloudSdk) {
-    return new CloudSdkAppEngineDevServer(cloudSdk);
+    factory.devServer(configureCloudSdkBuilder(factory.cloudSdkBuilder()).build()).run(this);
   }
 
   @Override

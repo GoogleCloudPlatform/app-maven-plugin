@@ -18,9 +18,6 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.app.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineFlexibleStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -164,7 +161,7 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   public void execute() throws MojoExecutionException, MojoFailureException {
     // delete staging directory if it exists
     if (stagingDirectory.exists()) {
-      getLog().info("Deleting the staging directory: " + stagingDirectory);
+      factory.logger(this).info("Deleting the staging directory: " + stagingDirectory);
       try {
         FileUtils.deleteDirectory(stagingDirectory);
       } catch (IOException e) {
@@ -175,24 +172,16 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       throw new MojoExecutionException("Unable to create staging directory");
     }
 
-    getLog().info("Staging the application to: " + stagingDirectory);
+    factory.logger(this).info("Staging the application to: " + stagingDirectory);
 
     if (new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml").exists()) {
-      getLog().info("Detected App Engine standard environment application.");
-      getStandardStaging(configureCloudSdkBuilder(createCloudSdkBuilder()).build())
+      factory.logger(this).info("Detected App Engine standard environment application.");
+      factory.standardStaging(configureCloudSdkBuilder(factory.cloudSdkBuilder()).build())
           .stageStandard(this);
     } else {
-      getLog().info("Detected App Engine flexible environment application.");
-      getFlexibleStaging().stageFlexible(this);
+      factory.logger(this).info("Detected App Engine flexible environment application.");
+      factory.flexibleStaging().stageFlexible(this);
     }
-  }
-
-  protected CloudSdkAppEngineStandardStaging getStandardStaging(CloudSdk cloudSdk) {
-    return new CloudSdkAppEngineStandardStaging(cloudSdk);
-  }
-
-  protected CloudSdkAppEngineFlexibleStaging getFlexibleStaging() {
-    return new CloudSdkAppEngineFlexibleStaging();
   }
 
   @Override
