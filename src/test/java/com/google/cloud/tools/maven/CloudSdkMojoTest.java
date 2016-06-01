@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Answers.RETURNS_SELF;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -41,20 +42,20 @@ public class CloudSdkMojoTest {
 
     // create mocks
     PluginDescriptor pluginDescriptorMock = createPluginDescriptorMock();
+    CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
 
     // create spies
     CloudSdkMojo mojoSpy = spy(CloudSdkMojo.class);
-    CloudSdk.Builder cloudSdkBuilderSpy = spy(CloudSdk.Builder.class);
 
     // wire up
     mojoSpy.pluginDescriptor = pluginDescriptorMock;
     mojoSpy.cloudSdkPath = new File("google-cloud-sdk");
 
     // invoke
-    mojoSpy.configureCloudSdkBuilder(cloudSdkBuilderSpy).build();
+    mojoSpy.configureCloudSdkBuilder(cloudSdkBuilderMock).build();
 
     // verify
-    verifyCloudSdkCommon(mojoSpy, cloudSdkBuilderSpy);
+    verifyCloudSdkCommon(mojoSpy, cloudSdkBuilderMock);
   }
 
   public static PluginDescriptor createPluginDescriptorMock() {
@@ -64,14 +65,14 @@ public class CloudSdkMojoTest {
     return pluginDescriptorMock;
   }
 
-  public static void verifyCloudSdkCommon(CloudSdkMojo mojo, CloudSdk.Builder cloudSdkBuilderSpy) {
+  public static void verifyCloudSdkCommon(CloudSdkMojo mojo, CloudSdk.Builder cloudSdkBuilderMock) {
     assertNotNull(mojo.gcloudOutputListener);
-    verify(cloudSdkBuilderSpy).sdkPath(mojo.cloudSdkPath);
-    verify(cloudSdkBuilderSpy).addStdOutLineListener(mojo.gcloudOutputListener);
-    verify(cloudSdkBuilderSpy).addStdErrLineListener(mojo.gcloudOutputListener);
-    verify(cloudSdkBuilderSpy).appCommandMetricsEnvironment("gcp-app-maven-plugin");
-    verify(cloudSdkBuilderSpy).appCommandMetricsEnvironmentVersion("0.1.0");
-    verify(cloudSdkBuilderSpy).build();
+    verify(cloudSdkBuilderMock).sdkPath(mojo.cloudSdkPath);
+    verify(cloudSdkBuilderMock).addStdOutLineListener(mojo.gcloudOutputListener);
+    verify(cloudSdkBuilderMock).addStdErrLineListener(mojo.gcloudOutputListener);
+    verify(cloudSdkBuilderMock).appCommandMetricsEnvironment(ARTIFACT_ID);
+    verify(cloudSdkBuilderMock).appCommandMetricsEnvironmentVersion(ARTIFACT_VERSION);
+    verify(cloudSdkBuilderMock).build();
   }
 
   public void testCreateCloudSdkBuilder() {

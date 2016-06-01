@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import static org.mockito.Answers.RETURNS_SELF;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -40,15 +41,15 @@ public class RunAsyncMojoTest {
     AppEngineDevServer devServerMock = mock(AppEngineDevServer.class);
     PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
     Log logMock = mock(Log.class);
+    CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
 
     // create spies
     RunAsyncMojo runAsyncMojoSpy = spy(RunAsyncMojo.class);
-    CloudSdk.Builder cloudSdkBuilderSpy = spy(CloudSdk.Builder.class);
 
     // wire up
     doReturn(devServerMock).when(runAsyncMojoSpy).getDevServer(cloudSdkMock);
-    doReturn(cloudSdkBuilderSpy).when(runAsyncMojoSpy).createCloudSdkBuilder();
-    doReturn(cloudSdkMock).when(cloudSdkBuilderSpy).build();
+    doReturn(cloudSdkBuilderMock).when(runAsyncMojoSpy).createCloudSdkBuilder();
+    doReturn(cloudSdkMock).when(cloudSdkBuilderMock).build();
     doReturn(logMock).when(runAsyncMojoSpy).getLog();
     runAsyncMojoSpy.pluginDescriptor = pluginDescriptorMock;
     runAsyncMojoSpy.startSuccessTimeout = 25;
@@ -58,9 +59,9 @@ public class RunAsyncMojoTest {
 
     // verify
     verify(devServerMock).run(runAsyncMojoSpy);
-    verify(cloudSdkBuilderSpy).async(true);
-    verify(cloudSdkBuilderSpy).runDevAppServerWait(25);
-    CloudSdkMojoTest.verifyCloudSdkCommon(runAsyncMojoSpy, cloudSdkBuilderSpy);
+    verify(cloudSdkBuilderMock).async(true);
+    verify(cloudSdkBuilderMock).runDevAppServerWait(25);
+    CloudSdkMojoTest.verifyCloudSdkCommon(runAsyncMojoSpy, cloudSdkBuilderMock);
     verify(logMock).info(contains("25 seconds"));
     verify(logMock).info(contains("started"));
   }

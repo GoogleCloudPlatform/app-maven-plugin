@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import static org.mockito.Answers.RETURNS_SELF;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -47,16 +48,16 @@ public class StageMojoTest {
         CloudSdkAppEngineStandardStaging.class);
     PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
     Log logMock = mock(Log.class);
+    CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
 
     // create spies
     StageMojo stageMojoSpy = spy(StageMojo.class);
-    CloudSdk.Builder cloudSdkBuilderSpy = spy(CloudSdk.Builder.class);
 
     // wire up
     doReturn(standardStagingMock).when(stageMojoSpy).getStandardStaging(cloudSdkMock);
-    doReturn(cloudSdkMock).when(cloudSdkBuilderSpy).build();
+    doReturn(cloudSdkMock).when(cloudSdkBuilderMock).build();
     doReturn(logMock).when(stageMojoSpy).getLog();
-    doReturn(cloudSdkBuilderSpy).when(stageMojoSpy).createCloudSdkBuilder();
+    doReturn(cloudSdkBuilderMock).when(stageMojoSpy).createCloudSdkBuilder();
     stageMojoSpy.pluginDescriptor = pluginDescriptorMock;
     stageMojoSpy.stagingDirectory = tempFolder.newFolder("staging");
     stageMojoSpy.sourceDirectory = tempFolder.newFolder("source");
@@ -71,7 +72,7 @@ public class StageMojoTest {
     // verify
     verify(standardStagingMock).stageStandard(stageMojoSpy);
     verify(logMock).info(contains("standard"));
-    CloudSdkMojoTest.verifyCloudSdkCommon(stageMojoSpy, cloudSdkBuilderSpy);
+    CloudSdkMojoTest.verifyCloudSdkCommon(stageMojoSpy, cloudSdkBuilderMock);
   }
 
   @Test

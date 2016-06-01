@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import static org.mockito.Answers.RETURNS_SELF;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -37,15 +38,15 @@ public class RunMojoTest {
     CloudSdk cloudSdkMock = mock(CloudSdk.class);
     AppEngineDevServer devServerMock = mock(AppEngineDevServer.class);
     PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
+    CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
 
     // create spies
     RunMojo runMojoSpy = spy(RunMojo.class);
-    CloudSdk.Builder cloudSdkBuilderSpy = spy(CloudSdk.Builder.class);
 
     // wire up
     doReturn(devServerMock).when(runMojoSpy).getDevServer(cloudSdkMock);
-    doReturn(cloudSdkMock).when(cloudSdkBuilderSpy).build();
-    doReturn(cloudSdkBuilderSpy).when(runMojoSpy).createCloudSdkBuilder();
+    doReturn(cloudSdkMock).when(cloudSdkBuilderMock).build();
+    doReturn(cloudSdkBuilderMock).when(runMojoSpy).createCloudSdkBuilder();
     runMojoSpy.pluginDescriptor = pluginDescriptorMock;
 
     // invoke
@@ -53,6 +54,6 @@ public class RunMojoTest {
 
     // verify
     verify(devServerMock).run(runMojoSpy);
-    CloudSdkMojoTest.verifyCloudSdkCommon(runMojoSpy, cloudSdkBuilderSpy);
+    CloudSdkMojoTest.verifyCloudSdkCommon(runMojoSpy, cloudSdkBuilderMock);
   }
 }

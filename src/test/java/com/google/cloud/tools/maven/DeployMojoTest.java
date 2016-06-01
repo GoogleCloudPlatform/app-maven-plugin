@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Answers.RETURNS_SELF;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -55,18 +56,18 @@ public class DeployMojoTest {
     CloudSdkAppEngineDeployment deploymentMock = mock(CloudSdkAppEngineDeployment.class);
     PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
     Log logMock = mock(Log.class);
+    CloudSdk.Builder cloudSdkStageBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
+    CloudSdk.Builder cloudSdkDeployBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
 
     // create spies
     DeployMojo deployMojoSpy = spy(DeployMojo.class);
-    CloudSdk.Builder cloudSdkStageBuilderSpy = spy(CloudSdk.Builder.class);
-    CloudSdk.Builder cloudSdkDeployBuilderSpy = spy(CloudSdk.Builder.class);
 
     // wire up
     doReturn(standardStagingMock).when(deployMojoSpy).getStandardStaging(cloudSdkMock);
     doReturn(deploymentMock).when(deployMojoSpy).getDeployment(cloudSdkMock);
-    doReturn(cloudSdkMock).when(cloudSdkStageBuilderSpy).build();
-    doReturn(cloudSdkMock).when(cloudSdkDeployBuilderSpy).build();
-    doReturn(cloudSdkStageBuilderSpy).doReturn(cloudSdkDeployBuilderSpy)
+    doReturn(cloudSdkMock).when(cloudSdkStageBuilderMock).build();
+    doReturn(cloudSdkMock).when(cloudSdkDeployBuilderMock).build();
+    doReturn(cloudSdkStageBuilderMock).doReturn(cloudSdkDeployBuilderMock)
         .when(deployMojoSpy).createCloudSdkBuilder();
     doReturn(logMock).when(deployMojoSpy).getLog();
     deployMojoSpy.pluginDescriptor = pluginDescriptorMock;
@@ -86,8 +87,8 @@ public class DeployMojoTest {
     //   verify(deployMojoSpy, times(2)).createCloudSdk();
     verify(standardStagingMock).stageStandard(deployMojoSpy);
     verify(deploymentMock).deploy(deployMojoSpy);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkStageBuilderSpy);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkDeployBuilderSpy);
+    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkStageBuilderMock);
+    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkDeployBuilderMock);
   }
 
   @Test
@@ -100,16 +101,16 @@ public class DeployMojoTest {
     CloudSdkAppEngineDeployment deploymentMock = mock(CloudSdkAppEngineDeployment.class);
     CloudSdk cloudSdkMock = mock(CloudSdk.class);
     Log logMock = mock(Log.class);
+    CloudSdk.Builder cloudSdkDeployBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
 
     // create spies
     DeployMojo deployMojoSpy = spy(DeployMojo.class);
-    CloudSdk.Builder cloudSdkDeployBuilderSpy = spy(CloudSdk.Builder.class);
 
     // wire up
     doReturn(deploymentMock).when(deployMojoSpy).getDeployment(cloudSdkMock);
     doReturn(flexibleStagingMock).when(deployMojoSpy).getFlexibleStaging();
-    doReturn(cloudSdkMock).when(cloudSdkDeployBuilderSpy).build();
-    doReturn(cloudSdkDeployBuilderSpy).doReturn(cloudSdkDeployBuilderSpy)
+    doReturn(cloudSdkMock).when(cloudSdkDeployBuilderMock).build();
+    doReturn(cloudSdkDeployBuilderMock).doReturn(cloudSdkDeployBuilderMock)
         .when(deployMojoSpy).createCloudSdkBuilder();
     doReturn(logMock).when(deployMojoSpy).getLog();
     deployMojoSpy.pluginDescriptor = pluginDescriptorMock;
@@ -123,6 +124,6 @@ public class DeployMojoTest {
     // verify
     assertEquals(1, deployMojoSpy.deployables.size());
     verify(flexibleStagingMock).stageFlexible(deployMojoSpy);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkDeployBuilderSpy);
+    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojoSpy, cloudSdkDeployBuilderMock);
   }
 }
