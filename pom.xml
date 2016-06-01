@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.cloud.tools</groupId>
-  <artifactId>gcp-app-maven-plugin</artifactId>
+  <artifactId>app-maven-plugin</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
@@ -88,6 +88,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.4</version>
+        <configuration>
+          <!-- change goal prefix from default 'app' to 'gcp-app' -->
+          <goalPrefix>gcp-app</goalPrefix>
+        </configuration>
         <executions>
           <execution>
             <id>default-descriptor</id>
