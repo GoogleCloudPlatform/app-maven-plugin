@@ -22,52 +22,81 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
+import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
+import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineFlexibleStaging;
+import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.junit.Test;
+import org.apache.maven.plugin.logging.Log;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
+import org.mockito.Mock;
 
-import java.io.File;
-
-public class CloudSdkMojoTest {
+public abstract class CloudSdkMojoTest {
 
   public static final String ARTIFACT_ID = "gcp-app-maven-plugin";
   public static final String ARTIFACT_VERSION = "0.1.0";
 
-  @Test
-  public void testConfigureCloudSdkBuilder() throws MojoFailureException, MojoExecutionException {
+  protected PluginDescriptor pluginDescriptorMock = createPluginDescriptorMock();
 
-    // create mocks
-    PluginDescriptor pluginDescriptorMock = createPluginDescriptorMock();
-    CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    // create mojo
-    CloudSdkMojo mojo = new CloudSdkMojo() {
-      @Override
-      public void execute() throws MojoExecutionException, MojoFailureException {
-      }
-    };
-    mojo.pluginDescriptor = pluginDescriptorMock;
-    mojo.cloudSdkPath = new File("google-cloud-sdk");
+  @Mock(answer = RETURNS_SELF)
+  protected CloudSdk.Builder cloudSdkBuilderMock;
 
-    // invoke
-    mojo.configureCloudSdkBuilder(cloudSdkBuilderMock).build();
+  @Mock(answer = RETURNS_SELF)
+  protected CloudSdk.Builder cloudSdkBuilderMock2;
 
-    // verify
-    verifyCloudSdkCommon(mojo, cloudSdkBuilderMock);
+  @Mock
+  protected Log logMock;
+
+  @Mock
+  protected CloudSdk cloudSdkMock;
+
+  @Mock
+  protected Factory factoryMock;
+
+  @Mock
+  protected CloudSdkAppEngineStandardStaging standardStagingMock;
+
+  @Mock
+  protected CloudSdkAppEngineFlexibleStaging flexibleStagingMock;
+
+  @Mock
+  protected CloudSdkAppEngineDeployment deploymentMock;
+
+  @Mock
+  protected AppEngineDevServer devServerMock;
+
+  @Before
+  public void wireUpMocks() {
+    when(factoryMock.logger(any(AbstractMojo.class))).thenReturn(logMock);
+    when(factoryMock.cloudSdkBuilder())
+        .thenReturn(cloudSdkBuilderMock, cloudSdkBuilderMock2);
+    when(factoryMock.standardStaging(cloudSdkMock)).thenReturn(standardStagingMock);
+    when(factoryMock.deployment(cloudSdkMock)).thenReturn(deploymentMock);
+    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
+    when(factoryMock.devServer()).thenReturn(devServerMock);
+    when(factoryMock.devServer(any(CloudSdk.class))).thenReturn(devServerMock);
+    when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
+    when(cloudSdkBuilderMock2.build()).thenReturn(cloudSdkMock);
   }
 
-  public static PluginDescriptor createPluginDescriptorMock() {
+  private static PluginDescriptor createPluginDescriptorMock() {
     PluginDescriptor pluginDescriptorMock = mock(PluginDescriptor.class);
     when(pluginDescriptorMock.getArtifactId()).thenReturn(ARTIFACT_ID);
     when(pluginDescriptorMock.getVersion()).thenReturn(ARTIFACT_VERSION);
     return pluginDescriptorMock;
   }
 
-  public static void verifyCloudSdkCommon(CloudSdkMojo mojo, CloudSdk.Builder cloudSdkBuilderMock) {
+  protected static void verifyCloudSdkCommon(CloudSdkMojo mojo,
+      CloudSdk.Builder cloudSdkBuilderMock) {
     verify(cloudSdkBuilderMock).sdkPath(mojo.cloudSdkPath);
     verify(cloudSdkBuilderMock).addStdOutLineListener(any(ProcessOutputLineListener.class));
     verify(cloudSdkBuilderMock).addStdErrLineListener(any(ProcessOutputLineListener.class));

@@ -17,64 +17,36 @@
 package com.google.cloud.tools.maven;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Answers.RETURNS_SELF;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineFlexibleStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.plugin.logging.Log;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DeployMojoTest {
+@RunWith(MockitoJUnitRunner.class)
+public class DeployMojoTest extends CloudSdkMojoTest {
 
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
+  @InjectMocks
+  private DeployMojo deployMojo;
+
+  @Before
+  public void wireUpDeployMojo() throws IOException {
+    deployMojo.deployables = new ArrayList<>();
+    deployMojo.stagingDirectory = tempFolder.newFolder("staging");
+    deployMojo.sourceDirectory = tempFolder.newFolder("source");
+  }
 
   @Test
   public void testDeployStandard()
       throws IOException, MojoFailureException, MojoExecutionException {
-
-    // create mocks
-    CloudSdkAppEngineStandardStaging standardStagingMock = mock(
-        CloudSdkAppEngineStandardStaging.class);
-    CloudSdk cloudSdkMock = mock(CloudSdk.class);
-    CloudSdkAppEngineDeployment deploymentMock = mock(CloudSdkAppEngineDeployment.class);
-    PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
-    Log logMock = mock(Log.class);
-    CloudSdk.Builder cloudSdkStageBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
-    CloudSdk.Builder cloudSdkDeployBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
-    Factory factoryMock = mock(Factory.class);
-
-    // create mojo
-    DeployMojo deployMojo = new DeployMojo();
-    deployMojo.factory = factoryMock;
-    deployMojo.pluginDescriptor = pluginDescriptorMock;
-    deployMojo.deployables = new ArrayList<>();
-    deployMojo.stagingDirectory = tempFolder.newFolder("staging");
-    deployMojo.sourceDirectory = tempFolder.newFolder("source");
-
-    // wire up
-    when(factoryMock.standardStaging(cloudSdkMock)).thenReturn(standardStagingMock);
-    when(factoryMock.deployment(cloudSdkMock)).thenReturn(deploymentMock);
-    when(factoryMock.logger(deployMojo)).thenReturn(logMock);
-    when(factoryMock.cloudSdkBuilder())
-        .thenReturn(cloudSdkStageBuilderMock, cloudSdkDeployBuilderMock);
-    when(cloudSdkStageBuilderMock.build()).thenReturn(cloudSdkMock);
-    when(cloudSdkDeployBuilderMock.build()).thenReturn(cloudSdkMock);
 
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
@@ -87,37 +59,12 @@ public class DeployMojoTest {
     assertEquals(1, deployMojo.deployables.size());
     verify(standardStagingMock).stageStandard(deployMojo);
     verify(deploymentMock).deploy(deployMojo);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojo, cloudSdkStageBuilderMock);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojo, cloudSdkDeployBuilderMock);
+    verifyCloudSdkCommon(deployMojo, cloudSdkBuilderMock);
+    verifyCloudSdkCommon(deployMojo, cloudSdkBuilderMock2);
   }
 
   @Test
   public void testDeployFlexible() throws Exception {
-
-    // create mocks
-    CloudSdkAppEngineFlexibleStaging flexibleStagingMock = mock(
-        CloudSdkAppEngineFlexibleStaging.class);
-    PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
-    CloudSdkAppEngineDeployment deploymentMock = mock(CloudSdkAppEngineDeployment.class);
-    CloudSdk cloudSdkMock = mock(CloudSdk.class);
-    Log logMock = mock(Log.class);
-    CloudSdk.Builder cloudSdkDeployBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
-    Factory factoryMock = mock(Factory.class);
-
-    // create mojo
-    DeployMojo deployMojo = new DeployMojo();
-    deployMojo.factory = factoryMock;
-    deployMojo.pluginDescriptor = pluginDescriptorMock;
-    deployMojo.deployables = new ArrayList<>();
-    deployMojo.stagingDirectory = tempFolder.newFolder("staging");
-    deployMojo.sourceDirectory = tempFolder.newFolder("source");
-
-    // wire up
-    when(factoryMock.deployment(cloudSdkMock)).thenReturn(deploymentMock);
-    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
-    when(factoryMock.cloudSdkBuilder()).thenReturn(cloudSdkDeployBuilderMock);
-    when(factoryMock.logger(deployMojo)).thenReturn(logMock);
-    when(cloudSdkDeployBuilderMock.build()).thenReturn(cloudSdkMock);
 
     // invoke
     deployMojo.execute();
@@ -125,6 +72,6 @@ public class DeployMojoTest {
     // verify
     assertEquals(1, deployMojo.deployables.size());
     verify(flexibleStagingMock).stageFlexible(deployMojo);
-    CloudSdkMojoTest.verifyCloudSdkCommon(deployMojo, cloudSdkDeployBuilderMock);
+    verifyCloudSdkCommon(deployMojo, cloudSdkBuilderMock);
   }
 }

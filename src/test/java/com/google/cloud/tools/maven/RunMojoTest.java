@@ -16,39 +16,23 @@
 
 package com.google.cloud.tools.maven;
 
-import static org.mockito.Answers.RETURNS_SELF;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
-public class RunMojoTest {
+@RunWith(MockitoJUnitRunner.class)
+public class RunMojoTest extends CloudSdkMojoTest {
+
+  @InjectMocks
+  private RunMojo runMojo;
 
   @Test
   public void testRun() throws MojoFailureException, MojoExecutionException {
-    // create mocks
-    CloudSdk cloudSdkMock = mock(CloudSdk.class);
-    AppEngineDevServer devServerMock = mock(AppEngineDevServer.class);
-    PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
-    CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
-    Factory factoryMock = mock(Factory.class);
-
-    // create mojo
-    RunMojo runMojo = new RunMojo();
-    runMojo.factory = factoryMock;
-    runMojo.pluginDescriptor = pluginDescriptorMock;
-
-    // wire up
-    when(factoryMock.devServer(cloudSdkMock)).thenReturn(devServerMock);
-    when(factoryMock.cloudSdkBuilder()).thenReturn(cloudSdkBuilderMock);
-    when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
 
     // invoke
     runMojo.execute();

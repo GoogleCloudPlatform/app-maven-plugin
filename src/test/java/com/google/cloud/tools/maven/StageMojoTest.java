@@ -16,52 +16,32 @@
 
 package com.google.cloud.tools.maven;
 
-import static org.mockito.Answers.RETURNS_SELF;
 import static org.mockito.Matchers.contains;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineFlexibleStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.plugin.logging.Log;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
+import java.io.IOException;
 
-public class StageMojoTest {
+@RunWith(MockitoJUnitRunner.class)
+public class StageMojoTest extends CloudSdkMojoTest {
 
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
+  @InjectMocks
+  private StageMojo stageMojo;
+
+  @Before
+  public void configureStageMojo() throws IOException {
+    stageMojo.stagingDirectory = tempFolder.newFolder("staging");
+    stageMojo.sourceDirectory = tempFolder.newFolder("source");
+  }
 
   @Test
   public void testStandardStaging() throws Exception {
-    // create mocks
-    CloudSdk cloudSdkMock = mock(CloudSdk.class);
-    CloudSdkAppEngineStandardStaging standardStagingMock = mock(
-        CloudSdkAppEngineStandardStaging.class);
-    PluginDescriptor pluginDescriptorMock = CloudSdkMojoTest.createPluginDescriptorMock();
-    Log logMock = mock(Log.class);
-    CloudSdk.Builder cloudSdkBuilderMock = mock(CloudSdk.Builder.class, RETURNS_SELF);
-    Factory factoryMock = mock(Factory.class);
-
-    // create mojo
-    StageMojo stageMojo = new StageMojo();
-    stageMojo.factory = factoryMock;
-    stageMojo.pluginDescriptor = pluginDescriptorMock;
-    stageMojo.stagingDirectory = tempFolder.newFolder("staging");
-    stageMojo.sourceDirectory = tempFolder.newFolder("source");
-
-    // wire up
-    when(factoryMock.standardStaging(cloudSdkMock)).thenReturn(standardStagingMock);
-    when(factoryMock.logger(stageMojo)).thenReturn(logMock);
-    when(factoryMock.cloudSdkBuilder()).thenReturn(cloudSdkBuilderMock);
-    when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
 
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
@@ -78,21 +58,6 @@ public class StageMojoTest {
 
   @Test
   public void testFlexibleStaging() throws Exception {
-    // create mocks
-    Factory factoryMock = mock(Factory.class);
-    CloudSdkAppEngineFlexibleStaging flexibleStagingMock = mock(
-        CloudSdkAppEngineFlexibleStaging.class);
-    Log logMock = mock(Log.class);
-
-    // create mojo
-    StageMojo stageMojo = new StageMojo();
-    stageMojo.factory = factoryMock;
-    stageMojo.stagingDirectory = tempFolder.newFolder("staging");
-    stageMojo.sourceDirectory = tempFolder.newFolder("source");
-
-    // wire up
-    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
-    when(factoryMock.logger(stageMojo)).thenReturn(logMock);
 
     // invoke
     stageMojo.execute();
