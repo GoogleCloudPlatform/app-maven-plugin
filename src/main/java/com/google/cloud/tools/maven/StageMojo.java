@@ -176,8 +176,7 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
 
     if (new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml").exists()) {
       getLog().info("Detected App Engine standard environment application.");
-      factory.standardStaging(configureCloudSdkBuilder(factory.cloudSdkBuilder()).build())
-          .stageStandard(this);
+      factory.standardStaging().stageStandard(this);
     } else {
       getLog().info("Detected App Engine flexible environment application.");
       factory.flexibleStaging().stageFlexible(this);

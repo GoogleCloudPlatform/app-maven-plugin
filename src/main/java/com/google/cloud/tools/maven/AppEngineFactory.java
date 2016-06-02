@@ -16,26 +16,25 @@
 
 package com.google.cloud.tools.maven;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.plugins.annotations.Parameter;
-
-import java.io.File;
+import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
+import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
+import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
+import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 
 /**
- * Abstract Mojo from which all goals inherit.
+ * Factory interface for App Engine dependencies.
  */
-public abstract class CloudSdkMojo extends AbstractMojo {
+public interface AppEngineFactory {
 
-  /**
-   * Optional parameter to configure the location of the Google Cloud SDK.
-   */
-  @Parameter(property = "cloudSdkPath", required = false)
-  protected File cloudSdkPath;
+  AppEngineStandardStaging standardStaging();
 
-  @Parameter(defaultValue = "${pluginDescriptor}", readonly = true)
-  protected PluginDescriptor pluginDescriptor;
+  AppEngineFlexibleStaging flexibleStaging();
 
-  protected AppEngineFactory factory = new CloudSdkAppEngineFactory(this);
+  AppEngineDeployment deployment();
 
+  AppEngineDevServer devServerRunSync();
+
+  AppEngineDevServer devServerRunAsync(int startSuccessTimeout);
+
+  AppEngineDevServer devServerStop();
 }
