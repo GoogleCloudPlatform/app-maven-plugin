@@ -60,7 +60,7 @@ public abstract class CloudSdkMojoTest {
   protected CloudSdk cloudSdkMock;
 
   @Mock
-  protected Factory factoryMock;
+  protected PluginDependenciesFactory factoryMock;
 
   @Mock
   protected CloudSdkAppEngineStandardStaging standardStagingMock;

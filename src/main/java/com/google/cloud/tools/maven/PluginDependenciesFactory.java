@@ -31,9 +31,9 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.logging.Log;
 
 /**
- * Factory for dependencies.
+ * Factory for plugin dependencies.
  */
-public class Factory {
+public class PluginDependenciesFactory {
 
   /**
    * Default output listener that copies output to the Maven Mojo logger with a 'GCLOUD: ' prefix.
@@ -42,7 +42,7 @@ public class Factory {
     return new ProcessOutputLineListener() {
       @Override
       public void outputLine(String line) {
-        Factory.this.logger(mojo).info("GCLOUD: " + line);
+        PluginDependenciesFactory.this.logger(mojo).info("GCLOUD: " + line);
       }
     };
   }
