@@ -31,11 +31,26 @@ public abstract class CloudSdkMojo extends AbstractMojo {
    * Optional parameter to configure the location of the Google Cloud SDK.
    */
   @Parameter(property = "cloudSdkPath", required = false)
-  protected File cloudSdkPath;
+  private File cloudSdkPath;
 
   @Parameter(defaultValue = "${pluginDescriptor}", readonly = true)
-  protected PluginDescriptor pluginDescriptor;
+  private PluginDescriptor pluginDescriptor;
 
-  protected AppEngineFactory factory = new CloudSdkAppEngineFactory(this);
+  private AppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 
+  public String getArtifactId() {
+    return pluginDescriptor.getArtifactId();
+  }
+
+  public String getArtifactVersion() {
+    return pluginDescriptor.getVersion();
+  }
+
+  public File getCloudSdkPath() {
+    return cloudSdkPath;
+  }
+
+  public AppEngineFactory getAppEngineFactory() {
+    return factory;
+  }
 }

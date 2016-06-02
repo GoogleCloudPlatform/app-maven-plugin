@@ -41,7 +41,7 @@ public class RunAsyncMojo extends RunMojo {
   public void execute() throws MojoExecutionException, MojoFailureException {
     getLog().info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server to start.");
 
-    factory.devServerRunAsync(startSuccessTimeout).run(this);
+    getAppEngineFactory().devServerRunAsync(startSuccessTimeout).run(this);
 
     getLog().info("Dev App Server started.");
   }

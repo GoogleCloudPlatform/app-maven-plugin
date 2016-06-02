@@ -42,7 +42,7 @@ public class StopMojo extends CloudSdkMojo implements StopConfiguration {
   protected Integer adminPort;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-    factory.devServerStop().stop(this);
+    getAppEngineFactory().devServerStop().stop(this);
   }
 
   @Override

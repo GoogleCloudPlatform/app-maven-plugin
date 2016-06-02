@@ -34,11 +34,16 @@ import org.apache.maven.plugin.logging.Log;
  */
 public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
-  protected CloudSdkFactory cloudSdkFactory = new CloudSdkFactory();
-  protected CloudSdkMojo mojo;
+  protected CloudSdkFactory cloudSdkFactory;
+  private CloudSdkMojo mojo;
 
   public CloudSdkAppEngineFactory(CloudSdkMojo mojo) {
+    this(mojo, new CloudSdkFactory());
+  }
+
+  public CloudSdkAppEngineFactory(CloudSdkMojo mojo, CloudSdkFactory cloudSdkFactory) {
     this.mojo = mojo;
+    this.cloudSdkFactory = cloudSdkFactory;
   }
 
   @Override
@@ -58,7 +63,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   @Override
   public AppEngineDevServer devServerRunSync() {
-    return new CloudSdkAppEngineDevServer(defaultCloudSdkBuilder().build());
+    return cloudSdkFactory.devServer(defaultCloudSdkBuilder().build());
   }
 
   @Override
@@ -79,11 +84,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());
 
     return cloudSdkFactory.cloudSdkBuilder()
-        .sdkPath(mojo.cloudSdkPath)
+        .sdkPath(mojo.getCloudSdkPath())
         .addStdOutLineListener(lineListener)
         .addStdErrLineListener(lineListener)
-        .appCommandMetricsEnvironment(mojo.pluginDescriptor.getArtifactId())
-        .appCommandMetricsEnvironmentVersion(mojo.pluginDescriptor.getVersion());
+        .appCommandMetricsEnvironment(mojo.getArtifactId())
+        .appCommandMetricsEnvironmentVersion(mojo.getArtifactVersion());
   }
 
   /**

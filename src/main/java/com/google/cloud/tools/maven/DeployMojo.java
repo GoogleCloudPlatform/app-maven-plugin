@@ -115,7 +115,7 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
           new File(getStagingDirectory() + "/app.yaml"));
     }
 
-    factory.deployment().deploy(this);
+    getAppEngineFactory().deployment().deploy(this);
   }
 
   @Override

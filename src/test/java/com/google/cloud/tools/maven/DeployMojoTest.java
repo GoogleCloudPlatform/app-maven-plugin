@@ -18,13 +18,22 @@ package com.google.cloud.tools.maven;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
+import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
+import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
@@ -32,7 +41,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DeployMojoTest extends CloudSdkMojoTest {
+public class DeployMojoTest {
+
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
+
+  @Mock
+  private CloudSdkAppEngineFactory factoryMock;
+
+  @Mock
+  private AppEngineFlexibleStaging flexibleStagingMock;
+
+  @Mock
+  private AppEngineStandardStaging standardStagingMock;
+
+  @Mock
+  private AppEngineDeployment deploymentMock;
+
+  @Mock
+  private Log log;
 
   @InjectMocks
   private DeployMojo deployMojo;
@@ -48,6 +75,10 @@ public class DeployMojoTest extends CloudSdkMojoTest {
   public void testDeployStandard()
       throws IOException, MojoFailureException, MojoExecutionException {
 
+    // wire up
+    when(factoryMock.standardStaging()).thenReturn(standardStagingMock);
+    when(factoryMock.deployment()).thenReturn(deploymentMock);
+
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
     appengineWebXml.createNewFile();
@@ -59,12 +90,14 @@ public class DeployMojoTest extends CloudSdkMojoTest {
     assertEquals(1, deployMojo.deployables.size());
     verify(standardStagingMock).stageStandard(deployMojo);
     verify(deploymentMock).deploy(deployMojo);
-    verifyCloudSdkCommon(deployMojo, cloudSdkBuilderMock);
-    verifyCloudSdkCommon(deployMojo, cloudSdkBuilderMock2);
   }
 
   @Test
   public void testDeployFlexible() throws Exception {
+
+    // wire up
+    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
+    when(factoryMock.deployment()).thenReturn(deploymentMock);
 
     // invoke
     deployMojo.execute();
@@ -72,6 +105,6 @@ public class DeployMojoTest extends CloudSdkMojoTest {
     // verify
     assertEquals(1, deployMojo.deployables.size());
     verify(flexibleStagingMock).stageFlexible(deployMojo);
-    verifyCloudSdkCommon(deployMojo, cloudSdkBuilderMock);
+    verify(deploymentMock).deploy(deployMojo);
   }
 }

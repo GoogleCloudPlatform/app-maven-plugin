@@ -17,22 +17,36 @@
 package com.google.cloud.tools.maven;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StopMojoTest extends CloudSdkMojoTest {
+public class StopMojoTest {
+
+  @Mock
+  private CloudSdkAppEngineFactory factoryMock;
+
+  @Mock
+  private AppEngineDevServer devServerMock;
 
   @InjectMocks
   private StopMojo stopMojo;
 
   @Test
   public void testStop() throws MojoFailureException, MojoExecutionException {
+
+    // wire up
+    when(factoryMock.devServerStop()).thenReturn(devServerMock);
+
     // invoke
     stopMojo.execute();
 

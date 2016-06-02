@@ -17,16 +17,26 @@
 package com.google.cloud.tools.maven;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RunMojoTest extends CloudSdkMojoTest {
+public class RunMojoTest {
+
+  @Mock
+  private CloudSdkAppEngineFactory factoryMock;
+
+  @Mock
+  private AppEngineDevServer devServerMock;
 
   @InjectMocks
   private RunMojo runMojo;
@@ -34,11 +44,13 @@ public class RunMojoTest extends CloudSdkMojoTest {
   @Test
   public void testRun() throws MojoFailureException, MojoExecutionException {
 
+    // wire up
+    when(factoryMock.devServerRunSync()).thenReturn(devServerMock);
+
     // invoke
     runMojo.execute();
 
     // verify
     verify(devServerMock).run(runMojo);
-    CloudSdkMojoTest.verifyCloudSdkCommon(runMojo, cloudSdkBuilderMock);
   }
 }

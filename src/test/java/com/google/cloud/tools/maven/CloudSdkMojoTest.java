@@ -16,91 +16,56 @@
 
 package com.google.cloud.tools.maven;
 
-import static org.mockito.Answers.RETURNS_SELF;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineFlexibleStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.plugin.logging.Log;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-public abstract class CloudSdkMojoTest {
-
-  public static final String ARTIFACT_ID = "gcp-app-maven-plugin";
-  public static final String ARTIFACT_VERSION = "0.1.0";
-
-  protected PluginDescriptor pluginDescriptorMock = createPluginDescriptorMock();
-
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
-
-  @Mock(answer = RETURNS_SELF)
-  protected CloudSdk.Builder cloudSdkBuilderMock;
-
-  @Mock(answer = RETURNS_SELF)
-  protected CloudSdk.Builder cloudSdkBuilderMock2;
+@RunWith(MockitoJUnitRunner.class)
+public class CloudSdkMojoTest {
 
   @Mock
-  protected Log logMock;
+  private PluginDescriptor pluginDescriptorMock;
 
-  @Mock
-  protected CloudSdk cloudSdkMock;
+  @InjectMocks
+  private CloudSdkMojoImpl mojo;
 
-  @Mock
-  protected AppEngineFactory factoryMock;
+  @Test
+  public void testGetArtifactId() {
+    final String ARTIFACT_ID = "gcp-app-maven-plugin";
 
-  @Mock
-  protected CloudSdkAppEngineStandardStaging standardStagingMock;
-
-  @Mock
-  protected CloudSdkAppEngineFlexibleStaging flexibleStagingMock;
-
-  @Mock
-  protected CloudSdkAppEngineDeployment deploymentMock;
-
-  @Mock
-  protected AppEngineDevServer devServerMock;
-
-  @Before
-  public void wireUpMocks() {
-    when(factoryMock.cloudSdkBuilder())
-        .thenReturn(cloudSdkBuilderMock, cloudSdkBuilderMock2);
-    when(factoryMock.standardStaging(cloudSdkMock)).thenReturn(standardStagingMock);
-    when(factoryMock.deployment(cloudSdkMock)).thenReturn(deploymentMock);
-    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
-    when(factoryMock.devServerStop()).thenReturn(devServerMock);
-    when(factoryMock.devServer(any(CloudSdk.class))).thenReturn(devServerMock);
-    when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
-    when(cloudSdkBuilderMock2.build()).thenReturn(cloudSdkMock);
-  }
-
-  private static PluginDescriptor createPluginDescriptorMock() {
-    PluginDescriptor pluginDescriptorMock = mock(PluginDescriptor.class);
+    // wire up
     when(pluginDescriptorMock.getArtifactId()).thenReturn(ARTIFACT_ID);
+
+    // invoke & verify
+    assertEquals(ARTIFACT_ID, mojo.getArtifactId());
+
+  }
+
+  @Test
+  public void testGetArtifactVersion() {
+    final String ARTIFACT_VERSION = "0.1.0";
+
+    // wire up
     when(pluginDescriptorMock.getVersion()).thenReturn(ARTIFACT_VERSION);
-    return pluginDescriptorMock;
+
+    // invoke & verify
+    assertEquals(ARTIFACT_VERSION, mojo.getArtifactVersion());
+
   }
 
-  protected static void verifyCloudSdkCommon(CloudSdkMojo mojo,
-      CloudSdk.Builder cloudSdkBuilderMock) {
-    verify(cloudSdkBuilderMock).sdkPath(mojo.cloudSdkPath);
-    verify(cloudSdkBuilderMock).addStdOutLineListener(any(ProcessOutputLineListener.class));
-    verify(cloudSdkBuilderMock).addStdErrLineListener(any(ProcessOutputLineListener.class));
-    verify(cloudSdkBuilderMock).appCommandMetricsEnvironment(ARTIFACT_ID);
-    verify(cloudSdkBuilderMock).appCommandMetricsEnvironmentVersion(ARTIFACT_VERSION);
-    verify(cloudSdkBuilderMock).build();
-  }
+  static class CloudSdkMojoImpl extends CloudSdkMojo {
 
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+
+    }
+  }
 }

@@ -18,18 +18,41 @@ package com.google.cloud.tools.maven;
 
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
+import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
+
+import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StageMojoTest extends CloudSdkMojoTest {
+public class StageMojoTest {
+
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
+
+  @Mock
+  private CloudSdkAppEngineFactory factoryMock;
+
+  @Mock
+  private AppEngineFlexibleStaging flexibleStagingMock;
+
+  @Mock
+  private AppEngineStandardStaging standardStagingMock;
+
+  @Mock
+  private Log logMock;
 
   @InjectMocks
   private StageMojo stageMojo;
@@ -43,6 +66,9 @@ public class StageMojoTest extends CloudSdkMojoTest {
   @Test
   public void testStandardStaging() throws Exception {
 
+    // wire up
+    when(factoryMock.standardStaging()).thenReturn(standardStagingMock);
+
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
     appengineWebXml.createNewFile();
@@ -53,11 +79,13 @@ public class StageMojoTest extends CloudSdkMojoTest {
     // verify
     verify(standardStagingMock).stageStandard(stageMojo);
     verify(logMock).info(contains("standard"));
-    CloudSdkMojoTest.verifyCloudSdkCommon(stageMojo, cloudSdkBuilderMock);
   }
 
   @Test
   public void testFlexibleStaging() throws Exception {
+
+    // wire up
+    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
 
     // invoke
     stageMojo.execute();

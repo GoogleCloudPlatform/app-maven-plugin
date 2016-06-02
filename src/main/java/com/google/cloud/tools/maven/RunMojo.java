@@ -196,7 +196,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    factory.devServerRunSync().run(this);
+    getAppEngineFactory().devServerRunSync().run(this);
   }
 
   @Override
