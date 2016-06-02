@@ -16,7 +16,7 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 ```XML
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
-    <artifactId>gcp-app-maven-plugin</artifactId>
+    <artifactId>app-maven-plugin</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </plugin>
 ```
