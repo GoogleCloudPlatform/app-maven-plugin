@@ -29,7 +29,6 @@ import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
@@ -60,7 +59,7 @@ public abstract class CloudSdkMojoTest {
   protected CloudSdk cloudSdkMock;
 
   @Mock
-  protected PluginDependenciesFactory factoryMock;
+  protected AppEngineDependenciesFactory factoryMock;
 
   @Mock
   protected CloudSdkAppEngineStandardStaging standardStagingMock;
@@ -76,7 +75,6 @@ public abstract class CloudSdkMojoTest {
 
   @Before
   public void wireUpMocks() {
-    when(factoryMock.logger(any(AbstractMojo.class))).thenReturn(logMock);
     when(factoryMock.cloudSdkBuilder())
         .thenReturn(cloudSdkBuilderMock, cloudSdkBuilderMock2);
     when(factoryMock.standardStaging(cloudSdkMock)).thenReturn(standardStagingMock);

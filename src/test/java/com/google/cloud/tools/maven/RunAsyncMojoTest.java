@@ -35,7 +35,6 @@ public class RunAsyncMojoTest extends CloudSdkMojoTest {
   @Test
   public void testRunAsync() throws MojoFailureException, MojoExecutionException {
 
-    runAsyncMojo.pluginDescriptor = pluginDescriptorMock;
     runAsyncMojo.startSuccessTimeout = 25;
 
     // invoke

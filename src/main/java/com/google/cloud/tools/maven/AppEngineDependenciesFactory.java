@@ -27,22 +27,19 @@ import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.logging.Log;
-
 /**
  * Factory for plugin dependencies.
  */
-public class PluginDependenciesFactory {
+public class AppEngineDependenciesFactory {
 
   /**
    * Default output listener that copies output to the Maven Mojo logger with a 'GCLOUD: ' prefix.
    */
-  public ProcessOutputLineListener gcloudOutputListener(final AbstractMojo mojo) {
+  public ProcessOutputLineListener gcloudOutputListener(final CloudSdkMojo mojo) {
     return new ProcessOutputLineListener() {
       @Override
       public void outputLine(String line) {
-        PluginDependenciesFactory.this.logger(mojo).info("GCLOUD: " + line);
+        mojo.getLog().info("GCLOUD: " + line);
       }
     };
   }
@@ -71,7 +68,4 @@ public class PluginDependenciesFactory {
     return new CloudSdkAppEngineDevServer(null);
   }
 
-  public Log logger(AbstractMojo mojo) {
-    return mojo.getLog();
-  }
 }
