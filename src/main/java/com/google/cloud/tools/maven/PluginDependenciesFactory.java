@@ -67,7 +67,7 @@ public class PluginDependenciesFactory {
     return new CloudSdkAppEngineDevServer(cloudSdk);
   }
 
-  public AppEngineDevServer devServer() {
+  public AppEngineDevServer devServerStop() {
     return new CloudSdkAppEngineDevServer(null);
   }
 

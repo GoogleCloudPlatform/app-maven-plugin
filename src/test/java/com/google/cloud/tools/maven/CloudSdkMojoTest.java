@@ -82,7 +82,7 @@ public abstract class CloudSdkMojoTest {
     when(factoryMock.standardStaging(cloudSdkMock)).thenReturn(standardStagingMock);
     when(factoryMock.deployment(cloudSdkMock)).thenReturn(deploymentMock);
     when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
-    when(factoryMock.devServer()).thenReturn(devServerMock);
+    when(factoryMock.devServerStop()).thenReturn(devServerMock);
     when(factoryMock.devServer(any(CloudSdk.class))).thenReturn(devServerMock);
     when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
     when(cloudSdkBuilderMock2.build()).thenReturn(cloudSdkMock);
