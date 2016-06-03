@@ -54,9 +54,7 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
    * The location of the dockerfile to use for App Engine flexible environment. This also applies to
    * App Engine Standard applications running on the flexible environment.
    */
-  @Parameter(
-      defaultValue = "${basedir}/src/main/appengine/Dockerfile",
-      alias = "stage.dockerfile", property = "app.stage.dockerfile")
+  @Parameter(alias = "stage.dockerfile", property = "app.stage.dockerfile")
   protected File dockerfile;
 
   ///////////////////////////////////
@@ -132,7 +130,13 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   protected boolean enableJarClasses;
 
   // always disable update check and do not expose this as a parameter
-  protected boolean disableUpdateCheck = true;
+  private boolean disableUpdateCheck = true;
+
+  @Parameter(defaultValue = "${basedir}/src/main/docker/Dockerfile", readonly = true)
+  private File dockerfilePrimaryDefaultLocation;
+
+  @Parameter(defaultValue = "${basedir}/src/main/appengine/Dockerfile", readonly = true)
+  private File dockerfileSecondaryDefaultLocation;
 
   ///////////////////////////////////
   // Flexible-only params
@@ -172,6 +176,9 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       throw new MojoExecutionException("Unable to create staging directory");
     }
 
+    // Dockerfile default location
+    configureDockerfileDefaultLocation();
+
     getLog().info("Staging the application to: " + stagingDirectory);
 
     if (new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml").exists()) {
@@ -180,6 +187,18 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
     } else {
       getLog().info("Detected App Engine flexible environment application.");
       getAppEngineFactory().flexibleStaging().stageFlexible(this);
+    }
+  }
+
+  protected void configureDockerfileDefaultLocation() {
+    if (dockerfile == null) {
+      if (dockerfilePrimaryDefaultLocation != null
+          && dockerfilePrimaryDefaultLocation.exists()) {
+        dockerfile = dockerfilePrimaryDefaultLocation;
+      } else if (dockerfileSecondaryDefaultLocation != null
+          && dockerfileSecondaryDefaultLocation.exists()) {
+        dockerfile = dockerfileSecondaryDefaultLocation;
+      }
     }
   }
 
