@@ -5,3 +5,16 @@ jdk:
 cache:
   directories:
    - $HOME/.m2
+
+script: "
+if [ ${TRAVIS_PULL_REQUEST} = 'false' ] && [ ${TRAVIS_BRANCH} = 'master' ];
+then
+    mvn clean deploy --settings .travis/settings.xml -B -U;
+else
+    mvn clean install -B -U;
+fi"
+
+env:
+  global:
+    - secure: "jI+pQpYZ7y9UbHaGLBkK1XiQX/WGjkcyxi1g4KowS/Kbz+6YohiXjyVf8JPT8+KMnpuRvsgTf2zlnTh2khJqd0fM67xvgn/6J1cn9DUhSpMbK5kXD9Io09I2noqGCQZPxtI/k3pxyn/hutgNkDT1o25zqtkTb0fSmrgpr8VwsGhO5renYZ5V1rS0eIQ2zMqdXm0xHglUYKH7sEoeYddmwqk8r8SITKaJ/xYIsfyS8PMK07xHmUO61odnzCMaC9KuQAVH3xDJDezZ4qGMTVIpebZAhLq4aDU9nSyAWlQ9TcXZdkti8BUvG9CjhgauRvlIRqxA28Kf8I2I51spyY1mpX0hp2fLRctFk0yji4tQT6A4uKnUQJRSaTNVKqeBIKXHlzEGlmHnmUJpiRBAtgS+7vktCrV9xUF+Nd0Kz3WyLOlvQSWUe5mbcn03cYr9XObIpWWvjuHnB+TM0xirYSgQv1K5EHS+cMSSqWaAbNzO5sGZtf5vsYRbCmdGduZiIkEJPpBXYewgblgzK3U5qQmJJQNlOHzAaVedAzLSHSohjH4kJMWYfsoVrENDCxdYZL+tuoF+5uz72BTXpSYDrRJ0/9fITvd9aRQC8pcB9poW8Sgr2RCuJvUZTH1bbMT+bKQi1ad8J0SJ7210TS/b6Sz2RkVh8ooX16R/b/qX8bIlSaw="
+    - secure: "AHS/BnKyyPBLcIKehP80FIKaWpWiHUfMVbr91PFK7aZvV+bz3o35IXatqZlGN/6qmuabNKnRyXzH7ONPDEogSZ0euynt4uvqVu/2UY5ZkAOmmhFb4H5L9Ho6JYDSV1x6RSn5aI7jfxoaZYxwlnzUANkEprdggqcI+Hfn22ZtK4sTp2oxqME5cqQ/w1zcemD6N8LAzmthfvTzbhSwQNKujRXUxV9d1yNr5MAgMZ3QMIEdMFtylZ2uOJ9CIxd2LLj3SWkWCfDY9bWvGRVZEJwennjYHKcnTYsHhVnE0XCdMsyQi+zN2hCpPq52p8sBIr81/GenajwjW7g0yQWMF3XBA28SI+GDcumGpe9GScmFGKHl3G/RgWUBmF3JKO8+Ws6f0iBruIda2Ichf4PitlZUMjtEmltUqBzeoKyaRGW7TCSHh47GZABb3ERV2FLyLSC9S+3rpUGo6V6dJIH/3JZBfb0yuAAwHyxxShj6GYUGXP1wU9/c2v1e5gya7e5mACcFWOlWuInAZxMV4lrISWemW3JvHkJHrbZ0/6nCgJbl7YJoIGHD2PcexomHA2B2YuBVGqseMPCbs9yxQwnkj0L+j+uIRNxq3oxCH6AzUCsaBaDaIU2fVh/Mas5Eic3O5WAGMvZh4XD7rQL7eqnBavsLeF5CDCmlo1d8U1unMZzUowA="
