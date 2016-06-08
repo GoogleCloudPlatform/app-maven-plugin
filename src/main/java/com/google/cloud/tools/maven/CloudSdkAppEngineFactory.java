@@ -25,6 +25,7 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
+import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 
 import org.apache.maven.plugin.logging.Log;
@@ -87,6 +88,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
         .sdkPath(mojo.getCloudSdkPath())
         .addStdOutLineListener(lineListener)
         .addStdErrLineListener(lineListener)
+        .exitListener(new NonZeroExceptionExitListener())
         .appCommandMetricsEnvironment(mojo.getArtifactId())
         .appCommandMetricsEnvironmentVersion(mojo.getArtifactVersion());
   }
