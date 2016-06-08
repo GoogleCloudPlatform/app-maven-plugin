@@ -16,12 +16,11 @@
 
 package com.google.cloud.tools.maven;
 
-
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.DefaultProcessOutputLineListener;
 
 import org.junit.Before;

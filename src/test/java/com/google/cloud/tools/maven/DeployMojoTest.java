@@ -20,9 +20,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
-import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
-import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;

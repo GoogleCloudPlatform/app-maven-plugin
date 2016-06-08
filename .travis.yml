@@ -6,6 +6,9 @@ cache:
   directories:
    - $HOME/.m2
 
+# skip install
+install: true
+
 script: "
 if [ ${TRAVIS_PULL_REQUEST} = 'false' ] && [ ${TRAVIS_BRANCH} = 'master' ];
 then

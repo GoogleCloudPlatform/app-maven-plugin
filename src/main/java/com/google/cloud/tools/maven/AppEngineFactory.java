@@ -16,10 +16,10 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
-import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
-import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
-import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
+import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 
 /**
  * Factory interface for App Engine dependencies.
