@@ -16,8 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
-
-import com.google.cloud.tools.app.api.devserver.RunConfiguration;
+import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;

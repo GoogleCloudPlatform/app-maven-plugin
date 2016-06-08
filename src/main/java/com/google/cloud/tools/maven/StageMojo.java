@@ -16,8 +16,8 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.app.api.deploy.StageFlexibleConfiguration;
-import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;

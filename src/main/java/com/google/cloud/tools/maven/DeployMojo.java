@@ -16,11 +16,8 @@
 
 package com.google.cloud.tools.maven;
 
-/**
- * Stages and then deploys application to App Engine standard or flexible environment.
- */
 
-import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;

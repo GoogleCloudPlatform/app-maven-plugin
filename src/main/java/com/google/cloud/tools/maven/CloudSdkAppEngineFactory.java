@@ -16,16 +16,17 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
-import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
-import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
-import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDevServer;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineFlexibleStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
+
+import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
+import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeployment;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 
 import org.apache.maven.plugin.logging.Log;
 
@@ -103,7 +104,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
     }
 
     @Override
-    public void outputLine(String line) {
+    public void onOutputLine(String line) {
       log.info("GCLOUD: " + line);
     }
   }

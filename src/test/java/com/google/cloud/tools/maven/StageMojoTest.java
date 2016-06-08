@@ -20,8 +20,8 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
-import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
