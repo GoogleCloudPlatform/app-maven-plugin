@@ -50,16 +50,18 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       alias = "stage.stagingDirectory", property = "app.stage.stagingDirectory")
   protected File stagingDirectory;
 
-  /**
-   * The location of the dockerfile to use for App Engine flexible environment. This also applies to
-   * App Engine Standard applications running on the flexible environment.
-   */
-  @Parameter(alias = "stage.dockerfile", property = "app.stage.dockerfile")
-  protected File dockerfile;
-
   ///////////////////////////////////
   // Standard-only params
   ///////////////////////////////////
+
+  /**
+   * The location of the dockerfile to use for App Engine Standard applications running on the
+   * flexible environment.
+   *
+   * <p>Applies to App Engine standard environment only.
+   */
+  @Parameter(alias = "stage.dockerfile", property = "app.stage.dockerfile")
+  protected File dockerfile;
 
   /**
    * The location of the compiled web application files, or the exploded WAR. This will be used as
@@ -150,6 +152,16 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   @Parameter(defaultValue = "${basedir}/src/main/appengine/app.yaml",
       alias = "stage.appYaml", property = "app.stage.appYaml")
   protected File appYaml;
+
+  /**
+   * The directory containing the Dockerfile and other Docker resources.
+   *
+   * <p>Applies to App Engine flexible environment only.
+   */
+  @Parameter(defaultValue = "${basedir}/src/main/docker/",
+      alias = "stage.dockerDirectory", property = "app.stage.dockerDirectory")
+  protected File dockerDirectory;
+
 
   /**
    * The location of the JAR or WAR archive to deploy.
@@ -265,5 +277,10 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   @Override
   public Boolean getDisableJarJsps() {
     return disableJarJsps;
+  }
+
+  @Override
+  public File getDockerDirectory() {
+    return dockerDirectory;
   }
 }
