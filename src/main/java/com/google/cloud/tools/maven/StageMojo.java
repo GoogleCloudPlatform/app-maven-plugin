@@ -188,13 +188,14 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       throw new MojoExecutionException("Unable to create staging directory");
     }
 
-    // Dockerfile default location
-    configureDockerfileDefaultLocation();
-
     getLog().info("Staging the application to: " + stagingDirectory);
 
     if (new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml").exists()) {
       getLog().info("Detected App Engine standard environment application.");
+
+      // Dockerfile default location
+      configureDockerfileDefaultLocation();
+
       getAppEngineFactory().standardStaging().stageStandard(this);
     } else {
       getLog().info("Detected App Engine flexible environment application.");
