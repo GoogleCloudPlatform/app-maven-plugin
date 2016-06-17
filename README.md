@@ -2,7 +2,7 @@
 [![build status image](https://travis-ci.org/GoogleCloudPlatform/app-maven-plugin.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/app-maven-plugin)
 # Google App Engine Maven plugin
 
-This Maven plugin allows you to perform Java app management operations.
+This Maven plugin allows you to manage Java applications running on Google App Engine.
 
 # Requirements
 
