@@ -39,7 +39,7 @@ public class CloudSdkMojoTest {
 
   @Test
   public void testGetArtifactId() {
-    final String ARTIFACT_ID = "gcp-app-maven-plugin";
+    final String ARTIFACT_ID = "appengine-maven-plugin";
 
     // wire up
     when(pluginDescriptorMock.getArtifactId()).thenReturn(ARTIFACT_ID);

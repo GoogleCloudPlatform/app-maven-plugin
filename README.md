@@ -17,18 +17,18 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 ```XML
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
-    <artifactId>app-maven-plugin</artifactId>
+    <artifactId>appengine-maven-plugin</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </plugin>
 ```
 
-You can now run commands like "mvn gcp-app:deploy" in the root folder of your Java application. (i.e., where the project's pom.xml file is)
+You can now run commands like "mvn appengine:deploy" in the root folder of your Java application. (i.e., where the project's pom.xml file is)
 
 # Supported goals
 
-- gcp-app:help
-- gcp-app:stage
-- gcp-app:deploy
-- gcp-app:run
-- gcp-app:start
-- gcp-app:stop
+- appengine:help
+- appengine:stage
+- appengine:deploy
+- appengine:run
+- appengine:start
+- appengine:stop
