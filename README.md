@@ -6,7 +6,7 @@ This Maven plugin provides goals to build and deploy Google App Engine applicati
 
 # Requirements
 
-[Maven](http://maven.apache.org/) is required to build the plugin.
+[Maven](http://maven.apache.org/) is required to build and run the plugin.
 
 You must have [Google Cloud SDK](https://cloud.google.com/sdk/) installed.
 
@@ -30,7 +30,7 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 </plugin>
 ```
 
-You can now run commands like "mvn appengine:deploy" in the root folder of your Java application. (i.e., where the project's pom.xml file is)
+You can now run commands like `mvn appengine:deploy` in the root folder of your Java application.
 
 # Supported goals
 - appengine:help
