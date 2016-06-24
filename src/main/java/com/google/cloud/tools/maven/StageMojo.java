@@ -84,7 +84,7 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   protected boolean enableQuickstart;
 
   /**
-   * Split large jar files (> 10M) into smaller fragments.
+   * Split large jar files (bigger than 10M) into smaller fragments.
    *
    * <p>Applies to App Engine standard environment only.
    */
