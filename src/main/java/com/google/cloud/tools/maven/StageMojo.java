@@ -145,13 +145,13 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   ///////////////////////////////////
 
   /**
-   * The location of the app.yaml in the source directory.
+   * The directory that contains app.yaml and other supported App Engine configuration files.
    *
    * <p>Applies to App Engine flexible environment only.
    */
-  @Parameter(defaultValue = "${basedir}/src/main/appengine/app.yaml",
-      alias = "stage.appYaml", property = "app.stage.appYaml")
-  protected File appYaml;
+  @Parameter(defaultValue = "${basedir}/src/main/appengine",
+      alias = "stage.appEngineDirectory", property = "app.stage.appEngineDirectory")
+  protected File appEngineDirectory;
 
   /**
    * The directory containing the Dockerfile and other Docker resources.
@@ -266,8 +266,8 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   }
 
   @Override
-  public File getAppYaml() {
-    return appYaml;
+  public File getAppEngineDirectory() {
+    return appEngineDirectory;
   }
 
   @Override
