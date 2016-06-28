@@ -42,7 +42,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
       // verify
       assertEquals("Hello from the App Engine Standard project.",
-          getUrlContentWithRetries(SERVER_URL, 5000, 100));
+          getUrlContentWithRetries(SERVER_URL, 5000, 1000));
       verifier.verifyErrorFreeLog();
       verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
