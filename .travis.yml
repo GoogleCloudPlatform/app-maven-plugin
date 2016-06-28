@@ -17,7 +17,13 @@ install:
   # add App Eengine component to Cloud SDK
   - gcloud components install app-engine-java --quiet
   # only run remote tests on master branch
-  - set doRemoteTests = [ $TRAVIS_PULL_REQUEST = 'false' ] && ( [ $TRAVIS_BRANCH = 'master' ] || [ $TRAVIS_BRANCH = 'integration_tests_fixes' ] )
+  - |
+    if [ $TRAVIS_PULL_REQUEST = 'false' ] && ( [ $TRAVIS_BRANCH = 'master' ] || [ $TRAVIS_BRANCH = 'integration_tests_fixes' ] ); then
+      set doRemoteTests = true
+    else
+      set doRemoteTests = false
+    fi
+  - echo doRemoteTests = $doRemoteTests
   - |
     if $doRemoteTests; then
       # decrypt the tavis-app-maven-plugin Cloud SDK project service account key
