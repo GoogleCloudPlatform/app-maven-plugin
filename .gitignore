@@ -1,4 +1,4 @@
 .idea
 target
 *.iml
-log.txt
+installPlugin.txt

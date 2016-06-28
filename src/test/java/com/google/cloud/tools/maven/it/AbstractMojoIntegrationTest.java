@@ -18,10 +18,15 @@ package com.google.cloud.tools.maven.it;
 
 import com.google.common.io.CharStreams;
 
+import org.apache.commons.io.input.Tailer;
+import org.apache.commons.io.input.TailerListener;
+import org.apache.commons.io.input.TailerListenerAdapter;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
+import org.apache.maven.it.util.ResourceExtractor;
 import org.junit.BeforeClass;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -31,13 +36,11 @@ public abstract class AbstractMojoIntegrationTest {
 
   private static boolean doneInstallPlugin = false;
 
-  @BeforeClass
+//  @BeforeClass
   public static void installPlugin() throws VerificationException {
     // install the plugin under test
     if (!doneInstallPlugin) {
-      Verifier verifier;
-      verifier = new Verifier(".");
-      verifier.setAutoclean(false);
+      Verifier verifier = createVerifier("installPlugin", ".");
       verifier.addCliOption("-DskipTests");
       verifier.executeGoal("install");
       doneInstallPlugin = true;
@@ -104,4 +107,53 @@ public abstract class AbstractMojoIntegrationTest {
 
     return content;
   }
+
+  protected Verifier createStandardVerifier(String testName)
+      throws VerificationException, IOException {
+    String projectDir = ResourceExtractor
+        .simpleExtractResources(getClass(), "/projects/standard-project")
+        .getAbsolutePath();
+    return createVerifier(testName, projectDir);
+  }
+
+  protected Verifier createFlexibleVerifier(String testName)
+      throws VerificationException, IOException {
+    String projectDir = ResourceExtractor
+        .simpleExtractResources(getClass(), "/projects/flexible-project")
+        .getAbsolutePath();
+    return createVerifier(testName, projectDir);
+  }
+
+  private static Verifier createVerifier(final String testName, String projectDir)
+      throws VerificationException {
+
+    Verifier verifier = new Verifier(projectDir, true);
+    verifier.setLogFileName(testName + ".txt");
+    verifier.setAutoclean(false);
+
+    TailerListener listener = new TailerListenerAdapter() {
+      @Override
+      public void handle(String line) {
+        System.out.println(testName + ": " + line);
+      }
+    };
+
+    // Tail the log
+    File file = new File(projectDir + File.separator + verifier.getLogFileName());
+    try {
+      if (file.exists()) {
+        file.delete();
+      }
+      file.createNewFile();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    Tailer tailer = new Tailer(file, listener, 1000);
+    Thread thread = new Thread(tailer);
+    thread.setDaemon(true);
+    thread.start();
+
+    return verifier;
+  }
+
 }

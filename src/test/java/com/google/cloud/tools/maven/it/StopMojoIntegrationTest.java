@@ -35,14 +35,9 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
   public void testStopStandard()
       throws IOException, VerificationException, InterruptedException {
 
-    String projectDir = ResourceExtractor
-        .simpleExtractResources(getClass(), "/projects/standard-project")
-        .getAbsolutePath();
-
-    Verifier verifier = new Verifier(projectDir);
+    Verifier verifier = createStandardVerifier("testStopStandard_start");
 
     // start dev app server
-    verifier.setLogFileName("testStopStandard_start.txt");
     verifier.executeGoal("appengine:start");
 
     // verify dev app server is up

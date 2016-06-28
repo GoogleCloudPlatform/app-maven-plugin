@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven.it;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
@@ -27,17 +28,13 @@ import java.io.IOException;
 
 
 public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
+  private final String SERVER_URL = "http://localhost:8080";
 
   @Test
   public void testRunAsyncStandard()
       throws IOException, VerificationException, InterruptedException {
 
-    String projectDir = ResourceExtractor
-        .simpleExtractResources(getClass(), "/projects/standard-project")
-        .getAbsolutePath();
-
-    final Verifier verifier = new Verifier(projectDir);
-    verifier.setLogFileName("testRunAsyncStandard.txt");
+    Verifier verifier = createStandardVerifier("testRunAsync");
 
     try {
       // execute
@@ -45,7 +42,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
       // verify
       assertEquals("Hello from the App Engine Standard project.",
-          getUrlContentWithRetries("http://localhost:8080", 5000, 100));
+          getUrlContentWithRetries(SERVER_URL, 5000, 100));
       verifier.verifyErrorFreeLog();
       verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
@@ -53,6 +50,8 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
       verifier.setLogFileName("testRunAsyncStandard_stop.txt");
       verifier.setAutoclean(false);
       verifier.executeGoal("appengine:stop");
+      // wait up to 5 seconds for the server to stop
+      assertTrue(isUrlDownWithRetries(SERVER_URL, 5000, 100));
     }
   }
 }

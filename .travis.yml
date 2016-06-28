@@ -24,11 +24,11 @@ install:
   - gcloud config set project travis-app-maven-plugin
 
 script: "
-if [ ${TRAVIS_PULL_REQUEST} = 'false' ] && [ ${TRAVIS_BRANCH} = 'master' ];
+if [ ${TRAVIS_PULL_REQUEST} = 'false' ] && ( [ ${TRAVIS_BRANCH} = 'master' ] || [ ${TRAVIS_BRANCH} = 'integration_tests_fixes' ] );
 then
-    travis_wait 30 mvn clean deploy --settings .travis/settings.xml -B -U -P include-remote-tests;
+    mvn clean deploy --settings .travis/settings.xml -B -U -P include-remote-tests;
 else
-    travis_wait 30 mvn clean install -B -U;
+    mvn clean install -B -U;
 fi"
 
 env:

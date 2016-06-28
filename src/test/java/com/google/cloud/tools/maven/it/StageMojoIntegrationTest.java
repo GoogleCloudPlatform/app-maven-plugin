@@ -33,8 +33,7 @@ public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
         .simpleExtractResources(getClass(), "/projects/standard-project")
         .getAbsolutePath();
 
-    Verifier verifier = new Verifier(projectDir);
-    verifier.setLogFileName("testStageStandard.txt");
+    Verifier verifier = createStandardVerifier("testStageStandard");
 
     // execute with staging directory not present
     verifier.executeGoal("appengine:stage");
@@ -60,12 +59,8 @@ public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   @Test
   public void testStageFlexible() throws IOException, VerificationException {
-    String projectDir = ResourceExtractor
-        .simpleExtractResources(getClass(), "/projects/flexible-project")
-        .getAbsolutePath();
 
-    Verifier verifier = new Verifier(projectDir);
-    verifier.setLogFileName("testStageFlexible.txt");
+    Verifier verifier = createFlexibleVerifier("testStageFlexible");
 
     // execute stage
     verifier.executeGoal("appengine:stage");

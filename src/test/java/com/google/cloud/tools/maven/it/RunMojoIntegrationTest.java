@@ -17,57 +17,57 @@
 package com.google.cloud.tools.maven.it;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 
-// TODO: make the test succeed more reliably on AppVeyor
-@Ignore
+
 public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
+
+  private final String SERVER_URL = "http://localhost:8080";
 
   @Test
   public void testRunStandard() throws IOException, VerificationException, InterruptedException {
 
-    String projectDir = ResourceExtractor
-        .simpleExtractResources(getClass(), "/projects/standard-project")
-        .getAbsolutePath();
+    final Verifier verifier = createStandardVerifier("testRun");
+    final StringBuilder urlContent = new StringBuilder();
 
-    final Verifier verifier = new Verifier(projectDir);
-    verifier.setLogFileName("testRunStandard.txt");
-
-    // execute
     Thread thread = new Thread() {
       @Override
       public void run() {
         try {
-          verifier.executeGoal("appengine:run");
-        } catch (VerificationException e) {
-          throw new RuntimeException(e);
+          // wait up to 60 seconds for the server to start (retry every second)
+          urlContent.append(getUrlContentWithRetries(SERVER_URL, 60000, 1000));
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        } finally {
+          // stop server
+          try {
+            verifier.executeGoal("appengine:stop");
+            // wait up to 5 seconds for the server to stop
+            assertTrue(isUrlDownWithRetries(SERVER_URL, 5000, 100));
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
       }
     };
+    thread.setDaemon(true);
     thread.start();
 
-    try {
-      // wait up to 60 seconds for the server to start (retry every 200ms)
-      String urlContent = getUrlContentWithRetries("http://localhost:8080/", 60000, 200);
+    // execute
+    verifier.executeGoal("appengine:run");
 
-      // verify
-      assertEquals("Hello from the App Engine Standard project.", urlContent);
-      verifier.verifyErrorFreeLog();
-      verifier.verifyTextInLog("Dev App Server is now running");
-    } finally {
-      // stop server
-      verifier.setLogFileName("testRunStandard_stop.txt");
-      verifier.setAutoclean(false);
-      verifier.executeGoal("appengine:stop");
-    }
+    thread.join();
+
+    // verify
+    assertEquals("Hello from the App Engine Standard project.", urlContent.toString());
+    verifier.verifyErrorFreeLog();
+    verifier.verifyTextInLog("Dev App Server is now running");
+
   }
-
-
 }
