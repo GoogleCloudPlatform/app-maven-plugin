@@ -47,7 +47,8 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
         } finally {
           // stop server
           try {
-            verifier.executeGoal("appengine:stop");
+            Verifier stopVerifier = createStandardVerifier("testRun_stop");
+            stopVerifier.executeGoal("appengine:stop");
             // wait up to 5 seconds for the server to stop
             assertTrue(isUrlDownWithRetries(SERVER_URL, 5000, 100));
           } catch (Exception e) {
