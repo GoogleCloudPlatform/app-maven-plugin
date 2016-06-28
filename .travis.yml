@@ -34,7 +34,7 @@ script:
       mvn clean deploy --settings .travis/settings.xml -B -U -P include-remote-tests
     else
       mvn clean install -B -U
-    fi"
+    fi
 
 env:
   global:
