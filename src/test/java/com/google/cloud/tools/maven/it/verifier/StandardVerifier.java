@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.maven.it;
-
-import com.google.cloud.tools.maven.it.verifier.TailingVerifier;
+package com.google.cloud.tools.maven.it.verifier;
 
 import org.apache.maven.it.VerificationException;
-import org.junit.BeforeClass;
+import org.apache.maven.it.util.ResourceExtractor;
 
-public abstract class AbstractMojoIntegrationTest {
+import java.io.IOException;
 
-  private static boolean doneInstallPlugin = false;
+public class StandardVerifier extends TailingVerifier {
 
-  @BeforeClass
-  public static void installPlugin() throws VerificationException {
-    // install the plugin under test
-    if (!doneInstallPlugin) {
-      TailingVerifier verifier = new TailingVerifier("installPlugin", ".");
-      verifier.addCliOption("-DskipTests");
-      verifier.executeGoal("install");
-      doneInstallPlugin = true;
-    }
+  public StandardVerifier(String testName) throws IOException, VerificationException {
+    super(testName,
+        ResourceExtractor
+            .simpleExtractResources(StandardVerifier.class, "/projects/standard-project")
+            .getAbsolutePath());
   }
 }

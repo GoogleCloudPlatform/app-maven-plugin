@@ -20,9 +20,11 @@ package com.google.cloud.tools.maven.it;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.google.cloud.tools.maven.it.util.UrlUtils;
+import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
+
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,14 +37,14 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
   public void testStopStandard()
       throws IOException, VerificationException, InterruptedException {
 
-    Verifier verifier = createStandardVerifier("testStopStandard_start");
+    Verifier verifier = new StandardVerifier("testStopStandard_start");
 
     // start dev app server
     verifier.executeGoal("appengine:start");
 
     // verify dev app server is up
     verifier.verifyErrorFreeLog();
-    assertNotNull(getUrlContentWithRetries(SERVER_URL, 5000, 100));
+    assertNotNull(UrlUtils.getUrlContentWithRetries(SERVER_URL, 5000, 100));
 
     // stop dev app server
     verifier.setLogFileName("testStopStandard.txt");
@@ -52,7 +54,7 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
     // verify dev app server is down
     verifier.verifyErrorFreeLog();
     // wait up to 5 seconds for the server to stop
-    assertTrue(isUrlDownWithRetries(SERVER_URL, 5000, 100));
+    assertTrue(UrlUtils.isUrlDownWithRetries(SERVER_URL, 5000, 100));
 
   }
 }

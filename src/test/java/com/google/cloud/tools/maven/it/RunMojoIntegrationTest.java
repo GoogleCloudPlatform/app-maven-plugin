@@ -19,6 +19,9 @@ package com.google.cloud.tools.maven.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.cloud.tools.maven.it.util.UrlUtils;
+import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
+
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Test;
@@ -33,7 +36,7 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
   @Test
   public void testRunStandard() throws IOException, VerificationException, InterruptedException {
 
-    final Verifier verifier = createStandardVerifier("testRun");
+    final Verifier verifier = new StandardVerifier("testRun");
     final StringBuilder urlContent = new StringBuilder();
 
     Thread thread = new Thread() {
@@ -41,16 +44,16 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
       public void run() {
         try {
           // wait up to 60 seconds for the server to start (retry every second)
-          urlContent.append(getUrlContentWithRetries(SERVER_URL, 60000, 1000));
+          urlContent.append(UrlUtils.getUrlContentWithRetries(SERVER_URL, 60000, 1000));
         } catch (InterruptedException e) {
           e.printStackTrace();
         } finally {
           // stop server
           try {
-            Verifier stopVerifier = createStandardVerifier("testRun_stop");
+            Verifier stopVerifier = new StandardVerifier("testRun_stop");
             stopVerifier.executeGoal("appengine:stop");
             // wait up to 5 seconds for the server to stop
-            assertTrue(isUrlDownWithRetries(SERVER_URL, 5000, 100));
+            assertTrue(UrlUtils.isUrlDownWithRetries(SERVER_URL, 5000, 100));
           } catch (Exception e) {
             e.printStackTrace();
           }
