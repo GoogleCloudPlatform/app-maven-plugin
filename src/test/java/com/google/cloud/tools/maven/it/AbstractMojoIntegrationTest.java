@@ -36,7 +36,7 @@ public abstract class AbstractMojoIntegrationTest {
 
   private static boolean doneInstallPlugin = false;
 
-//  @BeforeClass
+  @BeforeClass
   public static void installPlugin() throws VerificationException {
     // install the plugin under test
     if (!doneInstallPlugin) {
