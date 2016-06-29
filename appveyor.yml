@@ -26,9 +26,15 @@ install:
   # add App Eengine component to Cloud SDK
   - gcloud.cmd components install app-engine-java --quiet
 
-  # login to GCP if it's not a PR
+  # determine whether to run remote tests
   - >
-    IF NOT DEFINED APPVEYOR_PULL_REQUEST_NUMBER
+    IF NOT DEFINED APPVEYOR_PULL_REQUEST_NUMBER IF %APPVEYOR_REPO_BRANCH% == master
+    SET INCLUDE_REMOTE_TESTS=true
+  - echo INCLUDE_REMOTE_TESTS=%INCLUDE_REMOTE_TESTS%
+
+  # login to GCP if running remote tests
+  - >
+    IF DEFINED INCLUDE_REMOTE_TESTS
     echo %key_file_contents% > appveyor-app-maven-plugin-41c10cd961bb.json
     &&
     gcloud.cmd auth activate-service-account --key-file appveyor-app-maven-plugin-41c10cd961bb.json
@@ -39,9 +45,8 @@ build_script:
   - mvn clean install -DskipTests -B -U
 
 test_script:
-  # skip deploy test if it's a PR
   - >
-    IF NOT DEFINED APPVEYOR_PULL_REQUEST_NUMBER IF %APPVEYOR_REPO_BRANCH% == master
+    IF DEFINED INCLUDE_REMOTE_TESTS
     ( mvn clean install -B -U -P include-remote-tests)
     ELSE
     ( mvn clean install -B -U )

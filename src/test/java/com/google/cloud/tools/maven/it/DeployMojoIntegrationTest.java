@@ -19,10 +19,11 @@ package com.google.cloud.tools.maven.it;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
+import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
+import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -34,12 +35,7 @@ public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
   public void testDeployStandard()
       throws IOException, VerificationException, ProcessRunnerException {
 
-    String projectDir = ResourceExtractor
-        .simpleExtractResources(getClass(), "/projects/standard-project")
-        .getAbsolutePath();
-
-    Verifier verifier = new Verifier(projectDir);
-    verifier.setLogFileName("testDeployStandard.txt");
+    Verifier verifier = new StandardVerifier("testDeployStandard");
 
     // execute with staging directory not present
     verifier.executeGoal("appengine:deploy");
@@ -57,12 +53,7 @@ public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
   public void testDeployFlexible()
       throws IOException, VerificationException, ProcessRunnerException {
 
-    String projectDir = ResourceExtractor
-        .simpleExtractResources(getClass(), "/projects/flexible-project")
-        .getAbsolutePath();
-
-    Verifier verifier = new Verifier(projectDir);
-    verifier.setLogFileName("testDeployFlexible.txt");
+    Verifier verifier = new FlexibleVerifier("testDeployFlexible");
 
     // execute with staging directory not present
     verifier.executeGoal("appengine:deploy");
