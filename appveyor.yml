@@ -46,7 +46,7 @@ build_script:
 
 test_script:
   - >
-    IF NOT DEFINED INCLUDE_REMOTE_TESTS
+    IF DEFINED INCLUDE_REMOTE_TESTS
     ( mvn clean install -B -U -P include-remote-tests)
     ELSE
     ( mvn clean install -B -U )

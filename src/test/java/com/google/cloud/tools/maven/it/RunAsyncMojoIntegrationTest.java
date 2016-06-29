@@ -47,9 +47,8 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
       verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
       // stop server
-      verifier.setLogFileName("testRunAsyncStandard_stop.txt");
-      verifier.setAutoclean(false);
-      verifier.executeGoal("appengine:stop");
+      Verifier stopVerifier = createStandardVerifier("testRunAsyncStandard_stop");
+      stopVerifier.executeGoal("appengine:stop");
       // wait up to 5 seconds for the server to stop
       assertTrue(isUrlDownWithRetries(SERVER_URL, 5000, 100));
     }

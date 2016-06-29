@@ -18,7 +18,7 @@ install:
   - gcloud components install app-engine-java --quiet
   # only run remote tests on master branch
   - |
-    if [ $TRAVIS_PULL_REQUEST = 'false' ] && ( [ $TRAVIS_BRANCH = 'master' ] || [ $TRAVIS_BRANCH = 'integration_tests_fixes' ] ); then
+    if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
       export INCLUDE_REMOTE_TESTS=true
     else
       export INCLUDE_REMOTE_TESTS=false
