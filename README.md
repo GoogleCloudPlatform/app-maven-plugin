@@ -1,5 +1,5 @@
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
-[![build status image](https://travis-ci.org/GoogleCloudPlatform/app-maven-plugin.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/app-maven-plugin)
+[![Build Status](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin.svg)](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin)
 # Google App Engine Maven plugin
 
 This Maven plugin provides goals to build and deploy Google App Engine applications.
@@ -26,7 +26,7 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
     <artifactId>appengine-maven-plugin</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0-beta</version>
 </plugin>
 ```
 
