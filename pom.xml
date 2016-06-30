@@ -3,18 +3,67 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.cloud.tools</groupId>
-  <artifactId>app-maven-plugin</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <artifactId>appengine-maven-plugin</artifactId>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Google Cloud Platform Maven Plugin</name>
+  <description>
+    This Maven plugin provides goals to build and deploy Google App Engine applications.
+  </description>
+  <url>https://github.com/GoogleCloudPlatform/app-maven-plugin</url>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>joaomartins</id>
+      <name>João Martins</name>
+      <email>joaomartins@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+    <developer>
+      <id>appu</id>
+      <name>Appu Goundan</name>
+      <email>appu@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+    <developer>
+      <id>meltsufin</id>
+      <name>Mike Eltsufin</name>
+      <email>meltsufin@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/GoogleCloudPlatform/app-maven-plugin.git
+    </connection>
+    <developerConnection>scm:git:https://github.com/GoogleCloudPlatform/app-maven-plugin.git
+    </developerConnection>
+    <url>https://github.com/GoogleCloudPlatform/app-maven-plugin</url>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.version>3.3.9</maven.version>
   </properties>
 
   <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Sonatype Nexus Staging</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
       <name>Sonatype Nexus Snapshots</name>
@@ -55,8 +104,8 @@
 
     <dependency>
       <groupId>com.google.cloud.tools</groupId>
-      <artifactId>app-tools-lib-for-java</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <artifactId>appengine-plugins-core</artifactId>
+      <version>0.1.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -79,19 +128,34 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-verifier</artifactId>
+      <version>1.6</version>
+    </dependency>
+
   </dependencies>
 
   <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>projects/parent/pom.xml</include>
+        </includes>
+      </testResource>
+    </testResources>
+
     <plugins>
       <!-- Add "help" goal -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.4</version>
-        <configuration>
-          <!-- change goal prefix from default 'app' to 'gcp-app' -->
-          <goalPrefix>gcp-app</goalPrefix>
-        </configuration>
         <executions>
           <execution>
             <id>default-descriptor</id>
@@ -214,6 +278,85 @@
         </executions>
       </plugin>
 
+      <!-- Unit Testing -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <excludes>
+            <exclude>**/*IntegrationTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+      <!-- Integration Testing -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <includes>
+            <include>**/*IntegrationTest.java</include>
+          </includes>
+          <excludes>
+            <exclude>**/*DeployMojoIntegrationTest.java</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>include-remote-tests</id>
+      <properties>
+        <it.test>*IntegrationTest</it.test>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.3</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

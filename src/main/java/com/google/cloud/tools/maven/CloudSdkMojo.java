@@ -33,7 +33,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(property = "cloudSdkPath", required = false)
   private File cloudSdkPath;
 
-  @Parameter(defaultValue = "${pluginDescriptor}", readonly = true)
+  @Parameter(defaultValue = "${plugin}", readonly = true)
   private PluginDescriptor pluginDescriptor;
 
   private AppEngineFactory factory = new CloudSdkAppEngineFactory(this);

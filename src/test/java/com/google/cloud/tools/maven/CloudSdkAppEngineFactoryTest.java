@@ -37,7 +37,7 @@ import java.io.File;
 public class CloudSdkAppEngineFactoryTest {
 
   private final File CLOUD_SDK_PATH = new File("google-cloud-sdk");
-  private final String ARTIFACT_ID = "gcp-app-maven-plugin";
+  private final String ARTIFACT_ID = "appengine-maven-plugin";
   private final String ARTIFACT_VERSION = "0.1.0";
 
   @Mock

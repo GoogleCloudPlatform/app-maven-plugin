@@ -6,16 +6,41 @@ cache:
   directories:
    - $HOME/.m2
 
-# skip install
-install: true
+install:
+  # download Cloud SDK
+  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-112.0.0-linux-x86_64.tar.gz
+  - tar -xzvf google-cloud-sdk-112.0.0-linux-x86_64.tar.gz
+  - export PATH=$PWD/google-cloud-sdk/bin:$PATH
+  - export CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
+  # update all Cloud SDK components
+  - gcloud components update --quiet
+  # add App Eengine component to Cloud SDK
+  - gcloud components install app-engine-java --quiet
+  # only run remote tests on master branch
+  - |
+    if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
+      export INCLUDE_REMOTE_TESTS=true
+    else
+      export INCLUDE_REMOTE_TESTS=false
+    fi
+  - echo INCLUDE_REMOTE_TESTS = $INCLUDE_REMOTE_TESTS
+  - |
+    if $INCLUDE_REMOTE_TESTS; then
+      # decrypt the tavis-app-maven-plugin Cloud SDK project service account key
+      openssl aes-256-cbc -K $encrypted_4c3a51657fee_key -iv $encrypted_4c3a51657fee_iv -in config/travis-app-maven-plugin-e1bb638f290e.json.enc -out config/travis-app-maven-plugin-e1bb638f290e.json -d
+      # set Cloud SDK CLI authentication
+      gcloud auth activate-service-account --key-file config/travis-app-maven-plugin-e1bb638f290e.json
+      # set default project
+      gcloud config set project travis-app-maven-plugin
+    fi
 
-script: "
-if [ ${TRAVIS_PULL_REQUEST} = 'false' ] && [ ${TRAVIS_BRANCH} = 'master' ];
-then
-    mvn clean deploy --settings .travis/settings.xml -B -U;
-else
-    mvn clean install -B -U;
-fi"
+script:
+  - |
+    if $INCLUDE_REMOTE_TESTS; then
+      mvn clean deploy --settings .travis/settings.xml -B -U -P include-remote-tests
+    else
+      mvn clean install -B -U
+    fi
 
 env:
   global:
