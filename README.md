@@ -1,6 +1,6 @@
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 [![Build Status](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin.svg)](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin)
-# Google App Engine Maven plugin
+# Google App Engine Maven plugin (BETA)
 
 This Maven plugin provides goals to build and deploy Google App Engine applications.
 
