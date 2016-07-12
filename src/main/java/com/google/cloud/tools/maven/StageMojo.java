@@ -197,7 +197,7 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       getLog().info("Detected App Engine standard environment application.");
 
       // force runtime to 'java' for compat projects using Java version >1.7
-      if (Float.parseFloat(getCompileTargetVersion()) > 1.7) {
+      if (Float.parseFloat(getCompileTargetVersion()) > 1.7f) {
         runtime = "java";
       }
 
