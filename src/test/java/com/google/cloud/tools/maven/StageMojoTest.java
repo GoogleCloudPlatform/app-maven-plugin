@@ -22,6 +22,8 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
@@ -72,6 +74,7 @@ public class StageMojoTest {
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
     appengineWebXml.createNewFile();
+    Files.write("<appengine-web-app></appengine-web-app>", appengineWebXml, Charsets.UTF_8);
 
     // invoke
     stageMojo.execute();

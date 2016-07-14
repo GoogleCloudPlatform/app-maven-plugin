@@ -26,9 +26,18 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * Generates a deploy-ready application directory for App Engine standard or flexible environment
@@ -193,11 +202,14 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
 
     getLog().info("Staging the application to: " + stagingDirectory);
 
-    if (new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml").exists()) {
+    AppEngineWebXml appengineWebXml = new AppEngineWebXml(
+        new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
+
+    if (appengineWebXml.exists()) {
       getLog().info("Detected App Engine standard environment application.");
 
       // force runtime to 'java' for compat projects using Java version >1.7
-      if (Float.parseFloat(getCompileTargetVersion()) > 1.7f) {
+      if (Float.parseFloat(getCompileTargetVersion()) > 1.7f && appengineWebXml.isVm()) {
         runtime = "java";
       }
 
@@ -296,5 +308,46 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   @Override
   public String getRuntime() {
     return runtime;
+  }
+
+
+  /**
+   * Simple parser for appengine-web.xml, this should ideally not exist, but we need it to correctly
+   * error when vm=false and the user is using java8 as the target platform
+   */
+  private static class AppEngineWebXml {
+
+    private final Document document;
+
+    private AppEngineWebXml(File appengineWebXml) throws MojoExecutionException {
+      try {
+        if (appengineWebXml.exists()) {
+          document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+              .parse(appengineWebXml);
+        } else {
+          document = null;
+        }
+      } catch (SAXException | IOException | ParserConfigurationException e) {
+        throw new MojoExecutionException("Failed to parse appengine-web.xml", e);
+      }
+    }
+
+    public static AppEngineWebXml parse(File appengineWebXml) throws MojoExecutionException {
+      return new AppEngineWebXml(appengineWebXml);
+    }
+
+    public boolean exists() {
+      return document != null;
+    }
+
+    public boolean isVm() throws MojoExecutionException {
+      try {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        String expression = "/appengine-web-app/vm/text()='true'";
+        return (Boolean) xpath.evaluate(expression, document, XPathConstants.BOOLEAN);
+      } catch (XPathExpressionException e) {
+        throw new MojoExecutionException("XPath evaluation failed on appengine-web.xml", e);
+      }
+    }
   }
 }
