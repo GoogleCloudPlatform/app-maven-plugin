@@ -21,6 +21,8 @@ install:
   - appveyor DownloadFile https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe
   # install Cloud SDK
   - GoogleCloudSDKInstaller.exe /S /noreporting /nostartmenu /nodesktop /logtofile /D=C:\google
+  # prepare for non-interactive Cloud SDK components update
+  - gcloud.cmd components copy-bundled-python>>python_path.txt && SET /p CLOUDSDK_PYTHON=<python_path.txt && DEL python_path.txt
   # update all Cloud SDK components
   - gcloud.cmd components update --quiet
   # add App Eengine component to Cloud SDK
