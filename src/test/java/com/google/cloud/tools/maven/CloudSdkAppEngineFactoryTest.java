@@ -32,11 +32,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFactoryTest {
 
-  private final File CLOUD_SDK_PATH = new File("google-cloud-sdk");
+  private final Path CLOUD_SDK_PATH = Paths.get("google-cloud-sdk");
   private final String ARTIFACT_ID = "appengine-maven-plugin";
   private final String ARTIFACT_VERSION = "0.1.0";
 

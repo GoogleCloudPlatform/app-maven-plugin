@@ -24,6 +24,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Abstract Mojo from which all goals inherit.
@@ -52,8 +53,8 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return pluginDescriptor.getVersion();
   }
 
-  public File getCloudSdkPath() {
-    return cloudSdkPath;
+  public Path getCloudSdkPath() {
+    return cloudSdkPath != null ? cloudSdkPath.toPath() : null;
   }
 
   public AppEngineFactory getAppEngineFactory() {
