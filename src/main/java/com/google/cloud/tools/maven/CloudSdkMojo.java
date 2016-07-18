@@ -41,7 +41,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   private PluginDescriptor pluginDescriptor;
 
   @Parameter(defaultValue = "${project}", readonly = true)
-  private MavenProject mavenProject;
+  protected MavenProject mavenProject;
 
   private AppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 

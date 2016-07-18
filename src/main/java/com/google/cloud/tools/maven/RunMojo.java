@@ -194,9 +194,9 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       property = "app.devserver.defaultGcsBucketName")
   protected String defaultGcsBucketName;
 
-
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    verifyAppEngineStandardApp();
     workAroundNonJava7Version();
     getAppEngineFactory().devServerRunSync().run(this);
   }
@@ -211,6 +211,28 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
         jvmFlags = new ArrayList<>();
       }
       jvmFlags.add("-Dappengine.user.timezone=UTC");
+    }
+  }
+
+  /**
+   * Determine if the application is a Standard Environment app.
+   */
+  protected boolean isStandardEnvironmentApp() {
+    return mavenProject != null
+        && mavenProject.getBuild() != null
+        && new File(
+        mavenProject.getBuild().getDirectory() + "/" + mavenProject.getBuild().getFinalName()
+            + "/WEB-INF/appengine-web.xml").exists();
+  }
+
+  /**
+   * Verifies that the current application is an App Engine Standard Environment app. If it's not,
+   * an exception will be thrown.
+   */
+  protected void verifyAppEngineStandardApp() throws MojoExecutionException {
+    if (!isStandardEnvironmentApp()) {
+      throw new MojoExecutionException(
+          "Dev App Server does not support App Engine Flexible Environment applications.");
     }
   }
 

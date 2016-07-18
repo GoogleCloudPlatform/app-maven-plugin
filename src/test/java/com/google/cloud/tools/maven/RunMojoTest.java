@@ -16,35 +16,30 @@
 
 package com.google.cloud.tools.maven;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
+
 @RunWith(MockitoJUnitRunner.class)
-public class RunMojoTest {
-
-  @Mock
-  private CloudSdkAppEngineFactory factoryMock;
-
-  @Mock
-  private AppEngineDevServer devServerMock;
+public class RunMojoTest extends AbstractDevServerTest {
 
   @InjectMocks
   private RunMojo runMojo;
 
   @Test
-  public void testRun() throws MojoFailureException, MojoExecutionException {
-
+  public void testRun() throws MojoFailureException, MojoExecutionException, IOException {
     // wire up
+    setUpAppEngineWebXml();
     when(factoryMock.devServerRunSync()).thenReturn(devServerMock);
 
     // invoke
@@ -52,5 +47,21 @@ public class RunMojoTest {
 
     // verify
     verify(devServerMock).run(runMojo);
+  }
+
+  @Test
+  public void testRunFlexible() throws MojoFailureException, MojoExecutionException, IOException {
+    // wire up
+    when(factoryMock.devServerRunSync()).thenReturn(devServerMock);
+
+    // invoke
+    try {
+      runMojo.execute();
+      fail("Expected exception");
+    } catch (MojoExecutionException e) {
+      // verify
+      assertEquals("Dev App Server does not support App Engine Flexible Environment applications.",
+          e.getMessage());
+    }
   }
 }

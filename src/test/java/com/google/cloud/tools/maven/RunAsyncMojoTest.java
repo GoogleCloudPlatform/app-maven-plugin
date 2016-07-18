@@ -20,8 +20,6 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -31,14 +29,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
+
 @RunWith(MockitoJUnitRunner.class)
-public class RunAsyncMojoTest {
-
-  @Mock
-  private CloudSdkAppEngineFactory factoryMock;
-
-  @Mock
-  private AppEngineDevServer devServerMock;
+public class RunAsyncMojoTest extends AbstractDevServerTest {
 
   @Mock
   private Log logMock;
@@ -47,10 +41,11 @@ public class RunAsyncMojoTest {
   private RunAsyncMojo runAsyncMojo;
 
   @Test
-  public void testRunAsync() throws MojoFailureException, MojoExecutionException {
+  public void testRunAsync() throws MojoFailureException, MojoExecutionException, IOException {
     final int START_SUCCESS_TIMEOUT = 25;
 
     // wire up
+    setUpAppEngineWebXml();
     when(factoryMock.devServerRunAsync(START_SUCCESS_TIMEOUT)).thenReturn(devServerMock);
     runAsyncMojo.startSuccessTimeout = START_SUCCESS_TIMEOUT;
 

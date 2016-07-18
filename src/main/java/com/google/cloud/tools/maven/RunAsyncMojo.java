@@ -39,6 +39,8 @@ public class RunAsyncMojo extends RunMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    verifyAppEngineStandardApp();
+
     workAroundNonJava7Version();
 
     getLog().info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server to start.");
