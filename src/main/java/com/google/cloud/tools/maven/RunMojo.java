@@ -215,7 +215,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   }
 
   /**
-   * Determine if the application is a Standard Environment app.
+   * Determine if the built application is a Standard Environment app.
    */
   protected boolean isStandardEnvironmentApp() {
     return mavenProject != null
@@ -226,8 +226,8 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   }
 
   /**
-   * Verifies that the current application is an App Engine Standard Environment app. If it's not,
-   * an exception will be thrown.
+   * Verifies that the current build is an App Engine Standard Environment app. If it's not, an
+   * exception will be thrown.
    */
   protected void verifyAppEngineStandardApp() throws MojoExecutionException {
     if (!isStandardEnvironmentApp()) {
