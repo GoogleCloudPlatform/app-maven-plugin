@@ -221,8 +221,8 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
     return mavenProject != null
         && mavenProject.getBuild() != null
         && new File(
-        mavenProject.getBuild().getDirectory() + "/" + mavenProject.getBuild().getFinalName()
-            + "/WEB-INF/appengine-web.xml").exists();
+            mavenProject.getBuild().getDirectory() + "/"  + mavenProject.getBuild().getFinalName()
+                + "/WEB-INF/appengine-web.xml").exists();
   }
 
   /**
