@@ -48,6 +48,7 @@ public class RunAsyncMojo extends RunMojo {
     getAppEngineFactory().devServerRunAsync(startSuccessTimeout).run(this);
 
     getLog().info("Dev App Server started.");
+    getLog().info("Use the 'mvn appengine:stop' command to stop the server.");
   }
 
 }
