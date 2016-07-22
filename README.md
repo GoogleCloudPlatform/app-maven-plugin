@@ -26,7 +26,7 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
     <artifactId>appengine-maven-plugin</artifactId>
-    <version>0.1.0-beta</version>
+    <version>0.1.1-beta</version>
 </plugin>
 ```
 
