@@ -19,13 +19,13 @@ install:
   # only run remote tests on master branch
   - |
     if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
-      export INCLUDE_REMOTE_TESTS=true
+      export DO_DEPLOY=true
     else
-      export INCLUDE_REMOTE_TESTS=false
+      export DO_DEPLOY=false
     fi
-  - echo INCLUDE_REMOTE_TESTS = $INCLUDE_REMOTE_TESTS
+  - echo DO_DEPLOY = $DO_DEPLOY
   - |
-    if $INCLUDE_REMOTE_TESTS; then
+    if $DO_DEPLOY; then
       # decrypt the tavis-app-maven-plugin Cloud SDK project service account key
       openssl aes-256-cbc -K $encrypted_4c3a51657fee_key -iv $encrypted_4c3a51657fee_iv -in config/travis-app-maven-plugin-e1bb638f290e.json.enc -out config/travis-app-maven-plugin-e1bb638f290e.json -d
       # set Cloud SDK CLI authentication
@@ -36,7 +36,7 @@ install:
 
 script:
   - |
-    if $INCLUDE_REMOTE_TESTS; then
+    if $DO_DEPLOY; then
       mvn clean deploy --settings .travis/settings.xml -B -U
     else
       mvn clean install -B -U
