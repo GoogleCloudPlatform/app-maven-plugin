@@ -37,7 +37,7 @@ install:
 script:
   - |
     if $INCLUDE_REMOTE_TESTS; then
-      travis_wait 30 mvn clean deploy --settings .travis/settings.xml -B -U
+      mvn clean deploy --settings .travis/settings.xml -B -U
     else
       mvn clean install -B -U
     fi
