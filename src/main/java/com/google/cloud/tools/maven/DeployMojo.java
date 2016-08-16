@@ -37,8 +37,8 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
 
   /**
    * The yaml files for the services or configurations you want to deploy. If not given, defaults to
-   * app.yaml in the current directory. If that is not found, attempts to automatically generate
-   * necessary configuration files (such as app.yaml) in the current directory.
+   * app.yaml in the staging directory. If that is not found, attempts to automatically generate
+   * necessary configuration files (such as app.yaml) in the staging directory.
    */
   @Parameter(alias = "deploy.deployables", property = "app.deploy.deployables")
   protected List<File> deployables;
