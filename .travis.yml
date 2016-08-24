@@ -2,9 +2,6 @@ sudo: false
 language: java
 jdk:
   - openjdk7
-cache:
-  directories:
-   - $HOME/.m2
 
 install:
   # download Cloud SDK
