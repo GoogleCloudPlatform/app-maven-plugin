@@ -1,4 +1,4 @@
-[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+![beta](https://img.shields.io/badge/release%20status-beta-yellow.svg)
 [![Build Status](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin.svg)](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin)
 # Google App Engine Maven plugin (BETA)
 
