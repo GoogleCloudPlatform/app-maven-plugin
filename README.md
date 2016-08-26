@@ -4,11 +4,13 @@
 
 This Maven plugin provides goals to build and deploy Google App Engine applications.
 
-Reference docs for App Engine Standard Environment users:
+# Reference Documentation
+
+App Engine Standard Environment:
 * [Using Apache Maven and the App Engine Plugin (standard environment)](https://cloud.google.com/appengine/docs/java/tools/using-maven)
 * [App Engine Maven Plugin Goals and Parameters (standard environment)](https://cloud.google.com/appengine/docs/java/tools/maven-reference)
 
-Reference docs for App Engine Flexible Environment users:
+App Engine Flexible Environment:
 * [Using Apache Maven and the App Engine Plugin (flexible environment)](https://cloud.google.com/appengine/docs/flexible/java/using-maven)
 * [App Engine Maven Plugin Goals and Parameters (flexible environment)](https://cloud.google.com/appengine/docs/flexible/java/maven-reference)
 
