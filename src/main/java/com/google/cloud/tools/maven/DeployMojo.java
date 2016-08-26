@@ -51,19 +51,6 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
   protected String bucket;
 
   /**
-   * Perform a hosted ('remote') or local ('local') Docker build. To perform a local build, you must
-   * have your local docker environment configured correctly. The default is a hosted build.
-   */
-  @Parameter(alias = "deploy.dockerBuild", property = "app.deploy.dockerBuild")
-  protected String dockerBuild;
-
-  /**
-   * Force deploying, overriding any previous in-progress deployments to this version.
-   */
-  @Parameter(alias = "deploy.force", property = "app.deploy.force")
-  protected Boolean force;
-
-  /**
    * Deploy with a specific Docker image. Docker url must be from one of the valid gcr hostnames.
    */
   @Parameter(alias = "deploy.imageUrl", property = "app.deploy.imageUrl")
@@ -122,16 +109,6 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
   @Override
   public String getBucket() {
     return bucket;
-  }
-
-  @Override
-  public String getDockerBuild() {
-    return dockerBuild;
-  }
-
-  @Override
-  public Boolean getForce() {
-    return force;
   }
 
   @Override
