@@ -71,14 +71,21 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     // maven-plugin-compiler default is 1.5
     String javaVersion = "1.5";
     if (mavenProject != null) {
-      Plugin compilerPlugin = mavenProject
-          .getPlugin("org.apache.maven.plugins:maven-compiler-plugin");
-      if (compilerPlugin != null) {
-        Xpp3Dom config = (Xpp3Dom) compilerPlugin.getConfiguration();
-        if (config != null) {
-          Xpp3Dom domVersion = config.getChild("target");
-          if (domVersion != null) {
-            javaVersion = domVersion.getValue();
+      // check the maven.compiler.target property first
+      String mavenCompilerTargetProperty = mavenProject.getProperties()
+          .getProperty("maven.compiler.target");
+      if (mavenCompilerTargetProperty != null) {
+        javaVersion = mavenCompilerTargetProperty;
+      } else {
+        Plugin compilerPlugin = mavenProject
+            .getPlugin("org.apache.maven.plugins:maven-compiler-plugin");
+        if (compilerPlugin != null) {
+          Xpp3Dom config = (Xpp3Dom) compilerPlugin.getConfiguration();
+          if (config != null) {
+            Xpp3Dom domVersion = config.getChild("target");
+            if (domVersion != null) {
+              javaVersion = domVersion.getValue();
+            }
           }
         }
       }
