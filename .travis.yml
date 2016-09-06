@@ -39,6 +39,10 @@ script:
       mvn clean install -B -U
     fi
 
+# enable codecov-io
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 env:
   global:
     - secure: "jI+pQpYZ7y9UbHaGLBkK1XiQX/WGjkcyxi1g4KowS/Kbz+6YohiXjyVf8JPT8+KMnpuRvsgTf2zlnTh2khJqd0fM67xvgn/6J1cn9DUhSpMbK5kXD9Io09I2noqGCQZPxtI/k3pxyn/hutgNkDT1o25zqtkTb0fSmrgpr8VwsGhO5renYZ5V1rS0eIQ2zMqdXm0xHglUYKH7sEoeYddmwqk8r8SITKaJ/xYIsfyS8PMK07xHmUO61odnzCMaC9KuQAVH3xDJDezZ4qGMTVIpebZAhLq4aDU9nSyAWlQ9TcXZdkti8BUvG9CjhgauRvlIRqxA28Kf8I2I51spyY1mpX0hp2fLRctFk0yji4tQT6A4uKnUQJRSaTNVKqeBIKXHlzEGlmHnmUJpiRBAtgS+7vktCrV9xUF+Nd0Kz3WyLOlvQSWUe5mbcn03cYr9XObIpWWvjuHnB+TM0xirYSgQv1K5EHS+cMSSqWaAbNzO5sGZtf5vsYRbCmdGduZiIkEJPpBXYewgblgzK3U5qQmJJQNlOHzAaVedAzLSHSohjH4kJMWYfsoVrENDCxdYZL+tuoF+5uz72BTXpSYDrRJ0/9fITvd9aRQC8pcB9poW8Sgr2RCuJvUZTH1bbMT+bKQi1ad8J0SJ7210TS/b6Sz2RkVh8ooX16R/b/qX8bIlSaw="
