@@ -39,8 +39,14 @@ script:
       mvn clean install -B -U
     fi
 
-# enable codecov-io
 after_success:
+  # hide sensitive data from codecov-io
+  - rm -f config/travis-app-maven-plugin-e1bb638f290e.json
+  - export SONATYPE_USERNAME=[secure]
+  - export SONATYPE_PASSWORD=[secure]
+  - export encrypted_4c3a51657fee_key=[secure]
+  - export encrypted_4c3a51657fee_iv=[secure]
+  # run codecov-io
   - bash <(curl -s https://codecov.io/bash)
 
 env:
