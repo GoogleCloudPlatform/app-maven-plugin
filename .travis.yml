@@ -42,10 +42,10 @@ script:
 after_success:
   # hide sensitive data from codecov-io
   - rm -f config/travis-app-maven-plugin-e1bb638f290e.json
-  - export SONATYPE_USERNAME=[secure]
-  - export SONATYPE_PASSWORD=[secure]
-  - export encrypted_4c3a51657fee_key=[secure]
-  - export encrypted_4c3a51657fee_iv=[secure]
+  - unset SONATYPE_USERNAME
+  - unset SONATYPE_PASSWORD
+  - unset encrypted_4c3a51657fee_key
+  - unset encrypted_4c3a51657fee_iv
   # run codecov-io
   - bash <(curl -s https://codecov.io/bash)
 
