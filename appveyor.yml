@@ -8,14 +8,10 @@ install:
   - SET JAVA_HOME=C:\Program Files\Java\jdk1.7.0
 
   # set PATH
-  - SET PATH=C:\google\google-cloud-sdk\bin;C:\maven\apache-maven-3.2.5\bin;%JAVA_HOME%\bin;%PATH%
+  - SET PATH=C:\google\google-cloud-sdk\bin;%JAVA_HOME%\bin;%PATH%
 
   # check Java version
   - java -version
-
-  # install Maven
-  - appveyor DownloadFile http://www.us.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip
-  - 7z x apache-maven-3.2.5-bin.zip -oC:\maven
 
   # download Cloud SDK
   - appveyor DownloadFile https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe
