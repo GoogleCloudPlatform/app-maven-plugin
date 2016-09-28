@@ -1,6 +1,6 @@
-![beta](https://img.shields.io/badge/release%20status-beta-yellow.svg)
+![project status image](https://img.shields.io/badge/stability-stable-brightgreen.svg)
 [![Build Status](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin.svg)](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin)
-# Google App Engine Maven plugin (BETA)
+# Google App Engine Maven plugin
 
 This Maven plugin provides goals to build and deploy Google App Engine applications.
 
