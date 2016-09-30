@@ -73,7 +73,7 @@ public class DeployMojoTest {
     deployMojo.sourceDirectory = tempFolder.newFolder("source");
   }
 
-  //@Test
+  @Test
   public void testDeployStandard()
       throws IOException, MojoFailureException, MojoExecutionException {
 
@@ -95,7 +95,7 @@ public class DeployMojoTest {
     verify(deploymentMock).deploy(deployMojo);
   }
 
-  //@Test
+  @Test
   public void testDeployFlexible() throws Exception {
 
     // wire up
@@ -109,10 +109,5 @@ public class DeployMojoTest {
     assertEquals(1, deployMojo.deployables.size());
     verify(flexibleStagingMock).stageFlexible(deployMojo);
     verify(deploymentMock).deploy(deployMojo);
-  }
-
-  @Test
-  public void shutUp() {
-
   }
 }
