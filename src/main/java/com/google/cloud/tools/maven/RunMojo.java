@@ -345,4 +345,9 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   public String getDefaultGcsBucketName() {
     return defaultGcsBucketName;
   }
+
+  @Override
+  public String getJavaHomeDir() {
+    return null;
+  }
 }
