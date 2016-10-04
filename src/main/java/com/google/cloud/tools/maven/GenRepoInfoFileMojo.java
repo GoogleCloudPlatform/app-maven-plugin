@@ -17,7 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.debug.DefaultGenRepoInfoFileConfiguration;
+import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFileConfiguration;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -34,25 +34,32 @@ import java.nio.file.Paths;
  */
 @Mojo(name = "genRepoInfoFile")
 @Execute(phase = LifecyclePhase.PREPARE_PACKAGE)
-public class GenRepoInfoFileMojo extends CloudSdkMojo {
+public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFileConfiguration {
 
+  /**
+   * The root directory containing the source code of the app. Expected to be contained in a git
+   * repository.
+   */
   @Parameter(defaultValue = "${project.basedir}")
   private File sourceDirectory;
 
+  /**
+   * Directory where the source context files will be generated.
+   */
   @Parameter(defaultValue = "${project.build.outputDirectory}", property = "outputDirectory")
   private String outputDirectory;
 
+  /**
+   * If {@code true}, ignores errors generating the source context files and proceeds to deployment.
+   * If {@code false}, the goal is aborted by generation errors.
+   */
   @Parameter(defaultValue = "false", property = "ignoreSrcCtxError")
   private boolean ignoreErrors;
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    DefaultGenRepoInfoFileConfiguration genConfig = new DefaultGenRepoInfoFileConfiguration();
-    genConfig.setOutputDirectory(Paths.get(outputDirectory).toFile());
-    genConfig.setSourceDirectory(sourceDirectory);
-
     try {
-      getAppEngineFactory().genRepoInfoFile().generate(genConfig);
+      getAppEngineFactory().genRepoInfoFile().generate(this);
     } catch (AppEngineException aee) {
       if (!ignoreErrors) {
         throw new MojoExecutionException("An error occurred while generating source context files."
@@ -60,5 +67,15 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo {
             + "-DignoreSrcCtxError flag.", aee);
       }
     }
+  }
+
+  @Override
+  public File getSourceDirectory() {
+    return sourceDirectory;
+  }
+
+  @Override
+  public File getOutputDirectory() {
+    return Paths.get(outputDirectory).toFile();
   }
 }

@@ -26,6 +26,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -347,6 +348,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getJavaHomeDir() {
     return null;
   }
