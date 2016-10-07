@@ -347,6 +347,9 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
     return defaultGcsBucketName;
   }
 
+  // TODO(joaomartins): It's OK for this method to return null -- it will cause dev_appserver to
+  // use JAVA_HOME or java from PATH. We should eventually let users explicitly choose the VM they
+  // want to run dev_appserver in though?
   @Override
   @Nullable
   public String getJavaHomeDir() {
