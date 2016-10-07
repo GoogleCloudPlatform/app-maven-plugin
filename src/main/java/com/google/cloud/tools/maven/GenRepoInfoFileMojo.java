@@ -41,20 +41,20 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFile
    * repository.
    */
   @Parameter(defaultValue = "${project.basedir}")
-  private File sourceDirectory;
+  protected File sourceDirectory;
 
   /**
    * Directory where the source context files will be generated.
    */
   @Parameter(defaultValue = "${project.build.outputDirectory}", property = "outputDirectory")
-  private String outputDirectory;
+  protected String outputDirectory;
 
   /**
    * If {@code true}, ignores errors generating the source context files and proceeds to deployment.
    * If {@code false}, the goal is aborted by generation errors.
    */
   @Parameter(defaultValue = "false", property = "ignoreSrcCtxError")
-  private boolean ignoreErrors;
+  protected boolean ignoreErrors;
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
