@@ -302,6 +302,7 @@
           <excludes>
             <exclude>**/*DeployMojoIntegrationTest.java</exclude>
             <exclude>**/*GenRepoInfoFileMojoIntegrationTest.java</exclude>
+            <exclude>**/*StageMojoIntegrationTest.java</exclude>
           </excludes>
         </configuration>
         <executions>
