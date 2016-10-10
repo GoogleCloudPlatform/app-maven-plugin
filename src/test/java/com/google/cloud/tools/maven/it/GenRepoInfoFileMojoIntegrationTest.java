@@ -1,5 +1,6 @@
 package com.google.cloud.tools.maven.it;
 
+import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 
@@ -22,14 +23,17 @@ public class GenRepoInfoFileMojoIntegrationTest extends AbstractMojoIntegrationT
   }
 
   /**
-   * Ensures that the genRepoInfoFile goal is automatically called for a flexible project deployment
+   * Ensures that the genRepoInfoFile goal is automatically called for a flexible project
+   * deployment.
    */
   @Test
-  public void testGenerateFlex() throws VerificationException, IOException {
+  public void testGenerateFlex() throws VerificationException, IOException, ProcessRunnerException {
     Verifier verifier = new FlexibleVerifier("testGenRepoInfoFile_flex");
 
     verifier.executeGoal("appengine:deploy");
     verifier.assertFilePresent("target/flexible-project-1.0-SNAPSHOT/WEB-INF/classes/"
         + "source-context.json");
+
+    deleteService("flexible-project");
   }
 }

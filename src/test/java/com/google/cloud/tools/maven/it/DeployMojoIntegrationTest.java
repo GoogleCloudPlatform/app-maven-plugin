@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.maven.it;
 
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 
@@ -27,7 +25,6 @@ import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
@@ -65,12 +62,5 @@ public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
     // cleanup
     deleteService("flexible-project");
-  }
-
-  private void deleteService(String service) throws ProcessRunnerException {
-    CloudSdk cloudSdk = new CloudSdk.Builder()
-        .exitListener(new NonZeroExceptionExitListener())
-        .build();
-    cloudSdk.runAppCommand(Arrays.asList("services", "delete", service));
   }
 }
