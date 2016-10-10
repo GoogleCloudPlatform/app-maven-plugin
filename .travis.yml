@@ -11,8 +11,10 @@ install:
   - export CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
   # update all Cloud SDK components
   - gcloud components update --quiet
-  # add App Eengine component to Cloud SDK
+  # add App Engine component to Cloud SDK
   - gcloud components install app-engine-java --quiet
+  # add beta component to Cloud SDK for Cloud Debugger
+  - gcloud components install beta --quiet
   # only run remote tests on master branch
   - |
     if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
