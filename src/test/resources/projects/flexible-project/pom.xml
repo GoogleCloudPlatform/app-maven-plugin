@@ -23,6 +23,14 @@
         <version>${appengine-maven-plugin.version}</version>
         <configuration>
         </configuration>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>genRepoInfoFile</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

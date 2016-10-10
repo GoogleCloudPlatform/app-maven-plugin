@@ -21,8 +21,10 @@ install:
   - gcloud.cmd components copy-bundled-python>>python_path.txt && SET /p CLOUDSDK_PYTHON=<python_path.txt && DEL python_path.txt
   # update all Cloud SDK components
   - gcloud.cmd components update --quiet
-  # add App Eengine component to Cloud SDK
+  # add App Engine component to Cloud SDK
   - gcloud.cmd components install app-engine-java --quiet
+  # add beta component to Cloud SDK for Cloud Debugger
+  - gcloud.cmd components install beta --quiet
 
   # determine whether to run remote tests
   - >
