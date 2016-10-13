@@ -57,7 +57,7 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFile
    * If {@code false}, the goal is aborted by generation errors.
    */
   @Parameter(alias = "genRepoInfoFile.ignoreErrors", defaultValue = "false",
-      property = "app.genRepoInfoFile.ignoreSrcCtxError")
+      property = "app.genRepoInfoFile.ignoreErrors")
   protected boolean ignoreErrors;
 
   @Override
@@ -67,8 +67,8 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFile
     } catch (AppEngineException aee) {
       if (!ignoreErrors) {
         throw new MojoExecutionException("An error occurred while generating source context files."
-            + " To ignore source context generation errors and proceed to deployment, use the "
-            + "-DignoreSrcCtxError flag.", aee);
+            + " To ignore source context generation errors, use the "
+            + "-Dapp.genRepoInfoFile.ignoreErrors=false flag.", aee);
       }
     }
   }
