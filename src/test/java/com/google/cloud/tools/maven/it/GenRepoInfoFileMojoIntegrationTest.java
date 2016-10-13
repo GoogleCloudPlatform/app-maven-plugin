@@ -32,19 +32,4 @@ public class GenRepoInfoFileMojoIntegrationTest extends AbstractMojoIntegrationT
     verifier.executeGoal("package");
     verifier.assertFilePresent("target/appengine-staging/WEB-INF/classes/source-context.json");
   }
-
-  /**
-   * Ensures that the genRepoInfoFile goal is automatically called for a flexible project
-   * deployment.
-   */
-  @Test
-  public void testGenerateFlex() throws VerificationException, IOException, ProcessRunnerException {
-    Verifier verifier = new FlexibleVerifier("testGenRepoInfoFile_flex");
-
-    verifier.executeGoal("appengine:deploy");
-    verifier.assertFilePresent("target/flexible-project-1.0-SNAPSHOT/WEB-INF/classes/"
-        + "source-context.json");
-
-    deleteService("flexible-project");
-  }
 }

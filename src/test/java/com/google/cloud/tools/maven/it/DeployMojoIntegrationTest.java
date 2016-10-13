@@ -60,6 +60,10 @@ public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.verifyTextInLog("Detected App Engine flexible environment application");
     verifier.verifyTextInLog("GCLOUD: Deployed service");
 
+    // verify debugger required file generation
+    verifier.assertFilePresent("target/flexible-project-1.0-SNAPSHOT/WEB-INF/classes/"
+        + "source-context.json");
+
     // cleanup
     deleteService("flexible-project");
   }
