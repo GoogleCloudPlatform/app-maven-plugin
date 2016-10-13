@@ -7,7 +7,7 @@
   <version>1.0.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
-  <name>Google Cloud Platform Maven Plugin</name>
+  <name>App Engine Maven Plugin</name>
   <description>
     This Maven plugin provides goals to build and deploy Google App Engine applications.
   </description>
