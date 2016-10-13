@@ -28,6 +28,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 /**
  * Generates repository information files for the Stackdriver Debugger.
@@ -35,6 +36,11 @@ import java.nio.file.Paths;
 @Mojo(name = "genRepoInfoFile")
 @Execute(phase = LifecyclePhase.PREPARE_PACKAGE)
 public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFileConfiguration {
+
+  private static Logger logger = Logger.getLogger(GenRepoInfoFileMojo.class.getName());
+  private static String HOW_TO_FIX_MSG = "An error occurred while generating source context files."
+      + " To ignore source context generation errors, use the "
+      + "-Dapp.genRepoInfoFile.ignoreErrors=true flag.";
 
   /**
    * The root directory containing the source code of the app. Expected to be contained in a git
@@ -66,9 +72,9 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFile
       getAppEngineFactory().genRepoInfoFile().generate(this);
     } catch (AppEngineException aee) {
       if (!ignoreErrors) {
-        throw new MojoExecutionException("An error occurred while generating source context files."
-            + " To ignore source context generation errors, use the "
-            + "-Dapp.genRepoInfoFile.ignoreErrors=false flag.", aee);
+        throw new MojoExecutionException(HOW_TO_FIX_MSG, aee);
+      } else {
+        logger.warning(HOW_TO_FIX_MSG);
       }
     }
   }
