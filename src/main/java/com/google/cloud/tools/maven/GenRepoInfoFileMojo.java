@@ -38,8 +38,8 @@ import java.util.logging.Logger;
 public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFileConfiguration {
 
   private static Logger logger = Logger.getLogger(GenRepoInfoFileMojo.class.getName());
-  private static String HOW_TO_FIX_MSG = "An error occurred while generating source context files."
-      + " To ignore source context generation errors, use the "
+  private static final String HOW_TO_FIX_MSG = "An error occurred while generating source context"
+      + " files. To ignore source context generation errors, use the "
       + "-Dapp.genRepoInfoFile.ignoreErrors=true flag.";
 
   /**
