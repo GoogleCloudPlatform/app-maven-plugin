@@ -30,7 +30,7 @@ import java.io.File;
 import java.nio.file.Paths;
 
 /**
- * Generates source context files.
+ * Generates repository information files for the Stackdriver Debugger.
  */
 @Mojo(name = "genRepoInfoFile")
 @Execute(phase = LifecyclePhase.PREPARE_PACKAGE)
@@ -40,20 +40,24 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFile
    * The root directory containing the source code of the app. Expected to be contained in a git
    * repository.
    */
-  @Parameter(defaultValue = "${project.basedir}")
+  @Parameter(alias = "genRepoInfoFile.sourceDirectory", defaultValue = "${project.basedir}",
+      property = "app.genRepoInfoFile.sourceDirectory")
   protected File sourceDirectory;
 
   /**
    * Directory where the source context files will be generated.
    */
-  @Parameter(defaultValue = "${project.build.outputDirectory}", property = "outputDirectory")
+  @Parameter(alias = "genRepoInfoFile.outputDirectory",
+      defaultValue = "${project.build.outputDirectory}",
+      property = "app.genRepoInfoFile.outputDirectory")
   protected String outputDirectory;
 
   /**
    * If {@code true}, ignores errors generating the source context files and proceeds to deployment.
    * If {@code false}, the goal is aborted by generation errors.
    */
-  @Parameter(defaultValue = "false", property = "ignoreSrcCtxError")
+  @Parameter(alias = "genRepoInfoFile.ignoreErrors", defaultValue = "false",
+      property = "app.genRepoInfoFile.ignoreSrcCtxError")
   protected boolean ignoreErrors;
 
   @Override

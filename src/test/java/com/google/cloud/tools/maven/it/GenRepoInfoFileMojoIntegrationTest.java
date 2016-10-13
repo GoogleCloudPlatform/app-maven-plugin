@@ -23,6 +23,17 @@ public class GenRepoInfoFileMojoIntegrationTest extends AbstractMojoIntegrationT
   }
 
   /**
+   * Ensures that this goal is ran with the package phase.
+   */
+  @Test
+  public void testGenerateCallingPackage() throws IOException, VerificationException {
+    Verifier verifier = new StandardVerifier("testGenRepoInfoFile");
+
+    verifier.executeGoal("package");
+    verifier.assertFilePresent("target/appengine-staging/WEB-INF/classes/source-context.json");
+  }
+
+  /**
    * Ensures that the genRepoInfoFile goal is automatically called for a flexible project
    * deployment.
    */
