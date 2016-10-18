@@ -52,6 +52,26 @@ Dev App Server goals for standard environment apps:
 - appengine:start 
 - appengine:stop
 
+Stackdriver debugger goal for generating source context files for Flexible apps:
+- appengine:genRepoInfoFile
+
+To automatically run the appengine:genRepoInfoFile goal during the Maven build workflow, add the following to your plugin executions section:
+
+```XML
+<plugin>
+  ...
+  <executions>
+    <execution>
+      <phase>prepare-package</phase>
+      <goals>
+        <goal>genRepoInfoFile</goal>
+        </goals>
+    </execution>
+  </executions>
+  ...
+</plugin>
+```
+
 Goal documentation is available by running:
 
     mvn appengine:help -Ddetail=true -Dgoal=[goal]
