@@ -43,19 +43,18 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 You can now run commands like `mvn appengine:deploy` in the root folder of your Java application.
 
 # Supported goals
-- appengine:help
-- appengine:stage
-- appengine:deploy
 
-Dev App Server goals for standard environment apps:
-- appengine:run
-- appengine:start 
-- appengine:stop
+Goal | Description
+--- | ---
+appengine:stage|Generates an application directory for deployment.
+appengine:deploy|Stages and deploys an application to App Engine.
+appengine:run|Runs the App Engine local development server. *(App Engine Standard Only)*
+appengine:start|Starts running the App Engine devserver asynchronously and then returns to the command line. When this goal runs, the behavior is the same as the run goal except that Maven continues processing goals and exits after the server is up and running. *(App Engine Standard Only)*
+appengine:stop|Stops a running App Engine web development server. *(App Engine Standard Only)*
+appengine:genRepoInfoFile|Generates source context files for use by Stackdriver Debugger.
+appengine:help|Displays help information on the plugin. Use `mvn appengine:help -Ddetail=true -Dgoal=[goal]` for detailed goal documentation
 
-Stackdriver debugger goal for generating source context files for Flexible apps:
-- appengine:genRepoInfoFile
-
-To automatically run the appengine:genRepoInfoFile goal during the Maven build workflow, add the following to your plugin executions section:
+To automatically run the `appengine:genRepoInfoFile` goal during the Maven build workflow, add the following to your plugin executions section:
 
 ```XML
 <plugin>
@@ -71,7 +70,3 @@ To automatically run the appengine:genRepoInfoFile goal during the Maven build w
   ...
 </plugin>
 ```
-
-Goal documentation is available by running:
-
-    mvn appengine:help -Ddetail=true -Dgoal=[goal]
