@@ -51,4 +51,22 @@ appengine:deploy|Stages and deploys an application to App Engine.
 appengine:run|Runs the App Engine local development server. *(App Engine Standard Only)*
 appengine:start|Starts running the App Engine devserver asynchronously and then returns to the command line. When this goal runs, the behavior is the same as the run goal except that Maven continues processing goals and exits after the server is up and running. *(App Engine Standard Only)*
 appengine:stop|Stops a running App Engine web development server. *(App Engine Standard Only)*
+appengine:genRepoInfoFile|Generates source context files for use by Stackdriver Debugger.
 appengine:help|Displays help information on the plugin. Use `mvn appengine:help -Ddetail=true -Dgoal=[goal]` for detailed goal documentation.
+
+To automatically run the `appengine:genRepoInfoFile` goal during the Maven build workflow, add the following to your plugin executions section:
+
+```XML
+<plugin>
+  ...
+  <executions>
+    <execution>
+      <phase>prepare-package</phase>
+      <goals>
+        <goal>genRepoInfoFile</goal>
+        </goals>
+    </execution>
+  </executions>
+  ...
+</plugin>
+```
