@@ -4,7 +4,7 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-maven-plugin</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1.0-beta-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>App Engine Maven Plugin</name>
