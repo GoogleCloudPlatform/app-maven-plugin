@@ -79,7 +79,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   @Override
   public AppEngineDevServer devServerStop() {
-    return cloudSdkFactory.devServer(null);
+    return cloudSdkFactory.devServer(defaultCloudSdkBuilder().build());
   }
 
   @Override
