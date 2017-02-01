@@ -130,7 +130,7 @@ public class CloudSdkAppEngineFactoryTest {
     factory.devServerStop();
 
     // verify
-    verify(cloudSdkFactoryMock).devServer(null);
+    verify(cloudSdkFactoryMock).devServer(cloudSdkMock);
   }
 
   @Test
