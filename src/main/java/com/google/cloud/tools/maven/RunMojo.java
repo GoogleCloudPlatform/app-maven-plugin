@@ -195,6 +195,12 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       property = "app.devserver.defaultGcsBucketName")
   protected String defaultGcsBucketName;
 
+  /**
+   * Clear the datastore before running. (default: False)
+   */
+  @Parameter(alias = "devserver.clearDatastore", property = "app.devserver.clearDatastore")
+  protected Boolean clearDatastore;
+
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     verifyAppEngineStandardApp();
@@ -345,6 +351,11 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Override
   public String getDefaultGcsBucketName() {
     return defaultGcsBucketName;
+  }
+
+  @Override
+  public Boolean getClearDatastore() {
+    return clearDatastore;
   }
 
   // TODO(joaomartins): It's OK for this method to return null -- it will cause dev_appserver to
