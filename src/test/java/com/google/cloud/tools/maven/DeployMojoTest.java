@@ -90,7 +90,7 @@ public class DeployMojoTest {
     deployMojo.execute();
 
     // verify
-    assertEquals(1, deployMojo.deployables.size());
+    assertEquals(0, deployMojo.deployables.size());
     verify(standardStagingMock).stageStandard(deployMojo);
     verify(deploymentMock).deploy(deployMojo);
   }
@@ -106,7 +106,7 @@ public class DeployMojoTest {
     deployMojo.execute();
 
     // verify
-    assertEquals(1, deployMojo.deployables.size());
+    assertEquals(0, deployMojo.deployables.size());
     verify(flexibleStagingMock).stageFlexible(deployMojo);
     verify(deploymentMock).deploy(deployMojo);
   }
