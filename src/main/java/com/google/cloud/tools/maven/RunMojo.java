@@ -18,7 +18,6 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -27,7 +26,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -204,21 +202,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     verifyAppEngineStandardApp();
-    workAroundNonJava7Version();
     getAppEngineFactory().devServerRunSync().run(this);
-  }
-
-  /**
-   * Adds JVM flag -Dappengine.user.timezone=UTC to allow the Dev App Server to run on JVMs other
-   * than version 1.7.
-   */
-  protected void workAroundNonJava7Version() {
-    if (!SystemUtils.IS_JAVA_1_7) {
-      if (jvmFlags == null) {
-        jvmFlags = new ArrayList<>();
-      }
-      jvmFlags.add("-Dappengine.user.timezone=UTC");
-    }
   }
 
   /**
