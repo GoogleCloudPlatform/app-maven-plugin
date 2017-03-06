@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 * N/A
+
 ### Changed
 
 * N/A
+
 ### Fixed
 
 * "Directories are not supported" issue when deploying
