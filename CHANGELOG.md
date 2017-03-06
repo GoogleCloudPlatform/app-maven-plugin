@@ -11,4 +11,4 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-* "Directories are not supported" issue when deploying
+* "Directories are not supported" issue when deploying ([#144](https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/144))
