@@ -22,6 +22,7 @@
         <artifactId>appengine-maven-plugin</artifactId>
         <version>${appengine-maven-plugin.version}</version>
         <configuration>
+          <version>1</version>
         </configuration>
       </plugin>
     </plugins>

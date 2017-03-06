@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-    <application>standard-project</application>
-    <version>1</version>
+    <service>standard-project</service>
     <threadsafe>true</threadsafe>
-    <module>standard-project</module>
 </appengine-web-app>
