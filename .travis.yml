@@ -11,8 +11,10 @@ install:
   - export CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
   # update all Cloud SDK components
   - gcloud components update --quiet
-  # add App Eengine component to Cloud SDK
+  # add App Engine component to Cloud SDK
   - gcloud components install app-engine-java --quiet
+  # add beta component to Cloud SDK for Cloud Debugger
+  - gcloud components install beta --quiet
   # only run remote tests on master branch
   - |
     if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
@@ -38,6 +40,16 @@ script:
     else
       mvn clean install -B -U
     fi
+
+after_success:
+  # hide sensitive data from codecov-io
+  - rm -f config/travis-app-maven-plugin-e1bb638f290e.json
+  - unset SONATYPE_USERNAME
+  - unset SONATYPE_PASSWORD
+  - unset encrypted_4c3a51657fee_key
+  - unset encrypted_4c3a51657fee_iv
+  # run codecov-io
+  - bash <(curl -s https://codecov.io/bash)
 
 env:
   global:

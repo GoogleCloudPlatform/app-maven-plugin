@@ -4,10 +4,10 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-maven-plugin</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>1.2.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
-  <name>Google Cloud Platform Maven Plugin</name>
+  <name>App Engine Maven Plugin</name>
   <description>
     This Maven plugin provides goals to build and deploy Google App Engine applications.
   </description>
@@ -105,7 +105,7 @@
     <dependency>
       <groupId>com.google.cloud.tools</groupId>
       <artifactId>appengine-plugins-core</artifactId>
-      <version>0.1.6</version>
+      <version>0.2.8</version>
     </dependency>
 
     <dependency>
@@ -185,14 +185,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3</version>
+        <version>3.0.2</version>
       </plugin>
 
       <!-- Source files jar -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
+        <version>2.4</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -301,6 +301,8 @@
           </includes>
           <excludes>
             <exclude>**/*DeployMojoIntegrationTest.java</exclude>
+            <exclude>**/*GenRepoInfoFileMojoIntegrationTest.java</exclude>
+            <exclude>**/*StageMojoIntegrationTest.java</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -313,6 +315,31 @@
         </executions>
       </plugin>
 
+      <!-- Code Coverage -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.7.201606060606</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <excludes>
+            <exclude>**/*HelpMojo.*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

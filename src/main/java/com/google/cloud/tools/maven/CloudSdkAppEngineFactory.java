@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFile;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
@@ -25,6 +26,7 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFile;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 
@@ -77,7 +79,12 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   @Override
   public AppEngineDevServer devServerStop() {
-    return cloudSdkFactory.devServer(null);
+    return cloudSdkFactory.devServer(defaultCloudSdkBuilder().build());
+  }
+
+  @Override
+  public GenRepoInfoFile genRepoInfoFile() {
+    return cloudSdkFactory.genRepoInfoFile(defaultCloudSdkBuilder().build());
   }
 
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
@@ -132,6 +139,9 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
       return new CloudSdkAppEngineDevServer(cloudSdk);
     }
 
+    public GenRepoInfoFile genRepoInfoFile(CloudSdk cloudSdk) {
+      return new CloudSdkGenRepoInfoFile(cloudSdk);
+    }
   }
 
 }

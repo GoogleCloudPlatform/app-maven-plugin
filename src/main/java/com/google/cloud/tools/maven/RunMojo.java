@@ -18,7 +18,6 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -27,8 +26,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Run App Engine Development App Server synchronously.
@@ -194,24 +193,16 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       property = "app.devserver.defaultGcsBucketName")
   protected String defaultGcsBucketName;
 
+  /**
+   * Clear the datastore before running. (default: False)
+   */
+  @Parameter(alias = "devserver.clearDatastore", property = "app.devserver.clearDatastore")
+  protected Boolean clearDatastore;
+
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     verifyAppEngineStandardApp();
-    workAroundNonJava7Version();
     getAppEngineFactory().devServerRunSync().run(this);
-  }
-
-  /**
-   * Adds JVM flag -Dappengine.user.timezone=UTC to allow the Dev App Server to run on JVMs other
-   * than version 1.7.
-   */
-  protected void workAroundNonJava7Version() {
-    if (!SystemUtils.IS_JAVA_1_7) {
-      if (jvmFlags == null) {
-        jvmFlags = new ArrayList<>();
-      }
-      jvmFlags.add("-Dappengine.user.timezone=UTC");
-    }
   }
 
   /**
@@ -344,5 +335,19 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Override
   public String getDefaultGcsBucketName() {
     return defaultGcsBucketName;
+  }
+
+  @Override
+  public Boolean getClearDatastore() {
+    return clearDatastore;
+  }
+
+  // TODO(joaomartins): It's OK for this method to return null -- it will cause dev_appserver to
+  // use JAVA_HOME or java from PATH. We should eventually let users explicitly choose the VM they
+  // want to run dev_appserver in though?
+  @Override
+  @Nullable
+  public String getJavaHomeDir() {
+    return null;
   }
 }
