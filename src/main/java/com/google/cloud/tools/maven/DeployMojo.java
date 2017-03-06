@@ -93,9 +93,11 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
     // execute stage
     super.execute();
 
-    if (deployables.size() == 0) {
-      deployables.add(
-          new File(getStagingDirectory() + "/app.yaml"));
+    File appYamlFile = new File(stagingDirectory + "/app.yaml");
+    if (deployables.size() == 0 && appYamlFile.exists()) {
+      deployables.add(appYamlFile);
+    } else {
+      deployables.add(stagingDirectory);
     }
 
     getAppEngineFactory().deployment().deploy(this);

@@ -107,6 +107,7 @@ public class DeployMojoTest {
 
     // verify
     assertEquals(1, deployMojo.deployables.size());
+    assertEquals(deployMojo.stagingDirectory, deployMojo.deployables.get(0));
     verify(flexibleStagingMock).stageFlexible(deployMojo);
     verify(deploymentMock).deploy(deployMojo);
   }
