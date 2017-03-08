@@ -5,7 +5,10 @@
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-maven-plugin</artifactId>
   <version>1.2.2-SNAPSHOT</version>
-  <packaging>maven-plugin</packaging>
+  <modules>
+    <module>app-maven-plugin-parent</module>
+  </modules>
+  <packaging>pom</packaging>
 
   <name>App Engine Maven Plugin</name>
   <description>
