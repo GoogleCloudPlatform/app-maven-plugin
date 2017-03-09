@@ -3,10 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.cloud.tools</groupId>
-  <artifactId>appengine-maven-plugin</artifactId>
-  <version>1.2.2-SNAPSHOT</version>
+  <artifactId>appengine-maven</artifactId>
+  <version>1.2.3-SNAPSHOT</version>
   <modules>
-    <module>app-maven-plugin-parent</module>
+    <module>appengine-maven-plugin-parent</module>
+    <module>appengine-maven-plugin</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -142,10 +143,10 @@
   <build>
     <testResources>
       <testResource>
-        <directory>src/test/resources</directory>
+        <directory>appengine-maven-plugin/src/test/resources</directory>
       </testResource>
       <testResource>
-        <directory>src/test/resources</directory>
+        <directory>appengine-maven-plugin/src/test/resources</directory>
         <filtering>true</filtering>
         <includes>
           <include>projects/parent/pom.xml</include>
