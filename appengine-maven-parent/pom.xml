@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.google.cloud.tools</groupId>
-    <artifactId>appengine-maven-plugin-parent</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <artifactId>appengine-maven-parent</artifactId>
+    <version>1.2.2-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
