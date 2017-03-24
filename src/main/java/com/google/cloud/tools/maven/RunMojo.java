@@ -350,4 +350,10 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   public String getJavaHomeDir() {
     return null;
   }
+
+  // TODO (akerekes): Implement this eventually
+  @Override
+  public List<File> getServices() {
+    return null;
+  }
 }

@@ -185,6 +185,8 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       alias = "stage.artifact", property = "app.stage.artifact")
   protected File artifact;
 
+  private AppEngineWebXml appengineWebXml;
+
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     // delete staging directory if it exists
@@ -202,10 +204,8 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
 
     getLog().info("Staging the application to: " + stagingDirectory);
 
-    AppEngineWebXml appengineWebXml = new AppEngineWebXml(
-        new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
-
-    if (appengineWebXml.exists()) {
+    initializeAppEngineWebXml();
+    if (isStandardStaging()) {
       getLog().info("Detected App Engine standard environment application.");
 
       // force runtime to 'java' for compat projects using Java version >1.7
@@ -221,6 +221,15 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       getLog().info("Detected App Engine flexible environment application.");
       getAppEngineFactory().flexibleStaging().stageFlexible(this);
     }
+  }
+
+  private void initializeAppEngineWebXml() throws MojoExecutionException {
+    appengineWebXml =
+        new AppEngineWebXml(new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
+  }
+
+  protected boolean isStandardStaging() {
+    return appengineWebXml.exists();
   }
 
   protected void configureDockerfileDefaultLocation() {
