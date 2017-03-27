@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -90,9 +90,9 @@ public abstract class AbstractSingleYamlDeployMojoTest<M extends AbstractSingleY
     mojo.execute();
 
     // verify
-    assertEquals(Paths.get(tempFolder.getRoot().getAbsolutePath(),
-        "staging", "WEB-INF", "appengine-generated").toString(),
-        mojo.appEngineDirectory.getAbsolutePath());
+    assertTrue(java.nio.file.Files.isSameFile(Paths.get(tempFolder.getRoot().getAbsolutePath(),
+        "staging", "WEB-INF", "appengine-generated"),
+        mojo.appEngineDirectory.toPath()));
     verify(standardStagingMock).stageStandard(mojo);
     verifyDeployExecution();
   }

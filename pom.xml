@@ -300,7 +300,7 @@
             <include>**/*IntegrationTest.java</include>
           </includes>
           <excludes>
-            <exclude>**/*DeployMojoIntegrationTest.java</exclude>
+            <exclude>**/*Deploy*MojoIntegrationTest.java</exclude>
             <exclude>**/*GenRepoInfoFileMojoIntegrationTest.java</exclude>
             <exclude>**/*StageMojoIntegrationTest.java</exclude>
           </excludes>
