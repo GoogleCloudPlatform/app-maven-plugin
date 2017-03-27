@@ -39,6 +39,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractSingleYamlDeployMojoTest<M extends AbstractSingleYamlDeployMojo> {
@@ -89,7 +90,8 @@ public abstract class AbstractSingleYamlDeployMojoTest<M extends AbstractSingleY
     mojo.execute();
 
     // verify
-    assertEquals(tempFolder.getRoot().getAbsolutePath() + "/staging/WEB-INF/appengine-generated",
+    assertEquals(Paths.get(tempFolder.getRoot().getAbsolutePath(),
+        "staging", "WEB-INF", "appengine-generated").toString(),
         mojo.appEngineDirectory.getAbsolutePath());
     verify(standardStagingMock).stageStandard(mojo);
     verifyDeployExecution();
