@@ -204,7 +204,8 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
 
     getLog().info("Staging the application to: " + stagingDirectory);
 
-    initializeAppEngineWebXml();
+    appengineWebXml =
+        new AppEngineWebXml(new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
     if (isStandardStaging()) {
       getLog().info("Detected App Engine standard environment application.");
 
@@ -221,11 +222,6 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
       getLog().info("Detected App Engine flexible environment application.");
       getAppEngineFactory().flexibleStaging().stageFlexible(this);
     }
-  }
-
-  private void initializeAppEngineWebXml() throws MojoExecutionException {
-    appengineWebXml =
-        new AppEngineWebXml(new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
   }
 
   protected boolean isStandardStaging() {
