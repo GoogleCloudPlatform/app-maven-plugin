@@ -18,6 +18,7 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
+import com.google.common.annotations.VisibleForTesting;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -354,5 +355,15 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
         throw new MojoExecutionException("XPath evaluation failed on appengine-web.xml", e);
       }
     }
+  }
+
+  @VisibleForTesting
+  public void setStagingDirectory(File stagingDirectory) {
+    this.stagingDirectory = stagingDirectory;
+  }
+
+  @VisibleForTesting
+  public void setSourceDirectory(File sourceDirectory) {
+    this.sourceDirectory = sourceDirectory;
   }
 }
