@@ -33,13 +33,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.IOException;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StandardDeployCronMojoTest {
+public class StandardDeployIndexMojoTest {
 
-  private DeployCronMojo mojo = new DeployCronMojo();
+  private DeployIndexMojo mojo = new DeployIndexMojo();
 
   private TemporaryFolder tempFolder = new TemporaryFolder();
 
-  private SingleYamlStandradDeployTestHelper<DeployCronMojo> testFixture =
+  private SingleYamlStandradDeployTestHelper<DeployIndexMojo> testFixture =
       new SingleYamlStandradDeployTestHelper<>(mojo, tempFolder);
 
   @Rule
@@ -50,6 +50,6 @@ public class StandardDeployCronMojoTest {
       throws IOException, MojoFailureException, MojoExecutionException {
     mojo.execute();
 
-    verify(testFixture.getDeploymentMock()).deployCron(mojo);
+    verify(testFixture.getDeploymentMock()).deployIndex(mojo);
   }
 }

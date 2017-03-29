@@ -18,10 +18,8 @@ package com.google.cloud.tools.maven;
 
 import static org.mockito.Mockito.verify;
 
-import com.google.cloud.tools.maven.util.SingleYamlStandradDeployTestHelper;
+import com.google.cloud.tools.maven.util.SingleYamlFlexibleDeployTestHelper;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -30,26 +28,23 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
-
 @RunWith(MockitoJUnitRunner.class)
-public class StandardDeployCronMojoTest {
+public class FlexDeployDosMojoTest {
 
-  private DeployCronMojo mojo = new DeployCronMojo();
-
+  private DeployDosMojo mojo = new DeployDosMojo();
+  
   private TemporaryFolder tempFolder = new TemporaryFolder();
-
-  private SingleYamlStandradDeployTestHelper<DeployCronMojo> testFixture =
-      new SingleYamlStandradDeployTestHelper<>(mojo, tempFolder);
-
+  
+  private SingleYamlFlexibleDeployTestHelper<DeployDosMojo> testFixture =
+      new SingleYamlFlexibleDeployTestHelper<>(mojo, tempFolder);
+  
   @Rule
   public TestRule testRule = RuleChain.outerRule(tempFolder).around(testFixture);
-
+  
   @Test
-  public void testDeploy()
-      throws IOException, MojoFailureException, MojoExecutionException {
+  public void testDeployFlexible() throws Exception {
     mojo.execute();
 
-    verify(testFixture.getDeploymentMock()).deployCron(mojo);
+    verify(testFixture.getDeploymentMock()).deployDos(mojo);
   }
 }

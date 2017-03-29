@@ -18,7 +18,7 @@ package com.google.cloud.tools.maven;
 
 import static org.mockito.Mockito.verify;
 
-import com.google.cloud.tools.maven.util.SingleYamlDeployTestHelper;
+import com.google.cloud.tools.maven.util.SingleYamlFlexibleDeployTestHelper;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,8 +35,8 @@ public class FlexDeployCronMojoTest {
   
   private TemporaryFolder tempFolder = new TemporaryFolder();
   
-  private SingleYamlDeployTestHelper<DeployCronMojo> testFixture =
-      SingleYamlDeployTestHelper.forFlex(mojo, tempFolder);
+  private SingleYamlFlexibleDeployTestHelper<DeployCronMojo> testFixture =
+      new SingleYamlFlexibleDeployTestHelper<>(mojo, tempFolder);
   
   @Rule
   public TestRule testRule = RuleChain.outerRule(tempFolder).around(testFixture);
