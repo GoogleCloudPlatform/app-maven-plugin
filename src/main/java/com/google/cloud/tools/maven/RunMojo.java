@@ -39,7 +39,7 @@ import java.util.List;
 @Execute(phase = LifecyclePhase.PACKAGE)
 public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
-  // TODO: the name doesn't fit when you pass a build dir, maybe yamlOrWarPath?
+  // TODO remove this: https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/162
   /**
    * Path to a yaml file, or a directory containing yaml files, or a directory containing
    * WEB-INF/web.xml.
@@ -242,15 +242,17 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
     }
   }
 
+  /**
+   * Checks if the {@code services} field was set by Maven to the default value or
+   * the user explicitly configured it in the POM by checking the configuration of the plugin
+   * in the POM file.
+   * @throws MojoExecutionException if the configuration object is of an unexpected class
+   */
   private boolean servicesUsesTheDefaultValue() throws MojoExecutionException {
     MavenProject project = (MavenProject)getPluginContext().get("project");
     Plugin ourPlugin = project.getPlugin("com.google.cloud.tools:appengine-maven-plugin");
     Object configuration = ourPlugin.getConfiguration();
-    if (configuration instanceof org.apache.maven.shared.utils.xml.Xpp3Dom) {
-      org.apache.maven.shared.utils.xml.Xpp3Dom servicesConfiguration =
-          ((org.apache.maven.shared.utils.xml.Xpp3Dom)configuration).getChild("services");
-      return servicesConfiguration == null;
-    } else if (configuration instanceof org.codehaus.plexus.util.xml.Xpp3Dom) {
+    if (configuration instanceof org.codehaus.plexus.util.xml.Xpp3Dom) {
       org.codehaus.plexus.util.xml.Xpp3Dom servicesConfiguration =
           ((org.codehaus.plexus.util.xml.Xpp3Dom)configuration).getChild("services");
       return servicesConfiguration == null;
