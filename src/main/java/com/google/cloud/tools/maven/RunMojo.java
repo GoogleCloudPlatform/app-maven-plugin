@@ -25,7 +25,6 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.util.List;
@@ -246,8 +245,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    * @throws MojoExecutionException if the configuration object is of an unexpected class
    */
   private boolean servicesUsesTheDefaultValue() throws MojoExecutionException {
-    MavenProject project = (MavenProject)getPluginContext().get("project");
-    Plugin ourPlugin = project.getPlugin("com.google.cloud.tools:appengine-maven-plugin");
+    Plugin ourPlugin = mavenProject.getPlugin("com.google.cloud.tools:appengine-maven-plugin");
     Object configuration = ourPlugin.getConfiguration();
     if (configuration instanceof org.codehaus.plexus.util.xml.Xpp3Dom) {
       org.codehaus.plexus.util.xml.Xpp3Dom servicesConfiguration =
