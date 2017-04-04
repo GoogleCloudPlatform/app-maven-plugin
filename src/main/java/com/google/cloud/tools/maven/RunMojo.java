@@ -28,8 +28,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,8 +44,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    *
    * @deprecated 1.2.2
    */
-  @Parameter(alias = "devserver.appYamls", property = "app.devserver.appYamls",
-      defaultValue = "${project.build.directory}/${project.build.finalName}")
+  @Parameter(alias = "devserver.appYamls", property = "app.devserver.appYamls")
   @Deprecated
   protected List<File> appYamls;
 
@@ -229,7 +226,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    *     in the configuration
    */
   private void handleAppYamlsDeprecation() throws MojoExecutionException {
-    if (!appYamls.isEmpty()) {
+    if (appYamls != null && !appYamls.isEmpty()) {
       // no default value, so it was set by the user explicitly
       getLog().warn("<appYamls> is deprecated, use <services> instead.");
       if (servicesUsesTheDefaultValue()) {
@@ -395,12 +392,8 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   }
 
   @Override
-  public List<Path> getServices() {
-    List<Path> servicePaths = new ArrayList<>(services.size());
-    for (File file : services) {
-      servicePaths.add(file.toPath());
-    }
-    return servicePaths;
+  public List<File> getServices() {
+    return services;
   }
 
   @Override
