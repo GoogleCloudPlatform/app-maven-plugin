@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
-  private final String SERVER_URL = "http://localhost:8080";
+  private final String SERVER_URL = "http://localhost:28081";
 
   @Test
   public void testRunStandard() throws IOException, VerificationException, InterruptedException {
@@ -64,6 +64,8 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     thread.start();
 
     // execute
+    verifier.setSystemProperty("app.devserver.port", "28081");
+    verifier.setSystemProperty("app.devserver.adminPort", "28082");
     verifier.executeGoal("appengine:run");
 
     thread.join();
