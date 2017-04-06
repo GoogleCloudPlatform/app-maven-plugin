@@ -31,7 +31,9 @@ import java.io.IOException;
 
 public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
-  private final String SERVER_URL = "http://localhost:8080";
+  private static final String ADMIN_PORT = "28082";
+  private static final String SERVER_PORT = "28081";
+  private static final String SERVER_URL = "http://localhost:" + SERVER_PORT;
 
   @Test
   public void testRunAsyncStandard()
@@ -41,6 +43,8 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
     try {
       // execute
+      verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
+      verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
       verifier.executeGoal("appengine:start");
 
       // verify
@@ -51,6 +55,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
     } finally {
       // stop server
       Verifier stopVerifier = new StandardVerifier("testRunAsyncStandard_stop");
+      stopVerifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
       stopVerifier.executeGoal("appengine:stop");
       // wait up to 5 seconds for the server to stop
       assertTrue(UrlUtils.isUrlDownWithRetries(SERVER_URL, 5000, 100));
