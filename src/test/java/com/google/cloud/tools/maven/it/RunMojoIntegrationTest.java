@@ -41,7 +41,7 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
   }
 
   @Test
-  public void testRunStandardV2Alpha() 
+  public void testRunStandardV2Alpha()
       throws IOException, VerificationException, InterruptedException {
     test("testRunV2Alpha", SupportedVersion.V2ALPHA);
   }
@@ -76,6 +76,8 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     thread.start();
 
     // execute
+    verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
+    verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
     verifier.executeGoal("appengine:run");
 
     thread.join();
