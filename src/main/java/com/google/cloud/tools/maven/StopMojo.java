@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -30,6 +31,26 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class StopMojo extends CloudSdkMojo implements StopConfiguration {
 
   /**
+   * Version of the dev app server to use to run the services. Supported values are "1" and
+   * "2-alpha". (default: "1")
+   */
+  @Parameter(alias = "devserver.version", property = "app.devserver.version", required = true,
+      defaultValue = "1")
+  protected String devserverVersion;
+
+  /**
+   * Host name to which application modules should bind. (default: localhost)
+   */
+  @Parameter(alias = "devserver.host", property = "app.devserver.host")
+  protected String host;
+
+  /**
+   * Lowest port to which application modules should bind. (default: 8080)
+   */
+  @Parameter(alias = "devserver.port", property = "app.devserver.port")
+  protected Integer port;
+
+  /**
    * Host name to which the admin server was bound. (default: localhost)
    */
   @Parameter(alias = "devserver.adminHost", property = "app.devserver.adminHost")
@@ -41,17 +62,34 @@ public class StopMojo extends CloudSdkMojo implements StopConfiguration {
   @Parameter(alias = "devserver.adminPort", property = "app.devserver.adminPort")
   protected Integer adminPort;
 
+  @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getAppEngineFactory().devServerStop().stop(this);
+    SupportedVersion convertedVersion = null;
+    try {
+      convertedVersion = SupportedVersion.parse(devserverVersion);
+    } catch (IllegalArgumentException ex) {
+      throw new MojoExecutionException("Invalid version", ex);
+    }
+    getAppEngineFactory().devServerStop(convertedVersion).stop(this);
   }
 
   @Override
   public String getAdminHost() {
-    return adminHost;
+    // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/164
+    if (SupportedVersion.parse(devserverVersion) == SupportedVersion.V2ALPHA) {
+      return adminHost;
+    } else {
+      return host;
+    }
   }
 
   @Override
   public Integer getAdminPort() {
-    return adminPort;
+    // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/164
+    if (SupportedVersion.parse(devserverVersion) == SupportedVersion.V2ALPHA) {
+      return adminPort;
+    } else {
+      return port;
+    }
   }
 }

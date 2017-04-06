@@ -27,17 +27,38 @@ import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
  */
 public interface AppEngineFactory {
 
+  /**
+   * Supported dev app server versions.
+   */
+  public enum SupportedVersion {
+    V1, V2ALPHA;
+
+    /**
+     * Parses {@code versionString} into a {@link SupportedVersion}. The aim is to let the users
+     * use lowercase in version strings.
+     */
+    public static SupportedVersion parse(String versionString) {
+      if ("1".equals(versionString)) {
+        return V1;
+      } else if ("2-alpha".equals(versionString)) {
+        return V2ALPHA;
+      } else {
+        throw new IllegalArgumentException("Unsupported version value: " + versionString);
+      }
+    }
+  }
+
   AppEngineStandardStaging standardStaging();
 
   AppEngineFlexibleStaging flexibleStaging();
 
   AppEngineDeployment deployment();
 
-  AppEngineDevServer devServerRunSync();
+  AppEngineDevServer devServerRunSync(SupportedVersion version);
 
-  AppEngineDevServer devServerRunAsync(int startSuccessTimeout);
+  AppEngineDevServer devServerRunAsync(int startSuccessTimeout, SupportedVersion version);
 
-  AppEngineDevServer devServerStop();
+  AppEngineDevServer devServerStop(SupportedVersion version);
 
   GenRepoInfoFile genRepoInfoFile();
 }

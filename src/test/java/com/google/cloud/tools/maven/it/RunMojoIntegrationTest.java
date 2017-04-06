@@ -19,6 +19,7 @@ package com.google.cloud.tools.maven.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 
@@ -28,7 +29,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-
 public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   private static final String ADMIN_PORT = "28082";
@@ -36,9 +36,19 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
   private static final String SERVER_URL = "http://localhost:" + SERVER_PORT;
 
   @Test
-  public void testRunStandard() throws IOException, VerificationException, InterruptedException {
+  public void testRunStandardV1() throws IOException, VerificationException, InterruptedException {
+    test("testRunV1", SupportedVersion.V1);
+  }
 
-    final Verifier verifier = new StandardVerifier("testRun");
+  @Test
+  public void testRunStandardV2Alpha() 
+      throws IOException, VerificationException, InterruptedException {
+    test("testRunV2Alpha", SupportedVersion.V2ALPHA);
+  }
+
+  private void test(final String name, final SupportedVersion version)
+      throws IOException, VerificationException, InterruptedException {
+    final Verifier verifier = createVerifier(name, version);
     final StringBuilder urlContent = new StringBuilder();
 
     Thread thread = new Thread() {
@@ -52,8 +62,7 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
         } finally {
           // stop server
           try {
-            Verifier stopVerifier = new StandardVerifier("testRun_stop");
-            stopVerifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
+            Verifier stopVerifier = createVerifier(name + "_stop", version);
             stopVerifier.executeGoal("appengine:stop");
             // wait up to 5 seconds for the server to stop
             assertTrue(UrlUtils.isUrlDownWithRetries(SERVER_URL, 5000, 100));
@@ -67,8 +76,6 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     thread.start();
 
     // execute
-    verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
-    verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
     verifier.executeGoal("appengine:run");
 
     thread.join();
@@ -77,6 +84,16 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     assertEquals("Hello from the App Engine Standard project.", urlContent.toString());
     verifier.verifyErrorFreeLog();
     verifier.verifyTextInLog("Dev App Server is now running");
+  }
 
+  private Verifier createVerifier(String name, SupportedVersion version)
+      throws IOException, VerificationException {
+    Verifier verifier = new StandardVerifier(name);
+    verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
+    if (version == SupportedVersion.V2ALPHA) {
+      verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
+      verifier.setSystemProperty("app.devserver.version", "2-alpha");
+    }
+    return verifier;
   }
 }

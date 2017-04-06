@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.DefaultProcessOutputLineListener;
 
 import org.junit.Before;
@@ -31,7 +32,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -99,9 +99,20 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   @Test
-  public void testDevServerRunSync() {
+  public void testDevServer1RunSync() {
     // invoke
-    factory.devServerRunSync();
+    factory.devServerRunSync(SupportedVersion.V1);
+
+    // verify
+    verify(cloudSdkBuilderMock).build();
+    verify(cloudSdkFactoryMock).devServer1(cloudSdkMock);
+    verifyDefaultCloudSdkBuilder();
+  }
+
+  @Test
+  public void testDevServer2RunSync() {
+    // invoke
+    factory.devServerRunSync(SupportedVersion.V2ALPHA);
 
     // verify
     verify(cloudSdkBuilderMock).build();
@@ -110,11 +121,26 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   @Test
-  public void testDevServerRunAsync() {
+  public void testDevServer1RunAsync() {
     final int START_SUCCESS_TIMEOUT = 25;
 
     // invoke
-    factory.devServerRunAsync(START_SUCCESS_TIMEOUT);
+    factory.devServerRunAsync(START_SUCCESS_TIMEOUT, SupportedVersion.V1);
+
+    // verify
+    verify(cloudSdkBuilderMock).build();
+    verify(cloudSdkFactoryMock).devServer1(cloudSdkMock);
+    verify(cloudSdkBuilderMock).async(true);
+    verify(cloudSdkBuilderMock).runDevAppServerWait(START_SUCCESS_TIMEOUT);
+    verifyDefaultCloudSdkBuilder();
+  }
+
+  @Test
+  public void testDevServer2RunAsync() {
+    final int START_SUCCESS_TIMEOUT = 25;
+
+    // invoke
+    factory.devServerRunAsync(START_SUCCESS_TIMEOUT, SupportedVersion.V2ALPHA);
 
     // verify
     verify(cloudSdkBuilderMock).build();
@@ -125,9 +151,18 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   @Test
-  public void testDevServerStop() {
+  public void testDevServer1Stop() {
     // invoke
-    factory.devServerStop();
+    factory.devServerStop(SupportedVersion.V1);
+
+    // verify
+    verify(cloudSdkFactoryMock).devServer1(cloudSdkMock);
+  }
+
+  @Test
+  public void testDevServer2Stop() {
+    // invoke
+    factory.devServerStop(SupportedVersion.V2ALPHA);
 
     // verify
     verify(cloudSdkFactoryMock).devServer(cloudSdkMock);

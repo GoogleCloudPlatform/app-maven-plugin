@@ -24,6 +24,7 @@ import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFile;
@@ -65,21 +66,37 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   @Override
-  public AppEngineDevServer devServerRunSync() {
-    return cloudSdkFactory.devServer(defaultCloudSdkBuilder().build());
+  public AppEngineDevServer devServerRunSync(SupportedVersion version) {
+    return createDevServerForVersion(version);
+  }
+
+  private AppEngineDevServer createDevServerForVersion(SupportedVersion version) {
+    return createDevServerForVersion(version, defaultCloudSdkBuilder().build());
+  }
+
+  private AppEngineDevServer createDevServerForVersion(SupportedVersion version,
+      CloudSdk cloudSdk) {
+    switch (version) {
+      case V1:
+        return cloudSdkFactory.devServer1(cloudSdk);
+      case V2ALPHA:
+        return cloudSdkFactory.devServer(cloudSdk);
+      default:
+        throw new IllegalArgumentException("Unsupported dev server version: " + version);
+    }
   }
 
   @Override
-  public AppEngineDevServer devServerRunAsync(int startSuccessTimeout) {
+  public AppEngineDevServer devServerRunAsync(int startSuccessTimeout, SupportedVersion version) {
     CloudSdk.Builder builder = defaultCloudSdkBuilder()
         .async(true)
         .runDevAppServerWait(startSuccessTimeout);
-    return cloudSdkFactory.devServer(builder.build());
+    return createDevServerForVersion(version, builder.build());
   }
 
   @Override
-  public AppEngineDevServer devServerStop() {
-    return cloudSdkFactory.devServer(defaultCloudSdkBuilder().build());
+  public AppEngineDevServer devServerStop(SupportedVersion version) {
+    return createDevServerForVersion(version);
   }
 
   @Override
@@ -137,6 +154,10 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
     public AppEngineDevServer devServer(CloudSdk cloudSdk) {
       return new CloudSdkAppEngineDevServer(cloudSdk);
+    }
+
+    public AppEngineDevServer devServer1(CloudSdk cloudSdk) {
+      return new CloudSdkAppEngineDevServer1(cloudSdk);
     }
 
     public GenRepoInfoFile genRepoInfoFile(CloudSdk cloudSdk) {

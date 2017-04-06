@@ -20,18 +20,24 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
-@RunWith(MockitoJUnitRunner.class)
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+
+@RunWith(JUnitParamsRunner.class)
 public class RunAsyncMojoTest extends AbstractDevServerTest {
 
   @Mock
@@ -40,13 +46,22 @@ public class RunAsyncMojoTest extends AbstractDevServerTest {
   @InjectMocks
   private RunAsyncMojo runAsyncMojo;
 
+  @Before
+  public void setUp(){
+    MockitoAnnotations.initMocks(this);
+  }
+
   @Test
-  public void testRunAsync() throws MojoFailureException, MojoExecutionException, IOException {
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRunAsync(String version, SupportedVersion mockVersion)
+      throws MojoFailureException, MojoExecutionException, IOException {
     final int START_SUCCESS_TIMEOUT = 25;
 
     // wire up
+    runAsyncMojo.devserverVersion = version;
     setUpAppEngineWebXml();
-    when(factoryMock.devServerRunAsync(START_SUCCESS_TIMEOUT)).thenReturn(devServerMock);
+    when(factoryMock.devServerRunAsync(START_SUCCESS_TIMEOUT, mockVersion))
+        .thenReturn(devServerMock);
     runAsyncMojo.startSuccessTimeout = START_SUCCESS_TIMEOUT;
 
     // invoke

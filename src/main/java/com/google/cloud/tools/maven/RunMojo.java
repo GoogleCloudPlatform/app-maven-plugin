@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
 
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -51,6 +52,14 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       defaultValue = "${project.build.directory}/${project.build.finalName}",
       required = true)
   protected List<File> services;
+
+  /**
+   * Version of the dev app server to use to run the services. Supported values are "1" and
+   * "2-alpha". (default: "1")
+   */
+  @Parameter(alias = "devserver.version", property = "app.devserver.version", required = true,
+      defaultValue = "1")
+  protected String devserverVersion;
 
   /**
    * Host name to which application modules should bind. (default: localhost)
@@ -207,9 +216,23 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    SupportedVersion convertedVersion = convertDevserverVersionString();
     handleAppYamlsDeprecation();
     verifyAppEngineStandardApp();
-    getAppEngineFactory().devServerRunSync().run(this);
+    getAppEngineFactory().devServerRunSync(convertedVersion).run(this);
+  }
+
+  /**
+   * Verifies that {@code version} is of the supported values.
+   * @throws MojoExecutionException if {@code version} cannot be converted to
+   * {@link SupportedVersion}
+   */
+  protected SupportedVersion convertDevserverVersionString() throws MojoExecutionException {
+    try {
+      return SupportedVersion.parse(devserverVersion);
+    } catch (IllegalArgumentException ex) {
+      throw new MojoExecutionException("Invalid version", ex);
+    }
   }
 
   /**

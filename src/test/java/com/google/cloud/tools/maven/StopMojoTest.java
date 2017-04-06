@@ -20,16 +20,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
-@RunWith(MockitoJUnitRunner.class)
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+
+@RunWith(JUnitParamsRunner.class)
 public class StopMojoTest {
 
   @Mock
@@ -41,11 +46,19 @@ public class StopMojoTest {
   @InjectMocks
   private StopMojo stopMojo;
 
+  @Before
+  public void setUp(){
+    MockitoAnnotations.initMocks(this);
+  }
+
   @Test
-  public void testStop() throws MojoFailureException, MojoExecutionException {
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testStop(String version, SupportedVersion mockVersion)
+      throws MojoFailureException, MojoExecutionException {
 
     // wire up
-    when(factoryMock.devServerStop()).thenReturn(devServerMock);
+    stopMojo.devserverVersion = version;
+    when(factoryMock.devServerStop(mockVersion)).thenReturn(devServerMock);
 
     // invoke
     stopMojo.execute();

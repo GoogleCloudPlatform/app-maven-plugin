@@ -19,6 +19,7 @@ package com.google.cloud.tools.maven.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 
@@ -28,7 +29,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-
 public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   private static final String ADMIN_PORT = "28082";
@@ -36,29 +36,43 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
   private static final String SERVER_URL = "http://localhost:" + SERVER_PORT;
 
   @Test
-  public void testRunAsyncStandard()
+  public void testRunAsyncStandardV1()
       throws IOException, VerificationException, InterruptedException {
+    test("testRunAsyncV1", SupportedVersion.V1);
+  }
 
-    Verifier verifier = new StandardVerifier("testRunAsync");
+  @Test
+  public void testRunAsyncStandardV2Alpha()
+      throws IOException, VerificationException, InterruptedException {
+    test("testRunAsyncV2Alpha", SupportedVersion.V2ALPHA);
+  }
 
+  private void test(String name, SupportedVersion version)
+      throws IOException, VerificationException, InterruptedException {
     try {
-      // execute
-      verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
-      verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
-      verifier.executeGoal("appengine:start");
+    Verifier verifier = createVerifier(name, version);
+    verifier.executeGoal("appengine:start");
 
-      // verify
-      assertEquals("Hello from the App Engine Standard project.",
-          UrlUtils.getUrlContentWithRetries(SERVER_URL, 5000, 1000));
-      verifier.verifyErrorFreeLog();
-      verifier.verifyTextInLog("Dev App Server is now running");
+    assertEquals("Hello from the App Engine Standard project.",
+        UrlUtils.getUrlContentWithRetries(SERVER_URL, 5000, 1000));
+    verifier.verifyErrorFreeLog();
+    verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
-      // stop server
-      Verifier stopVerifier = new StandardVerifier("testRunAsyncStandard_stop");
-      stopVerifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
+      Verifier stopVerifier = createVerifier(name + "_stop", version);
       stopVerifier.executeGoal("appengine:stop");
       // wait up to 5 seconds for the server to stop
       assertTrue(UrlUtils.isUrlDownWithRetries(SERVER_URL, 5000, 100));
     }
+  }
+
+  private Verifier createVerifier(String name, SupportedVersion version)
+      throws IOException, VerificationException {
+    Verifier verifier = new StandardVerifier(name);
+    verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
+    if (version == SupportedVersion.V2ALPHA) {
+      verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
+      verifier.setSystemProperty("app.devserver.version", "2-alpha");
+    }
+    return verifier;
   }
 }

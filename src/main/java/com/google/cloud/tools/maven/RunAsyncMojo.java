@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -41,11 +43,13 @@ public class RunAsyncMojo extends RunMojo {
   public void execute() throws MojoExecutionException, MojoFailureException {
     verifyAppEngineStandardApp();
 
-    getLog().info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server to start.");
+    SupportedVersion version = convertDevserverVersionString();
+    getLog().info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server "
+        + devserverVersion + " to start.");
 
-    getAppEngineFactory().devServerRunAsync(startSuccessTimeout).run(this);
+    getAppEngineFactory().devServerRunAsync(startSuccessTimeout, version).run(this);
 
-    getLog().info("Dev App Server started.");
+    getLog().info("Dev App Server " + devserverVersion + " started.");
     getLog().info("Use the 'mvn appengine:stop' command to stop the server.");
   }
 
