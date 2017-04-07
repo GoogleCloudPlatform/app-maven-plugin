@@ -65,6 +65,17 @@ public class RunMojoTest extends AbstractDevServerTest {
   }
 
   @Test
+  public void testInvalidVersionString()
+      throws IOException, MojoExecutionException, MojoFailureException {
+    runMojo.devserverVersion = "bogus-version";
+    setUpAppEngineWebXml();
+    expectedException.expect(MojoExecutionException.class);
+    expectedException.expectMessage("Invalid version");
+
+    runMojo.execute();
+  }
+
+  @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
   public void testRun(String version, SupportedVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
