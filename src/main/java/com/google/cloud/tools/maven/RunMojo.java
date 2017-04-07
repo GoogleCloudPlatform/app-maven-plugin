@@ -92,13 +92,15 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   protected String authDomain;
 
   /**
-   * Path to the data (datastore, blobstore, etc.) associated with the application. (default: None)
+   * Path to the data (datastore, blobstore, etc.) associated with the application. Supported only
+   * for devserver version 2-alpha. (default: None)
    */
   @Parameter(alias = "devserver.storagePath", property = "app.devserver.storagePath")
   protected File storagePath;
 
   /**
-   * TODO.
+   *  Path to a file used to store datastore contents (defaults to a file in --storage_path if not
+   *  set). Supported only for devserver version 2-alpha.(default: None)
    */
   @Parameter(alias = "devserver.datastorePath", property = "app.devserver.datastorePath")
   protected File datastorePath;
