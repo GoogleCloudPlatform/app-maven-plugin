@@ -17,7 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -224,7 +224,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    SupportedVersion convertedVersion = convertDevserverVersionString();
+    SupportedDevServerVersion convertedVersion = convertDevserverVersionString();
     handleAppYamlsDeprecation();
     verifyAppEngineStandardApp();
     getAppEngineFactory().devServerRunSync(convertedVersion).run(this);
@@ -233,11 +233,12 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   /**
    * Verifies that {@code version} is of the supported values.
    * @throws MojoExecutionException if {@code version} cannot be converted to
-   * {@link SupportedVersion}
+   * {@link SupportedDevServerVersion}
    */
-  protected SupportedVersion convertDevserverVersionString() throws MojoExecutionException {
+  protected SupportedDevServerVersion convertDevserverVersionString()
+      throws MojoExecutionException {
     try {
-      return SupportedVersion.parse(devserverVersion);
+      return SupportedDevServerVersion.parse(devserverVersion);
     } catch (IllegalArgumentException ex) {
       throw new MojoExecutionException("Invalid version", ex);
     }

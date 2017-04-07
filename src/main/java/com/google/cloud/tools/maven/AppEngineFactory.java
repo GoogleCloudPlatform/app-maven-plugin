@@ -30,14 +30,14 @@ public interface AppEngineFactory {
   /**
    * Supported dev app server versions.
    */
-  public enum SupportedVersion {
+  public enum SupportedDevServerVersion {
     V1, V2ALPHA;
 
     /**
-     * Parses {@code versionString} into a {@link SupportedVersion}. The aim is to let the users
-     * use lowercase in version strings.
+     * Parses {@code versionString} into a {@link SupportedDevServerVersion}. The aim is to let the
+     * users use lowercase in version strings.
      */
-    public static SupportedVersion parse(String versionString) {
+    public static SupportedDevServerVersion parse(String versionString) {
       if ("1".equals(versionString)) {
         return V1;
       } else if ("2-alpha".equals(versionString)) {
@@ -54,11 +54,11 @@ public interface AppEngineFactory {
 
   AppEngineDeployment deployment();
 
-  AppEngineDevServer devServerRunSync(SupportedVersion version);
+  AppEngineDevServer devServerRunSync(SupportedDevServerVersion version);
 
-  AppEngineDevServer devServerRunAsync(int startSuccessTimeout, SupportedVersion version);
+  AppEngineDevServer devServerRunAsync(int startSuccessTimeout, SupportedDevServerVersion version);
 
-  AppEngineDevServer devServerStop(SupportedVersion version);
+  AppEngineDevServer devServerStop(SupportedDevServerVersion version);
 
   GenRepoInfoFile genRepoInfoFile();
 }

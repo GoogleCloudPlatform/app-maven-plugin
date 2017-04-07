@@ -66,15 +66,15 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   @Override
-  public AppEngineDevServer devServerRunSync(SupportedVersion version) {
+  public AppEngineDevServer devServerRunSync(SupportedDevServerVersion version) {
     return createDevServerForVersion(version);
   }
 
-  private AppEngineDevServer createDevServerForVersion(SupportedVersion version) {
+  private AppEngineDevServer createDevServerForVersion(SupportedDevServerVersion version) {
     return createDevServerForVersion(version, defaultCloudSdkBuilder().build());
   }
 
-  private AppEngineDevServer createDevServerForVersion(SupportedVersion version,
+  private AppEngineDevServer createDevServerForVersion(SupportedDevServerVersion version,
       CloudSdk cloudSdk) {
     switch (version) {
       case V1:
@@ -87,7 +87,8 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   @Override
-  public AppEngineDevServer devServerRunAsync(int startSuccessTimeout, SupportedVersion version) {
+  public AppEngineDevServer devServerRunAsync(int startSuccessTimeout,
+      SupportedDevServerVersion version) {
     CloudSdk.Builder builder = defaultCloudSdkBuilder()
         .async(true)
         .runDevAppServerWait(startSuccessTimeout);
@@ -95,7 +96,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   @Override
-  public AppEngineDevServer devServerStop(SupportedVersion version) {
+  public AppEngineDevServer devServerStop(SupportedDevServerVersion version) {
     return createDevServerForVersion(version);
   }
 

@@ -19,7 +19,7 @@ package com.google.cloud.tools.maven.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 
@@ -38,16 +38,16 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
   @Test
   public void testRunAsyncStandardV1()
       throws IOException, VerificationException, InterruptedException {
-    test("testRunAsyncV1", SupportedVersion.V1);
+    test("testRunAsyncV1", SupportedDevServerVersion.V1);
   }
 
   @Test
   public void testRunAsyncStandardV2Alpha()
       throws IOException, VerificationException, InterruptedException {
-    test("testRunAsyncV2Alpha", SupportedVersion.V2ALPHA);
+    test("testRunAsyncV2Alpha", SupportedDevServerVersion.V2ALPHA);
   }
 
-  private void test(String name, SupportedVersion version)
+  private void test(String name, SupportedDevServerVersion version)
       throws IOException, VerificationException, InterruptedException {
     try {
     Verifier verifier = createVerifier(name, version);
@@ -65,11 +65,11 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
     }
   }
 
-  private Verifier createVerifier(String name, SupportedVersion version)
+  private Verifier createVerifier(String name, SupportedDevServerVersion version)
       throws IOException, VerificationException {
     Verifier verifier = new StandardVerifier(name);
     verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
-    if (version == SupportedVersion.V2ALPHA) {
+    if (version == SupportedDevServerVersion.V2ALPHA) {
       verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
       verifier.setSystemProperty("app.devserver.version", "2-alpha");
     }

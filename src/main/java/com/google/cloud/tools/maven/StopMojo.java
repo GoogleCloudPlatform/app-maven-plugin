@@ -17,7 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -64,9 +64,9 @@ public class StopMojo extends CloudSdkMojo implements StopConfiguration {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    SupportedVersion convertedVersion = null;
+    SupportedDevServerVersion convertedVersion = null;
     try {
-      convertedVersion = SupportedVersion.parse(devserverVersion);
+      convertedVersion = SupportedDevServerVersion.parse(devserverVersion);
     } catch (IllegalArgumentException ex) {
       throw new MojoExecutionException("Invalid version", ex);
     }
@@ -76,7 +76,7 @@ public class StopMojo extends CloudSdkMojo implements StopConfiguration {
   @Override
   public String getAdminHost() {
     // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/164
-    if (SupportedVersion.parse(devserverVersion) == SupportedVersion.V2ALPHA) {
+    if (SupportedDevServerVersion.parse(devserverVersion) == SupportedDevServerVersion.V2ALPHA) {
       return adminHost;
     } else {
       return host;
@@ -86,7 +86,7 @@ public class StopMojo extends CloudSdkMojo implements StopConfiguration {
   @Override
   public Integer getAdminPort() {
     // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/164
-    if (SupportedVersion.parse(devserverVersion) == SupportedVersion.V2ALPHA) {
+    if (SupportedDevServerVersion.parse(devserverVersion) == SupportedDevServerVersion.V2ALPHA) {
       return adminPort;
     } else {
       return port;

@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.common.base.Joiner;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -77,7 +77,7 @@ public class StopMojoTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testStop(String version, SupportedVersion mockVersion)
+  public void testStop(String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException {
 
     // wire up

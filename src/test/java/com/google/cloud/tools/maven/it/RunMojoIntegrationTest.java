@@ -19,7 +19,7 @@ package com.google.cloud.tools.maven.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 
@@ -37,16 +37,16 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   @Test
   public void testRunStandardV1() throws IOException, VerificationException, InterruptedException {
-    test("testRunV1", SupportedVersion.V1);
+    test("testRunV1", SupportedDevServerVersion.V1);
   }
 
   @Test
   public void testRunStandardV2Alpha()
       throws IOException, VerificationException, InterruptedException {
-    test("testRunV2Alpha", SupportedVersion.V2ALPHA);
+    test("testRunV2Alpha", SupportedDevServerVersion.V2ALPHA);
   }
 
-  private void test(final String name, final SupportedVersion version)
+  private void test(final String name, final SupportedDevServerVersion version)
       throws IOException, VerificationException, InterruptedException {
     final Verifier verifier = createVerifier(name, version);
     final StringBuilder urlContent = new StringBuilder();
@@ -88,11 +88,11 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.verifyTextInLog("Dev App Server is now running");
   }
 
-  private Verifier createVerifier(String name, SupportedVersion version)
+  private Verifier createVerifier(String name, SupportedDevServerVersion version)
       throws IOException, VerificationException {
     Verifier verifier = new StandardVerifier(name);
     verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
-    if (version == SupportedVersion.V2ALPHA) {
+    if (version == SupportedDevServerVersion.V2ALPHA) {
       verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
       verifier.setSystemProperty("app.devserver.version", "2-alpha");
     }

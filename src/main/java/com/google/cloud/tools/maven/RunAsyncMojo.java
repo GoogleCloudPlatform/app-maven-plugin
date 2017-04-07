@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -43,7 +43,7 @@ public class RunAsyncMojo extends RunMojo {
   public void execute() throws MojoExecutionException, MojoFailureException {
     verifyAppEngineStandardApp();
 
-    SupportedVersion version = convertDevserverVersionString();
+    SupportedDevServerVersion version = convertDevserverVersionString();
     getLog().info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server "
         + devserverVersion + " to start.");
 

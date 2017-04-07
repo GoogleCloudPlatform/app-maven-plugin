@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedVersion;
+import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -77,7 +77,7 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun(String version, SupportedVersion mockVersion)
+  public void testRun(String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     // wire up
     runMojo.devserverVersion = version;
@@ -93,7 +93,8 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsSetAndOverridesServices(String version, SupportedVersion mockVersion)
+  public void testRun_appYamlsSetAndOverridesServices(String version,
+      SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -108,7 +109,8 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsNotSetServicesIsUsed(String version, SupportedVersion mockVersion)
+  public void testRun_appYamlsNotSetServicesIsUsed(String version,
+      SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -123,7 +125,8 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsEmptyServicesIsUsed(String version, SupportedVersion mockVersion)
+  public void testRun_appYamlsEmptyServicesIsUsed(String version,
+      SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -139,7 +142,8 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlAndServicesSetCausesError(String version, SupportedVersion mockVersion)
+  public void testRun_appYamlAndServicesSetCausesError(String version,
+      SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     when(mockConfiguration.getChild("services")).thenReturn(mock(Xpp3Dom.class));
@@ -172,7 +176,7 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRunFlexible(String version, SupportedVersion mockVersion)
+  public void testRunFlexible(String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     // wire up
     runMojo.devserverVersion = version;
