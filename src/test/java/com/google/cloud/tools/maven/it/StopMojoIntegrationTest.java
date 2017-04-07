@@ -44,7 +44,7 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
     // verify dev app server is up
     verifier.verifyErrorFreeLog();
-    assertNotNull(UrlUtils.getUrlContentWithRetries(SERVER_URL, 5000, 100));
+    assertNotNull(UrlUtils.getUrlContentWithRetries(SERVER_URL, 60000, 100));
 
     // stop dev app server
     verifier.setLogFileName("testStopStandard.txt");

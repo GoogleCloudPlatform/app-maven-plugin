@@ -54,7 +54,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.executeGoal("appengine:start");
 
     assertEquals("Hello from the App Engine Standard project.",
-        UrlUtils.getUrlContentWithRetries(SERVER_URL, 50000, 1000));
+        UrlUtils.getUrlContentWithRetries(SERVER_URL, 60000, 1000));
     verifier.verifyErrorFreeLog();
     verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
