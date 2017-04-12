@@ -36,7 +36,7 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
     <artifactId>appengine-maven-plugin</artifactId>
-    <version>1.2.1</version>
+    <version>1.3.0-rc1</version>
 </plugin>
 ```
 
@@ -143,7 +143,7 @@ Multimodule support can be done by adding all the runnable modules to a single m
 <configuration>
   <services>
     <service>${project.build.directory}/${project.name}-${project.version}</service>
-    <service>${project.parent.basedir}/&lt;other_module&gt;/target/&lt;other_module_finalName&gt;-${project.version}</service>
+    <service>${project.parent.basedir}/other_module/target/other_module_finalName-${project.version}</service>
   </services>
 </configuration>
 ```
