@@ -1,20 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 1.3.0-rc
+## 1.3.0-rc1
 ### Added
 
-* New goals to deploy App Engine configuration XMLs (cron.xml, dispatch.xml, dos.xml, datastore-indexes.xml, queue.xml) separately.
-* New parameter `devserverVersion` to change between devappserver 1 and 2-alpha for local runs.
-
+* New goals to deploy App Engine configuration XMLs/YMLs separately. ([#155](issues/155))
+* Dev Appserver1 integration ([#158](issues/158)
+* New parameter `devserverVersion` to change between Java Dev Appserver 1 and 2-alpha for local runs.
 
 ### Changed
 
-* Javadoc update to indicate which parameters are supported by devappserver 1 and 2-alpha.
+* Javadoc update to indicate which parameters are supported by Java Dev Appserver 1 and 2-alpha. ([#167](issues/167))
+* Default local dev server is Java Dev Appserver1
+* `appYamls` parameter is deprecated in favor of `services`
 
 ### Fixed
 
-* :deploy goal should quietly skip non-war projects ([#171](https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/85))
+* :deploy goal should quietly skip non-war projects ([#171](issues/85))
 
 ## 1.2.1
 ### Added
@@ -27,4 +29,4 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-* "Directories are not supported" issue when deploying ([#144](https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/144))
+* "Directories are not supported" issue when deploying ([#144](issues/144))
