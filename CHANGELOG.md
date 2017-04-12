@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 * New goals to deploy App Engine configuration XMLs/YMLs separately. ([#155](issues/155))
-* Dev Appserver1 integration ([#158](issues/158)
+* Dev Appserver1 integration ([#158](issues/158))
 * New parameter `devserverVersion` to change between Java Dev Appserver 1 and 2-alpha for local runs.
 
 ### Changed
