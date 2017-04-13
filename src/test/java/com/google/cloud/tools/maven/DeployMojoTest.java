@@ -81,8 +81,8 @@ public class DeployMojoTest {
     deployMojo.deployables = new ArrayList<>();
     deployMojo.stagingDirectory = tempFolder.newFolder("staging");
     deployMojo.sourceDirectory = tempFolder.newFolder("source");
-    deployMojo.mavenProject = project;
     when(project.getProperties()).thenReturn(new Properties());
+    when(project.getBasedir()).thenReturn(new File("/fake/project/base/dir"));
   }
 
   @Test

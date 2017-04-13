@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -50,6 +51,7 @@ public class SingleYamlFlexibleDeployTestHelper<M extends AbstractSingleYamlDepl
     MockitoAnnotations.initMocks(this);
 
     when(mavenProject.getProperties()).thenReturn(new Properties());
+    when(mavenProject.getBasedir()).thenReturn(new File("/fake/project/base/dir"));
     when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
     when(factoryMock.deployment()).thenReturn(deploymentMock);
   }

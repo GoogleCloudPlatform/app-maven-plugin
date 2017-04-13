@@ -37,15 +37,15 @@ import junitparams.Parameters;
 public class FlexDeployQueueMojoTest {
 
   private DeployQueueMojo mojo = new DeployQueueMojo();
-  
+
   private TemporaryFolder tempFolder = new TemporaryFolder();
-  
+
   private SingleYamlFlexibleDeployTestHelper<DeployQueueMojo> testFixture =
       new SingleYamlFlexibleDeployTestHelper<>(mojo, tempFolder);
-  
+
   @Rule
   public TestRule testRule = RuleChain.outerRule(tempFolder).around(testFixture);
-  
+
   @Test
   @Parameters({"jar", "war"})
   public void testDeployFlexible(String packaging)

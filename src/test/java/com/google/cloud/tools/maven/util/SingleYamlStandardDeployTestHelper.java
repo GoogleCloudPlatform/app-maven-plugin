@@ -64,6 +64,7 @@ public class SingleYamlStandardDeployTestHelper<M extends AbstractSingleYamlDepl
     when(factoryMock.standardStaging()).thenReturn(standardStagingMock);
     when(factoryMock.deployment()).thenReturn(deploymentMock);
     when(mavenProject.getProperties()).thenReturn(new Properties());
+    when(mavenProject.getBasedir()).thenReturn(new File("/fake/project/base/dir"));
   }
   
   @Override

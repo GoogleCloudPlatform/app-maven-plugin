@@ -43,13 +43,25 @@ public abstract class AbstractSingleYamlDeployMojo
   public void execute() throws MojoExecutionException, MojoFailureException {
     // execute stage
     super.execute();
+    doDeploy(getAppEngineFactory().deployment(), this);
+  }
   
+  /**
+   * Sets {@code appEngineDirectory} based on whether the project is GAE Standard or Flexible if
+   * the user has not set a value explicitly.
+   *
+   * <p>For Standard it uses {@code <stagingDirectory>/WEB-INF/appengine-generated}, for Flexible
+   * it uses <code>${basedir}/src/main/appengine</code>.
+   */
+  @Override
+  protected void configureAppEngineDirectory() {
     if (isStandardStaging()) {
       appEngineDirectory =
           stagingDirectory.toPath().resolve("WEB-INF/appengine-generated").toFile();
+    } else {
+      appEngineDirectory =
+          mavenProject.getBasedir().toPath().resolve("src/main/appengine").toFile();
     }
-  
-    doDeploy(getAppEngineFactory().deployment(), this);
   }
 
   protected abstract void doDeploy(AppEngineDeployment appEngineDeployment,

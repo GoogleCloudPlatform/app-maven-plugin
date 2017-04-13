@@ -23,21 +23,20 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 
-import org.apache.maven.model.Plugin;
+import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Collections;
 
 import junitparams.JUnitParamsRunner;
@@ -46,10 +45,6 @@ import junitparams.Parameters;
 @RunWith(JUnitParamsRunner.class)
 public class RunMojoTest extends AbstractDevServerTest {
 
-  @Mock
-  private Plugin mockPlugin;
-  @Mock
-  private Xpp3Dom mockConfiguration;
   @InjectMocks
   private RunMojo runMojo;
 
@@ -59,9 +54,6 @@ public class RunMojoTest extends AbstractDevServerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    when(mavenProjectMock.getPlugin("com.google.cloud.tools:appengine-maven-plugin"))
-        .thenReturn(mockPlugin);
-    when(mockPlugin.getConfiguration()).thenReturn(mockConfiguration);
   }
 
   @Test
@@ -93,12 +85,29 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsSetAndOverridesServices(String version,
+  public void testRun_appYamlsSetAndOverridesNullServices(String version,
       SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
     runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
+    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
+
+    runMojo.execute();
+
+    assertArrayEquals(new File[]{ new File("src/main/appengine") },
+        runMojo.getServices().toArray());
+  }
+
+  @Test
+  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  public void testRun_appYamlsSetAndOverridesEmptyServices(String version,
+      SupportedDevServerVersion mockVersion)
+      throws MojoFailureException, MojoExecutionException, IOException {
+    runMojo.devserverVersion = version;
+    setUpAppEngineWebXml();
+    runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
+    runMojo.services = Collections.emptyList();
     when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
 
     runMojo.execute();
@@ -142,11 +151,45 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  public void testRun_appYamlsEmptyServicesNullDefaultIsUsed(String version,
+      SupportedDevServerVersion mockVersion)
+      throws MojoFailureException, MojoExecutionException, IOException {
+    runMojo.devserverVersion = version;
+    setUpAppEngineWebXml();
+    runMojo.appYamls = Collections.emptyList();
+    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
+
+    runMojo.execute();
+
+    assertArrayEquals(new File[]{
+        Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile() },
+        runMojo.getServices().toArray());
+  }
+
+  @Test
+  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  public void testRun_appYamlsEmptyServicesEmptyDefaultIsUsed(String version,
+      SupportedDevServerVersion mockVersion)
+      throws MojoFailureException, MojoExecutionException, IOException {
+    runMojo.devserverVersion = version;
+    setUpAppEngineWebXml();
+    runMojo.appYamls = Collections.emptyList();
+    runMojo.services = Collections.emptyList();
+    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
+
+    runMojo.execute();
+
+    assertArrayEquals(new File[]{
+        Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile() },
+        runMojo.getServices().toArray());
+  }
+
+  @Test
+  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
   public void testRun_appYamlAndServicesSetCausesError(String version,
       SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
-    when(mockConfiguration.getChild("services")).thenReturn(mock(Xpp3Dom.class));
     runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
     runMojo.services = Collections.singletonList(new File("src/main/appengine2"));
     when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
@@ -159,28 +202,15 @@ public class RunMojoTest extends AbstractDevServerTest {
   }
 
   @Test
-  @Parameters({"1", "2-alpha" })
-  public void testRun_unexpectedConfigurationClass(String version)
-      throws MojoFailureException, MojoExecutionException, IOException {
-    runMojo.devserverVersion = version;
-    when(mockConfiguration.getChild("services")).thenReturn(mock(Xpp3Dom.class));
-    runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
-    when(mockPlugin.getConfiguration()).thenReturn(new Object());
-
-    expectedException.expect(MojoExecutionException.class);
-    expectedException.expectMessage("Unexpected configuration object, report this error on "
-        + "https://github.com/GoogleCloudPlatform/app-maven-plugin/issues");
-
-    runMojo.execute();
-  }
-
-  @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA" })
   public void testRunFlexible(String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     // wire up
     runMojo.devserverVersion = version;
     when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
+    when(mavenProjectMock.getBuild()).thenReturn(mock(Build.class));
+    when(mavenProjectMock.getBuild().getDirectory()).thenReturn("/fake/project/build/directory");
+    when(mavenProjectMock.getBuild().getFinalName()).thenReturn("artifact");
 
     // invoke
     expectedException.expect(MojoExecutionException.class);

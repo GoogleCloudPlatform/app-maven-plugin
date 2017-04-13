@@ -77,6 +77,7 @@ public class StageMojoTest {
     stageMojo.stagingDirectory = tempFolder.newFolder("staging");
     stageMojo.sourceDirectory = tempFolder.newFolder("source");
     when(mavenProject.getProperties()).thenReturn(new Properties());
+    when(mavenProject.getBasedir()).thenReturn(new File("/fake/project/base/dir"));
   }
 
   @Test

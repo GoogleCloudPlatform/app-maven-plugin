@@ -18,8 +18,9 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
+import com.google.cloud.tools.maven.util.CollectionUtil;
 
-import org.apache.maven.model.Plugin;
+import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -28,6 +29,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,9 +50,13 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Deprecated
   protected List<File> appYamls;
 
-  @Parameter(alias = "devserver.services", property = "app.devserver.services",
-      defaultValue = "${project.build.directory}/${project.build.finalName}",
-      required = true)
+  /**
+   * Path to a yaml file, or a directory containing yaml files, or a directory containing
+   * WEB-INF/web.xml. Defaults to
+   * <code>${project.build.directory}/${project.build.finalName}</code>, unless {@code #appYamls}
+   * is set, in which case it will default to {@code #appYamls}' value.
+   */
+  @Parameter(alias = "devserver.services", property = "app.devserver.services", required = true)
   protected List<File> services;
 
   /**
@@ -259,11 +265,17 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Parameter(alias = "devserver.clearDatastore", property = "app.devserver.clearDatastore")
   protected Boolean clearDatastore;
 
+  // RunAsyncMojo should override #runServer(version) so that other configuration changing code 
+  // shared between these classes is executed 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     SupportedDevServerVersion convertedVersion = convertDevserverVersionString();
     handleAppYamlsDeprecation();
     verifyAppEngineStandardApp();
+    runServer(convertedVersion);
+  }
+
+  protected void runServer(SupportedDevServerVersion convertedVersion) {
     getAppEngineFactory().devServerRunSync(convertedVersion).run(this);
   }
 
@@ -293,36 +305,23 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    * @throws MojoExecutionException if both &lt;appYamls&gt; and &lt;services&gt; are explicitly set
    *     in the configuration
    */
-  private void handleAppYamlsDeprecation() throws MojoExecutionException {
-    if (appYamls != null && !appYamls.isEmpty()) {
+  protected void handleAppYamlsDeprecation() throws MojoExecutionException {
+    if (CollectionUtil.isNullOrEmpty(appYamls)) {
+      if (CollectionUtil.isNullOrEmpty(services)) {
+        Build build = mavenProject.getBuild();
+        services =
+            Collections.singletonList(new File(build.getDirectory()).toPath()
+                .resolve(build.getFinalName()).toFile());
+      }
+    } else {
       // no default value, so it was set by the user explicitly
       getLog().warn("<appYamls> is deprecated, use <services> instead.");
-      if (servicesUsesTheDefaultValue()) {
-        getLog().warn("The value of <appYamls> will override the default value of <services>");
+      if (CollectionUtil.isNullOrEmpty(services)) {
         services = appYamls;
       } else {
         throw new MojoExecutionException("Both <appYamls> and <services> are defined."
             + " <appYamls> is deprecated, use <services> only.");
       }
-    }
-  }
-
-  /**
-   * Checks if the {@code services} field was set by Maven to the default value or
-   * the user explicitly configured it in the POM by checking the configuration of the plugin
-   * in the POM file.
-   * @throws MojoExecutionException if the configuration object is of an unexpected class
-   */
-  private boolean servicesUsesTheDefaultValue() throws MojoExecutionException {
-    Plugin ourPlugin = mavenProject.getPlugin("com.google.cloud.tools:appengine-maven-plugin");
-    Object configuration = ourPlugin.getConfiguration();
-    if (configuration instanceof org.codehaus.plexus.util.xml.Xpp3Dom) {
-      org.codehaus.plexus.util.xml.Xpp3Dom servicesConfiguration =
-          ((org.codehaus.plexus.util.xml.Xpp3Dom)configuration).getChild("services");
-      return servicesConfiguration == null;
-    } else {
-      throw new MojoExecutionException("Unexpected configuration object, report this error on "
-          + "https://github.com/GoogleCloudPlatform/app-maven-plugin/issues");
     }
   }
 

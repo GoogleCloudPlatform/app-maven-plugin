@@ -160,10 +160,10 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   /**
    * The directory that contains app.yaml and other supported App Engine configuration files.
    *
-   * <p>Applies to App Engine flexible environment only.
+   * <p>Applies to App Engine flexible environment only. Defaults to
+   * <code>${basedir}/src/main/appengine</code>
    */
-  @Parameter(defaultValue = "${basedir}/src/main/appengine",
-      alias = "stage.appEngineDirectory", property = "app.stage.appEngineDirectory")
+  @Parameter(alias = "stage.appEngineDirectory", property = "app.stage.appEngineDirectory")
   protected File appEngineDirectory;
 
   /**
@@ -212,6 +212,9 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
 
     appengineWebXml =
         new AppEngineWebXml(new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
+
+    configureAppEngineDirectory();
+
     if (isStandardStaging()) {
       getLog().info("Detected App Engine standard environment application.");
 
@@ -243,6 +246,19 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
           && dockerfileSecondaryDefaultLocation.exists()) {
         dockerfile = dockerfileSecondaryDefaultLocation;
       }
+    }
+  }
+
+  /**
+   * Sets {@link #appEngineDirectory} to <code>${basedir}/src/main/appengine</code>.
+   *
+   * <p>Called during {@link #execute()}, subclasses can override to provide a different value
+   * for {@link #appEngineDirectory}.
+   */
+  protected void configureAppEngineDirectory() {
+    if (appEngineDirectory == null) {
+      appEngineDirectory =
+          mavenProject.getBasedir().toPath().resolve("src/main/appengine").toFile();
     }
   }
 
