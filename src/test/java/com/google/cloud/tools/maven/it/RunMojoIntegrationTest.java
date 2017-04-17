@@ -100,7 +100,10 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.verifyTextInLog("Module instance " + expectedModuleName + " is running");
   }
 
-  @SuppressWarnings("unused") // used for testRun()
+  /**
+   * Provides parameters  for {@link #testRun(SupportedDevServerVersion, String[], String)}.
+   */
+  @SuppressWarnings("unused")
   private Object[] parametersForTestRun() {
     List<Object[]> result = new ArrayList<>();
     for (SupportedDevServerVersion serverVersion : SupportedDevServerVersion.values()) {
