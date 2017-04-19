@@ -1,6 +1,5 @@
 # User guide
 
----
 Primitive guide for users 1.3.0 and above (need to expand)
 
 ## Applying the Plugin
@@ -22,11 +21,9 @@ For both _standard_ and _flexible_ applications, include the plugin in your pom.
 The [Cloud SDK](https://cloud.google.com/sdk) is required for this plugin to
 function. Download and install it before running any tasks.
 
----
-
 ## App Engine Standard
 The plugin will include App Engine standard features if you include an `appengine-web.xml`
-in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible][#app-engine-flexible] application.
+in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible](#app-engine-flexible) application.
 
 ### Goals
 For App Engine standard, the plugin exposes the following goals :
@@ -60,7 +57,7 @@ can be configured using the usual `<configuration>` element.
 
 | Parameter      | Description |
 | -------------- | ----------- |
-| `cloudSdkPath` | Location of to the cloud sdk, the plugin will try to find it if none is specified here. |
+| `cloudSdkPath` | Location of the Cloud SDK, the plugin will try to find it if none is specified here. |
 
 ##### Run configuration
 Note that only a subset are valid for Dev App Server version "1" and all are valid for Dev App Server
@@ -140,7 +137,7 @@ The `deploy` configuration has the following parameters:
 
 ### How do I deploy my project Configuration Files?
 
-You can now deploy the cron/doc/etc. configuration files separately using the new goals:
+You can now deploy the cron/dos/etc. configuration files separately using the new goals:
 
 * `deployCron`
 * `deployDispatch`
@@ -207,7 +204,7 @@ To switch back to the Dev App Server v2-alpha (that was default in version < 1.3
 ---
 
 ## App Engine Flexible
-The plugin will include App Engine standard features if you do **NOT** include an `appengine-web.xml`
+The plugin will include App Engine flexible features if you do **NOT** include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`.
 
 ### Goals
@@ -234,7 +231,7 @@ can be configured using the usual `<configuration>` element.
 
 | Parameter      | Description |
 | -------------- | ----------- |
-| `cloudSdkPath` | Location of to the cloud sdk, the plugin will try to find it if none is specified here. |
+| `cloudSdkPath` | Location of the Cloud SDK, the plugin will try to find it if none is specified here. |
 
 
 ##### Stage
