@@ -52,6 +52,8 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
 
   /**
    * Deploy with a specific Docker image. Docker url must be from one of the valid gcr hostnames.
+   * 
+   * <p><i>Supported only for devserver version 2-alpha.</i>
    */
   @Parameter(alias = "deploy.imageUrl", property = "app.deploy.imageUrl")
   protected String imageUrl;
