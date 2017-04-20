@@ -22,8 +22,9 @@ The [Cloud SDK](https://cloud.google.com/sdk) is required for this plugin to
 function. Download and install it before running any tasks.
 
 ## App Engine Standard
-The plugin will include App Engine standard features if you include an `appengine-web.xml`
-in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible](#app-engine-flexible) application.
+The plugin will target the App Engine standard environment if you include an `appengine-web.xml`
+in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible][#app-engine-flexible]
+application.
 
 ### Goals
 For App Engine standard, the plugin exposes the following goals :
@@ -49,9 +50,18 @@ For App Engine standard, the plugin exposes the following goals :
 | `deployQueue`    | Deploy queue configuration. |
 
 ### Configuration
-Once you've configured `gcloud` in the Cloud SDK, no further configuration should be needed to run
-and deploy an application, however if you chose to customize your configuration, the plugin
-can be configured using the usual `<configuration>` element.
+Once you've [initialized](https://cloud.google.com/sdk/docs/initializing) `gcloud` you can run and deploy
+your application using the defaults provided by the plugin.
+
+To see the generated documentation for goals and parameters, execute the
+following:
+
+```bash
+$  mvn appengine:help -Ddetail
+```
+
+If you wish to customize your configuration, the plugin can be configured using the usual
+`<configuration>` element.
 
 ##### Cloud SDK configuration
 
@@ -204,7 +214,7 @@ To switch back to the Dev App Server v2-alpha (that was default in version < 1.3
 ---
 
 ## App Engine Flexible
-The plugin will include App Engine flexible features if you do **NOT** include an `appengine-web.xml`
+The plugin will target the App Engine flexible environment if you do **NOT** include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`.
 
 ### Goals
@@ -222,10 +232,18 @@ For App Engine flexible, the plugin exposes the following goals:
 | `deployIndex`    | Deploy datastore index configuration. |
 | `deployQueue`    | Deploy queue configuration. |
 
-### Configuration
-Once you've configured `gcloud` in the Cloud SDK, no further configuration should be needed to run
-and deploy an application, however if you chose to customize your configuration, the plugin
-can be configured using the usual `<configuration>` element.
+Once you've [initialized](https://cloud.google.com/sdk/docs/initializing) `gcloud` you can run and deploy
+your application using the defaults provided by the plugin.
+
+To see the generated documentation for goals and parameters, execute the
+following:
+
+```bash
+$  mvn appengine:help -Ddetail
+```
+
+If you wish to customize your configuration, the plugin can be configured using the usual
+`<configuration>` element.
 
 ##### Cloud SDK configuration
 
