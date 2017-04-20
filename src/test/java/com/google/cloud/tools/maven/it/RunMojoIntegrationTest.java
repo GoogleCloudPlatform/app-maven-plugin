@@ -26,6 +26,7 @@ import com.google.cloud.tools.maven.util.SocketUtil;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,27 +43,22 @@ import junitparams.Parameters;
 @RunWith(JUnitParamsRunner.class)
 public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
-//  private static final String ADMIN_PORT = "28082";
-//  private static final String SERVER_PORT = "28081";
-//  private static final String SERVER_URL = "http://localhost:" + SERVER_PORT;
-
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   private int serverPort;
   private int adminPort;
 
-  private String getServerUrl() {
-    return "http://localhost:" + serverPort;
+  @Before
+  public void initPorts() throws IOException {
+    serverPort = SocketUtil.findPort();
+    adminPort = SocketUtil.findPort();
   }
 
   @Test
   @Parameters
   public void testRun(final SupportedDevServerVersion version, String[] profiles,
       String expectedModuleName) throws IOException, VerificationException, InterruptedException {
-
-    serverPort = SocketUtil.findPort();
-    adminPort = SocketUtil.findPort();
 
     final String name = "testRun" + version + Arrays.toString(profiles);
     final Verifier verifier = createVerifier(name, version);
@@ -147,5 +143,9 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
       verifier.setSystemProperty("app.devserver.version", "2-alpha");
     }
     return verifier;
+  }
+
+  private String getServerUrl() {
+    return "http://localhost:" + serverPort;
   }
 }
