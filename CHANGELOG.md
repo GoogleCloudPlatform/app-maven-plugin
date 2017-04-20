@@ -1,6 +1,32 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 1.3.0
+### Added
+
+* N/A
+
+### Changed
+
+* N/A
+
+### Fixed
+
+* N/A
+
+## 1.3.0-rc2
+### Added
+
+* N/A
+
+### Changed
+
+* N/A
+
+### Fixed
+
+* Setting appEngineDirectory for GAE Standard projects has no effect ([#173](../../issues/173))
+
 ## 1.3.0-rc1
 ### Added
 
