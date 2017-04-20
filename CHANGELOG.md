@@ -1,6 +1,21 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+### Added
+
+### Changed
+
+### Fixed
+
+## 1.3.0
+No changes compared to 1.3.0-rc2.
+
+## 1.3.0-rc2
+### Fixed
+
+* Setting appEngineDirectory for GAE Standard projects has no effect ([#173](../../issues/173))
+
 ## 1.3.0-rc1
 ### Added
 
@@ -20,14 +35,6 @@ All notable changes to this project will be documented in this file.
 * :deploy goal should quietly skip non-war projects ([#171](../../issues/85))
 
 ## 1.2.1
-### Added
-
-* N/A
-
-### Changed
-
-* N/A
-
 ### Fixed
 
 * "Directories are not supported" issue when deploying ([#144](../../issues/144))
