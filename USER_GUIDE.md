@@ -23,7 +23,7 @@ function. Download and install it before running any tasks.
 
 ## App Engine Standard
 The plugin will target the App Engine standard environment if you include an `appengine-web.xml`
-in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible][#app-engine-flexible]
+in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible](#app-engine-flexible)
 application.
 
 ### Goals
@@ -53,7 +53,7 @@ For App Engine standard, the plugin exposes the following goals :
 Once you've [initialized](https://cloud.google.com/sdk/docs/initializing) `gcloud` you can run and deploy
 your application using the defaults provided by the plugin.
 
-To see the generated documentation for goals and parameters, execute the
+To see the generated documentation for goals and parameters including default values, execute the
 following:
 
 ```bash
@@ -85,7 +85,7 @@ Valid for versions "1" and "2-alpha":
 | `devserverVersion`    | Server versions to use, options are "1" or "2-alpha" |
 | `services`            | List of services to run |
 
-Only valid for versions "2-alpha":
+Only valid for version "2-alpha":
 
 | Parameter (2-alpha only) |
 | ------------------------ |
@@ -235,7 +235,7 @@ For App Engine flexible, the plugin exposes the following goals:
 Once you've [initialized](https://cloud.google.com/sdk/docs/initializing) `gcloud` you can run and deploy
 your application using the defaults provided by the plugin.
 
-To see the generated documentation for goals and parameters, execute the
+To see the generated documentation for goals and parameters including default values, execute the
 following:
 
 ```bash
