@@ -1,4 +1,12 @@
 # Change Log
+All notable changes to this project will be documented in this file.
+
+## Unreleased
+### Added
+
+### Changed
+
+### Fixed
 
 ## 1.3.0
 No changes compared to 1.3.0-rc2.
