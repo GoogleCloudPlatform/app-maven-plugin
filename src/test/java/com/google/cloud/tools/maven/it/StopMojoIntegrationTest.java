@@ -46,6 +46,8 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
     Verifier verifier = new StandardVerifier("testStopStandard_start");
 
+    verifier.setSystemProperty("app.devserver.port", Integer.toString(serverPort));
+
     // start dev app server
     verifier.executeGoal("appengine:start");
 

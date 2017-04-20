@@ -89,8 +89,6 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     thread.start();
 
     // execute
-    verifier.setSystemProperty("app.devserver.port", Integer.toString(serverPort));
-    verifier.setSystemProperty("app.devserver.adminPort", Integer.toString(adminPort));
     for (String profile : profiles) {
       if (!profile.isEmpty()) {
         verifier.addCliOption("-P" + profile);
