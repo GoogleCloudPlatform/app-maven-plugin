@@ -42,6 +42,7 @@ import junitparams.Parameters;
 @RunWith(JUnitParamsRunner.class)
 public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
+
 //  private static final String ADMIN_PORT = "28082";
 //  private static final String SERVER_PORT = "28081";
 //  private static final String SERVER_URL = "http://localhost:" + SERVER_PORT;
