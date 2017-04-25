@@ -3,6 +3,9 @@ package com.google.cloud.tools.maven.util;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * Helper methods to handle sockets.
+ */
 public class SocketUtil {
 
   /**
