@@ -22,9 +22,11 @@ import static org.junit.Assert.assertTrue;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
+import com.google.cloud.tools.maven.util.SocketUtil;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -41,12 +43,17 @@ import junitparams.Parameters;
 @RunWith(JUnitParamsRunner.class)
 public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
-  private static final String ADMIN_PORT = "28082";
-  private static final String SERVER_PORT = "28081";
-  private static final String SERVER_URL = "http://localhost:" + SERVER_PORT;
-
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
+
+  private int serverPort;
+  private int adminPort;
+
+  @Before
+  public void initPorts() throws IOException {
+    serverPort = SocketUtil.findPort();
+    adminPort = SocketUtil.findPort();
+  }
 
   @Test
   @Parameters
@@ -62,7 +69,7 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
       public void run() {
         try {
           // wait up to 60 seconds for the server to start (retry every second)
-          urlContent.append(UrlUtils.getUrlContentWithRetries(SERVER_URL, 60000, 1000));
+          urlContent.append(UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000));
         } catch (InterruptedException e) {
           e.printStackTrace();
         } finally {
@@ -71,7 +78,7 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
             Verifier stopVerifier = createVerifier(name + "_stop", version);
             stopVerifier.executeGoal("appengine:stop");
             // wait up to 5 seconds for the server to stop
-            assertTrue(UrlUtils.isUrlDownWithRetries(SERVER_URL, 5000, 100));
+            assertTrue(UrlUtils.isUrlDownWithRetries(getServerUrl(), 5000, 100));
           } catch (Exception e) {
             e.printStackTrace();
           }
@@ -82,8 +89,6 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     thread.start();
 
     // execute
-    verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
-    verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
     for (String profile : profiles) {
       if (!profile.isEmpty()) {
         verifier.addCliOption("-P" + profile);
@@ -130,11 +135,15 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
   private Verifier createVerifier(String name, SupportedDevServerVersion version)
       throws IOException, VerificationException {
     Verifier verifier = new StandardVerifier(name);
-    verifier.setSystemProperty("app.devserver.port", SERVER_PORT);
+    verifier.setSystemProperty("app.devserver.port", Integer.toString(serverPort));
     if (version == SupportedDevServerVersion.V2ALPHA) {
-      verifier.setSystemProperty("app.devserver.adminPort", ADMIN_PORT);
+      verifier.setSystemProperty("app.devserver.adminPort", Integer.toString(adminPort));
       verifier.setSystemProperty("app.devserver.version", "2-alpha");
     }
     return verifier;
+  }
+
+  private String getServerUrl() {
+    return "http://localhost:" + serverPort;
   }
 }

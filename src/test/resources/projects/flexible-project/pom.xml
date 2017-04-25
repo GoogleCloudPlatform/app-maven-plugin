@@ -22,6 +22,10 @@
         <artifactId>appengine-maven-plugin</artifactId>
         <version>${appengine-maven-plugin.version}</version>
         <configuration>
+          <jvmFlags>
+            <!-- required for kokoro gcp_ubuntu b/37217450 -->
+            <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
+          </jvmFlags>
         </configuration>
         <executions>
           <execution>

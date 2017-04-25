@@ -22,13 +22,17 @@
         <version>${appengine-maven-plugin.version}</version>
         <configuration>
           <version>1</version>
+          <jvmFlags>
+            <!-- required for kokoro gcp_ubuntu b/37217450 -->
+            <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
+          </jvmFlags>
         </configuration>
       </plugin>
     </plugins>
   </build>
 
   <profiles>
-    <!-- base profile for integration tests using appYamls/services to configure 
+    <!-- base profile for integration tests using appYamls/services to configure
       devappserver -->
     <profile>
       <id>base-it-profile</id>
@@ -47,7 +51,7 @@
       </build>
     </profile>
 
-    <!-- integration test for configuring the devappserver via the appYamls 
+    <!-- integration test for configuring the devappserver via the appYamls
       element -->
     <profile>
       <id>appyamls</id>
@@ -71,7 +75,7 @@
       </build>
     </profile>
 
-    <!-- integration test for configuring the devappserver via the services 
+    <!-- integration test for configuring the devappserver via the services
       element -->
     <profile>
       <id>services</id>
@@ -95,7 +99,7 @@
       </build>
     </profile>
 
-    <!-- integration test to verify behavior if both appYamls and services 
+    <!-- integration test to verify behavior if both appYamls and services
       element is set (i.e. should fail) -->
     <profile>
       <id>appYamlsAndServices</id>
