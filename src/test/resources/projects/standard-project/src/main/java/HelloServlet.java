@@ -15,6 +15,7 @@ public class HelloServlet extends HttpServlet {
     resp.setHeader("Pragma", "no-cache"); // HTTP 1.0.
     resp.setHeader("Expires", "0"); // Proxies.
 
+    resp.getWriter().print("TEST_VAR=" + System.getenv("TEST_VAR"));
     resp.getWriter().print("Hello from the App Engine Standard project.");
   }
 

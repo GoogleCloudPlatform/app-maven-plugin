@@ -26,6 +26,9 @@
             <!-- required for kokoro gcp_ubuntu b/37217450 -->
             <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
           </jvmFlags>
+          <environment>
+            <TEST_VAR>testVariableValue</TEST_VAR>
+          </environment>
         </configuration>
       </plugin>
     </plugins>

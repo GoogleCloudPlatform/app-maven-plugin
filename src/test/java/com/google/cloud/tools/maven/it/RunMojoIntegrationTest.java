@@ -16,14 +16,16 @@
 
 package com.google.cloud.tools.maven.it;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import com.google.cloud.tools.maven.util.SocketUtil;
-
+import com.google.common.base.Strings;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
@@ -58,7 +60,8 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
   @Test
   @Parameters
   public void testRun(final SupportedDevServerVersion version, String[] profiles,
-      String expectedModuleName) throws IOException, VerificationException, InterruptedException {
+      String expectedModuleName)
+          throws IOException, VerificationException, InterruptedException {
 
     final String name = "testRun" + version + Arrays.toString(profiles);
     final Verifier verifier = createVerifier(name, version);
@@ -98,8 +101,9 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
     thread.join();
 
-    // verify
-    assertEquals("Hello from the App Engine Standard project.", urlContent.toString());
+    assertThat(urlContent.toString(),
+        containsString("Hello from the App Engine Standard project."));
+    assertThat(urlContent.toString(), containsString("TEST_VAR=testVariableValue"));
     verifier.verifyErrorFreeLog();
     verifier.verifyTextInLog("Dev App Server is now running");
     verifier.verifyTextInLog("Module instance " + expectedModuleName + " is running");

@@ -31,6 +31,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Run App Engine Development App Server synchronously.
@@ -265,6 +266,9 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Parameter(alias = "devserver.clearDatastore", property = "app.devserver.clearDatastore")
   protected Boolean clearDatastore;
 
+  @Parameter(alias = "devserver.environment", property = "app.devserver.environment")
+  private Map<String, String> environment;
+
   // RunAsyncMojo should override #runServer(version) so that other configuration changing code 
   // shared between these classes is executed 
   @Override
@@ -465,5 +469,10 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Override
   public File getDatastorePath() {
     return datastorePath;
+  }
+
+  @Override
+  public Map<String, String> getEnvironment() {
+    return environment;
   }
 }

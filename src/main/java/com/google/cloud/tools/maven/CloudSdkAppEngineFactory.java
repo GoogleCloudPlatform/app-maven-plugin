@@ -23,8 +23,8 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeployment;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFile;
@@ -154,7 +154,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
     }
 
     public AppEngineDevServer devServer(CloudSdk cloudSdk) {
-      return new CloudSdkAppEngineDevServer(cloudSdk);
+      return new CloudSdkAppEngineDevServer2(cloudSdk);
     }
 
     public AppEngineDevServer devServer1(CloudSdk cloudSdk) {

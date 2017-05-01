@@ -16,7 +16,9 @@
 
 package com.google.cloud.tools.maven.it;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
@@ -61,8 +63,9 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.setSystemProperty("app.devserver.startSuccessTimeout", "60");
     verifier.executeGoal("appengine:start");
 
-    assertEquals("Hello from the App Engine Standard project.",
-        UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000));
+    String urlContent = UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000);
+    assertThat(urlContent, containsString("Hello from the App Engine Standard project."));
+    assertThat(urlContent, containsString("TEST_VAR=testVariableValue"));
     verifier.verifyErrorFreeLog();
     verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
