@@ -266,6 +266,9 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Parameter(alias = "devserver.clearDatastore", property = "app.devserver.clearDatastore")
   protected Boolean clearDatastore;
 
+  /**
+   * Environment variables passed to the devappserver process.
+   */
   @Parameter(alias = "devserver.environment", property = "app.devserver.environment")
   private Map<String, String> environment;
 
