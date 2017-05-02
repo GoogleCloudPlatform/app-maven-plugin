@@ -270,7 +270,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    * Environment variables passed to the devappserver process.
    */
   @Parameter(alias = "devserver.environment", property = "app.devserver.environment")
-  private Map<String, String> environment;
+  protected Map<String, String> environment;
 
   // RunAsyncMojo should override #runServer(version) so that other configuration changing code 
   // shared between these classes is executed 

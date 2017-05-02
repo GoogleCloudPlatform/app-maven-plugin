@@ -84,6 +84,7 @@ Valid for versions "1" and "2-alpha":
 | `startSuccessTimeout` | Amount of time in seconds to wait for the Dev App Server to start in the background. |
 | `devserverVersion`    | Server versions to use, options are "1" or "2-alpha" |
 | `services`            | List of services to run |
+| `environment`        | Environment variables to pass to the Dev App Server process |
 
 Only valid for version "2-alpha":
 
@@ -209,6 +210,18 @@ To switch back to the Dev App Server v2-alpha (that was default in version < 1.3
 <configuration>
    <devserverVersion>2-alpha</devserverVersion>
 </configuration>
+```
+
+### How can I pass environment variables to the Dev Appserver (both v1 and v2-alpha)?
+
+You can debug the Dev App Server v1 using the jvmFlags:
+
+```XML
+<configuration>
+  <environment>
+    <VARIABLE_NAME>value</VARIABLE_NAME>
+  <environment>
+<configuration>
 ```
 
 ---
