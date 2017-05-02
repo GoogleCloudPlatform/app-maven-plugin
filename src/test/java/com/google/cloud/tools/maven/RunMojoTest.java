@@ -17,10 +17,13 @@
 package com.google.cloud.tools.maven;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 
 import org.apache.maven.model.Build;
@@ -31,6 +34,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
@@ -38,7 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
-
+import java.util.Map;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -47,6 +52,9 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @InjectMocks
   private RunMojo runMojo;
+
+  @Captor
+  private ArgumentCaptor<RunConfiguration> captor = ArgumentCaptor.forClass(RunConfiguration.class);
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -217,5 +225,22 @@ public class RunMojoTest extends AbstractDevServerTest {
     expectedException.expectMessage(
         "Dev App Server does not support App Engine Flexible Environment applications.");
     runMojo.execute();
+  }
+
+  @Test
+  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  public void testEnvironment(String version, SupportedDevServerVersion mockVersion)
+      throws IOException, MojoExecutionException, MojoFailureException {
+    runMojo.devserverVersion = version;
+    setUpAppEngineWebXml();
+    runMojo.services = Collections.singletonList(new File("src/main/appengine"));
+    runMojo.environment = Collections.singletonMap("envVarName", "envVarValue");
+    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
+    doNothing().when(devServerMock).run(captor.capture());
+    runMojo.execute();
+
+    Map<String, String> environment = captor.getValue().getEnvironment();
+    assertEquals(1, environment.size());
+    assertEquals("envVarValue", environment.get("envVarName"));
   }
 }
