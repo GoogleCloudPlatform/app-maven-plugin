@@ -214,7 +214,7 @@ To switch back to the Dev App Server v2-alpha (that was default in version < 1.3
 
 ### How can I pass environment variables to the Dev Appserver (both v1 and v2-alpha)?
 
-You can debug the Dev App Server v1 using the jvmFlags:
+You can pass environment variables directly to the Dev App Server:
 
 ```XML
 <configuration>
