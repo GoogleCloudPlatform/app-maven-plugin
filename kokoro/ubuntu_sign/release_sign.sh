@@ -31,5 +31,5 @@ done
 # bundle the artifacts for manual deploy to the Maven staging repository
 cd signed
 POM_NAME=$(ls *.pom)
-BUNDLE_NAME=${$POM_NAME%.pom}-bundle.jar
+BUNDLE_NAME=${POM_NAME%.pom}-bundle.jar
 jar -cvf ${BUNDLE_NAME} *
