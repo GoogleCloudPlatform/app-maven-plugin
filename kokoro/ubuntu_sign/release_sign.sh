@@ -10,9 +10,10 @@ mkdir signed && chmod 777 signed
 
 # find the latest directory under prod/app-maven-plugin/gcp_ubuntu/release/
 LAST_BUILD=$(ls prod/app-maven-plugin/gcp_ubuntu/release/ | sort -rV | head -1)
-# find regular files under the directory, assumption is that only the jars and
-# the pom are there
-FILES=$(find `pwd`/prod/app-maven-plugin/gcp_ubuntu/release/${LAST_BUILD}/* -type f)
+
+# find the jars and the pom in the latest build artifact directory
+FILES=$(find `pwd`/prod/app-maven-plugin/gcp_ubuntu/release/${LAST_BUILD}/* -type f \( -iname \*.jar -o -iname \*.pom \))
+
 for f in $FILES
 do
   echo "Processing $f file..."
@@ -27,8 +28,6 @@ do
   fi
 done
 
-ls -laR
-
-# reevaluate to add the signature files too
+# bundle the artifacts for manual deploy to the Maven staging repository
 cd signed
 jar -cvf bundle.jar *
