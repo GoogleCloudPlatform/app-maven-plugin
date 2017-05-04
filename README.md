@@ -36,7 +36,7 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
     <artifactId>appengine-maven-plugin</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
 </plugin>
 ```
 
