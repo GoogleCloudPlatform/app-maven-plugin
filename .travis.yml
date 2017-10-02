@@ -5,8 +5,8 @@ jdk:
 
 install:
   # download Cloud SDK
-  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-112.0.0-linux-x86_64.tar.gz
-  - tar -xzvf google-cloud-sdk-112.0.0-linux-x86_64.tar.gz
+  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-171.0.0-linux-x86_64.tar.gz
+  - tar -xzvf google-cloud-sdk-171.0.0-linux-x86_64.tar.gz
   - export PATH=$PWD/google-cloud-sdk/bin:$PATH
   - export CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
   # update all Cloud SDK components
