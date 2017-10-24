@@ -9,6 +9,13 @@ curl https://sdk.cloud.google.com | bash
 GOOGLE_CLOUD_SDK_HOME=/Users/kbuilder/google-cloud-sdk
 "$GOOGLE_CLOUD_SDK_HOME"/bin/gcloud components install app-engine-java
 
+which gcloud
+
+# Remove older versions of gcloud.
+rm -rf /usr/local/Caskroom/google-cloud-sdk
+
+which gcloud
+
 # temporary workaround until mvn is available in the image by default
 # the integration tests rely on Maven being installed, cannot use the wrapper
 curl  https://storage.googleapis.com/cloud-tools-for-java-team-kokoro-build-cache/apache-maven-3.5.0-bin.tar.gz -o apache-maven-3.5.0-bin.tar.gz
