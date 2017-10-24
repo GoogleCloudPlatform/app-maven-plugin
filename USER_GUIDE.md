@@ -236,7 +236,7 @@ You can pass environment variables directly to the Dev App Server:
   <environment>
     <VARIABLE_NAME>value</VARIABLE_NAME>
   </environment>
-<configuration>
+</configuration>
 ```
 
 ### How can I pass additional arguments to the Dev Appserver (both v1 and v2-alpha)?
@@ -249,7 +249,7 @@ You can pass additional arguments directly to the Dev App Server:
     <additionalArgument>--ARG1</additionalArgument>
     <additionalArgument>--ARG2</additionalArgument>
   </additionalArguments>
-<configuration>
+</configuration>
 ```
 
 ---
