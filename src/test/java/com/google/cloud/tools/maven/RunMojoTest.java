@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -43,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -242,5 +244,21 @@ public class RunMojoTest extends AbstractDevServerTest {
     Map<String, String> environment = captor.getValue().getEnvironment();
     assertEquals(1, environment.size());
     assertEquals("envVarValue", environment.get("envVarName"));
+  }
+
+  @Test
+  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  public void testAdditionalArguments(String version, SupportedDevServerVersion mockVersion)
+      throws IOException, MojoExecutionException, MojoFailureException {
+    runMojo.devserverVersion = version;
+    setUpAppEngineWebXml();
+    runMojo.services = Collections.singletonList(new File("src/main/appengine"));
+    runMojo.additionalArguments = ImmutableList.of("--ARG1", "--ARG2");
+    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
+    doNothing().when(devServerMock).run(captor.capture());
+    runMojo.execute();
+
+    assertArrayEquals(new String[]{ "--ARG1", "--ARG2" },
+        captor.getValue().getAdditionalArguments().toArray());
   }
 }
