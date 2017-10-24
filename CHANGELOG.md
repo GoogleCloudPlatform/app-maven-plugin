@@ -8,6 +8,15 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+## 1.3.2
+### Added
+* New `<additionalArguments>` parameter to pass additional arguments to Dev App Server ([#219](../../pulls/219)),
+relevant pull request in App Engine Plugins Core:
+[appengine-plugins-core/433](https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/433)
+
+### Changed
+* Upgrade App Engine Plugins Core dependency to 0.3.9 ([#219](../../pulls/219))
+
 ## 1.3.1
 ### Added
 * New `<environment>` parameter to pass environment variables to Dev App Server ([#183](../../pulls/183)),
