@@ -7,6 +7,8 @@ set -x
 
 ls .
 readlink -f $(which gcloud)
+ls /opt
+ls /opt/google-cloud-sdk
 tree /opt
 
 curl https://sdk.cloud.google.com | bash
