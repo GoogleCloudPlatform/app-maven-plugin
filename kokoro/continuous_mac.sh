@@ -5,11 +5,10 @@ set -e
 # Display commands to stderr.
 set -x
 
-ls .
+gcloud version
 readlink $(which gcloud)
-ls /opt
-ls /opt/google-cloud-sdk
-tree /opt
+brew cask reinstall google-cloud-sdk
+gcloud version
 
 curl https://sdk.cloud.google.com | bash
 GOOGLE_CLOUD_SDK_HOME=/Users/kbuilder/google-cloud-sdk
