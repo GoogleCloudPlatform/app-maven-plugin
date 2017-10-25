@@ -6,7 +6,7 @@ set -e
 set -x
 
 ls .
-readlink -f $(which gcloud)
+readlink $(which gcloud)
 ls /opt
 ls /opt/google-cloud-sdk
 tree /opt
