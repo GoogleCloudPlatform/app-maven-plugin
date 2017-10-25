@@ -5,7 +5,7 @@ set -e
 # Display commands to stderr.
 set -x
 
-gcloud update components
+gcloud components update
 gcloud components install app-engine-java
 
 gcloud version
