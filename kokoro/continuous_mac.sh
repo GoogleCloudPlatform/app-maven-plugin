@@ -5,17 +5,8 @@ set -e
 # Display commands to stderr.
 set -x
 
-gcloud version
-readlink $(which gcloud)
-brew cask reinstall google-cloud-sdk
-gcloud version
-
-curl https://sdk.cloud.google.com | bash
-GOOGLE_CLOUD_SDK_HOME=/Users/kbuilder/google-cloud-sdk
-"$GOOGLE_CLOUD_SDK_HOME"/bin/gcloud components install app-engine-java
-
-# Sets gcloud to use the downloaded SDK.
-ln -sf "$GOOGLE_CLOUD_SDK_HOME"/bin/gcloud $(which gcloud)
+gcloud update components
+gcloud components install app-engine-java
 
 # temporary workaround until mvn is available in the image by default
 # the integration tests rely on Maven being installed, cannot use the wrapper
