@@ -8,8 +8,6 @@ set -x
 gcloud components update
 gcloud components install app-engine-java
 
-gcloud version
-
 # temporary workaround until mvn is available in the image by default
 # the integration tests rely on Maven being installed, cannot use the wrapper
 curl  https://storage.googleapis.com/cloud-tools-for-java-team-kokoro-build-cache/apache-maven-3.5.0-bin.tar.gz -o apache-maven-3.5.0-bin.tar.gz
