@@ -5,6 +5,10 @@ set -e
 # Display commands to stderr.
 set -x
 
+ls .
+readlink -f $(which gcloud)
+tree /opt
+
 curl https://sdk.cloud.google.com | bash
 GOOGLE_CLOUD_SDK_HOME=/Users/kbuilder/google-cloud-sdk
 "$GOOGLE_CLOUD_SDK_HOME"/bin/gcloud components install app-engine-java
