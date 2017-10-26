@@ -68,8 +68,9 @@ mvn versions:set versions:commit -DnewVersion=${NEXT_SNAPSHOT}
 # Commits this next snapshot version.
 git commit -am "${NEXT_SNAPSHOT}"
 
-# Pushes the release branch to Github.
-git push --tags --set-upstream origin ${VERSION}
+# Pushes the tag and release branch to Github.
+git push origin v${VERSION}
+git push --set-upstream origin ${VERSION}
 
 # File a PR on Github for the new branch. Have someone LGTM it, which gives you permission to continue.
 EchoGreen 'File a PR for the new release branch:'
