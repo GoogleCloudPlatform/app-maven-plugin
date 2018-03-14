@@ -175,7 +175,7 @@ You can debug the Dev App Server v1 using the jvmFlags:
         -agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n
     </jvmFlag>
   </jvmFlags>
-<configuration>
+</configuration>
 ```
 
 ### How do I enable hot reload of my application?
@@ -188,7 +188,7 @@ To enable hot reload of classes, you must tell the Dev App Server v1 to scan for
         -Dappengine.fullscan.seconds=5
     </jvmFlag>
   </jvmFlags>
-<configuration>
+</configuration>
 ```
 While your app is running, just run `mvn war:exploded` to reflect your changes into the running application.
 
@@ -201,7 +201,7 @@ While your app is running, just run `mvn war:exploded` to reflect your changes i
         -Ddatastore.backing_store=/path/to/my/local_db.bin
     </jvmFlag>
   </jvmFlags>
-<configuration>
+</configuration>
 ```
 
 ### How do I run multiple modules on the Dev App Server v1?
