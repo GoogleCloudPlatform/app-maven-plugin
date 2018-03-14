@@ -102,12 +102,17 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
+    if (mojo.getCloudSdkHome() == null) {
+      mojo.downloadCloudSdk();
+    } else if (mojo.getCloudSdkVersion() != null) {
+      mojo.checkCloudSdk();
+    }
 
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());
 
     return cloudSdkFactory
         .cloudSdkBuilder()
-        .sdkPath(mojo.getCloudSdkPath())
+        .sdkPath(mojo.getCloudSdkHome())
         .addStdOutLineListener(lineListener)
         .addStdErrLineListener(lineListener)
         .exitListener(new NonZeroExceptionExitListener())

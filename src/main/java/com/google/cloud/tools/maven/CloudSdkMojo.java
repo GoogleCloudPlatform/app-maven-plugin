@@ -29,8 +29,12 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 public abstract class CloudSdkMojo extends AbstractMojo {
 
   /** Optional parameter to configure the location of the Google Cloud SDK. */
-  @Parameter(property = "cloudSdkPath", required = false)
-  private File cloudSdkPath;
+  @Parameter(property = "cloudSdkHome", required = false)
+  private File cloudSdkHome;
+
+  /** Optional parameter to configure the version of the Google Cloud SDK. */
+  @Parameter(property = "cloudSdkVersion", required = false)
+  private String cloudSdkVersion;
 
   @Parameter(defaultValue = "${plugin}", readonly = true)
   private PluginDescriptor pluginDescriptor;
@@ -48,8 +52,12 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return pluginDescriptor.getVersion();
   }
 
-  public Path getCloudSdkPath() {
-    return cloudSdkPath != null ? cloudSdkPath.toPath() : null;
+  public Path getCloudSdkHome() {
+    return cloudSdkHome != null ? cloudSdkHome.toPath() : null;
+  }
+
+  public String getCloudSdkVersion() {
+    return cloudSdkVersion;
   }
 
   public AppEngineFactory getAppEngineFactory() {
@@ -86,6 +94,15 @@ public abstract class CloudSdkMojo extends AbstractMojo {
       }
     }
     return javaVersion;
+  }
+
+  public void downloadCloudSdk() {
+    // Just logging a warning here for now so tests don't fail
+    getLog().warn("Downloading Cloud SDK (not implemented)");
+  }
+
+  public void checkCloudSdk() {
+    getLog().warn("Checking Cloud SDK (not implemented)");
   }
 
   protected String getPackaging() {
