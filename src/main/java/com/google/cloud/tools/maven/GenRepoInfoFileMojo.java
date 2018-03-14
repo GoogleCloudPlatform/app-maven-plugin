@@ -18,7 +18,9 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFileConfiguration;
-
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.logging.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -26,44 +28,45 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.logging.Logger;
-
-/**
- * Generates repository information files for the Stackdriver Debugger.
- */
+/** Generates repository information files for the Stackdriver Debugger. */
 @Mojo(name = "genRepoInfoFile")
 @Execute(phase = LifecyclePhase.PREPARE_PACKAGE)
 public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFileConfiguration {
 
   private static Logger logger = Logger.getLogger(GenRepoInfoFileMojo.class.getName());
-  private static final String HOW_TO_FIX_MSG = "An error occurred while generating source context"
-      + " files. Make sure your project is in a Git repository. To ignore source context generation"
-      + " errors, use the -Dapp.genRepoInfoFile.ignoreErrors=true flag.";
+  private static final String HOW_TO_FIX_MSG =
+      "An error occurred while generating source context"
+          + " files. Make sure your project is in a Git repository. To ignore source context"
+          + " generation errors, use the -Dapp.genRepoInfoFile.ignoreErrors=true flag.";
 
   /**
    * The root directory containing the source code of the app. Expected to be contained in a git
    * repository.
    */
-  @Parameter(alias = "genRepoInfoFile.sourceDirectory", defaultValue = "${project.basedir}",
-      property = "app.genRepoInfoFile.sourceDirectory")
+  @Parameter(
+    alias = "genRepoInfoFile.sourceDirectory",
+    defaultValue = "${project.basedir}",
+    property = "app.genRepoInfoFile.sourceDirectory"
+  )
   protected File sourceDirectory;
 
-  /**
-   * Directory where the source context files will be generated.
-   */
-  @Parameter(alias = "genRepoInfoFile.outputDirectory",
-      defaultValue = "${project.build.outputDirectory}",
-      property = "app.genRepoInfoFile.outputDirectory")
+  /** Directory where the source context files will be generated. */
+  @Parameter(
+    alias = "genRepoInfoFile.outputDirectory",
+    defaultValue = "${project.build.outputDirectory}",
+    property = "app.genRepoInfoFile.outputDirectory"
+  )
   protected String outputDirectory;
 
   /**
    * If {@code true}, ignores errors generating the source context files and proceeds to deployment.
    * If {@code false}, the goal is aborted by generation errors.
    */
-  @Parameter(alias = "genRepoInfoFile.ignoreErrors", defaultValue = "false",
-      property = "app.genRepoInfoFile.ignoreErrors")
+  @Parameter(
+    alias = "genRepoInfoFile.ignoreErrors",
+    defaultValue = "false",
+    property = "app.genRepoInfoFile.ignoreErrors"
+  )
   protected boolean ignoreErrors;
 
   @Override

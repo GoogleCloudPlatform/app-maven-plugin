@@ -22,16 +22,13 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 
-/**
- * Factory interface for App Engine dependencies.
- */
+/** Factory interface for App Engine dependencies. */
 public interface AppEngineFactory {
 
-  /**
-   * Supported dev app server versions.
-   */
+  /** Supported dev app server versions. */
   public enum SupportedDevServerVersion {
-    V1, V2ALPHA;
+    V1,
+    V2ALPHA;
 
     /**
      * Parses {@code versionString} into a {@link SupportedDevServerVersion}. The aim is to let the

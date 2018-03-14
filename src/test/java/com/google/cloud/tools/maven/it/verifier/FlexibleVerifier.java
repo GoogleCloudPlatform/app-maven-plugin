@@ -16,17 +16,17 @@
 
 package com.google.cloud.tools.maven.it.verifier;
 
+import java.io.IOException;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.util.ResourceExtractor;
-
-import java.io.IOException;
 
 public class FlexibleVerifier extends TailingVerifier {
 
   public FlexibleVerifier(String testName) throws IOException, VerificationException {
-    super(testName,
-        ResourceExtractor
-            .simpleExtractResources(FlexibleVerifier.class, "/projects/flexible-project")
+    super(
+        testName,
+        ResourceExtractor.simpleExtractResources(
+                FlexibleVerifier.class, "/projects/flexible-project")
             .getAbsolutePath());
   }
 }

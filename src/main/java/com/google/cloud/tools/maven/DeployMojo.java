@@ -17,7 +17,8 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
-
+import java.io.File;
+import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -25,12 +26,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
-import java.util.List;
-
-/**
- * Stage and deploy an application to Google App Engine standard or flexible environment.
- */
+/** Stage and deploy an application to Google App Engine standard or flexible environment. */
 @Mojo(name = "deploy")
 @Execute(phase = LifecyclePhase.PACKAGE)
 public class DeployMojo extends StageMojo implements DeployConfiguration {
@@ -52,27 +48,21 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
 
   /**
    * Deploy with a specific Docker image. Docker url must be from one of the valid gcr hostnames.
-   * 
+   *
    * <p><i>Supported only for flexible environment.</i>
    */
   @Parameter(alias = "deploy.imageUrl", property = "app.deploy.imageUrl")
   protected String imageUrl;
 
-  /**
-   * Promote the deployed version to receive all traffic. True by default.
-   */
+  /** Promote the deployed version to receive all traffic. True by default. */
   @Parameter(alias = "deploy.promote", property = "app.deploy.promote")
   protected Boolean promote;
 
-  /**
-   * The App Engine server to connect to. You will not typically need to change this value.
-   */
+  /** The App Engine server to connect to. You will not typically need to change this value. */
   @Parameter(alias = "deploy.server", property = "app.deploy.server")
   protected String server;
 
-  /**
-   * Stop the previously running version when deploying a new version that receives all traffic.
-   */
+  /** Stop the previously running version when deploying a new version that receives all traffic. */
   @Parameter(alias = "deploy.stopPreviousVersion", property = "app.deploy.stopPreviousVersion")
   protected Boolean stopPreviousVersion;
 

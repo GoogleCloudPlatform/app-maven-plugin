@@ -26,7 +26,11 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -40,36 +44,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 @RunWith(JUnitParamsRunner.class)
 public class StageMojoTest {
 
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
-  @Mock
-  private CloudSdkAppEngineFactory factoryMock;
+  @Mock private CloudSdkAppEngineFactory factoryMock;
 
-  @Mock
-  private MavenProject mavenProject;
+  @Mock private MavenProject mavenProject;
 
-  @Mock
-  private AppEngineFlexibleStaging flexibleStagingMock;
+  @Mock private AppEngineFlexibleStaging flexibleStagingMock;
 
-  @Mock
-  private AppEngineStandardStaging standardStagingMock;
+  @Mock private AppEngineStandardStaging standardStagingMock;
 
-  @Mock
-  private Log logMock;
+  @Mock private Log logMock;
 
-  @InjectMocks
-  private StageMojo stageMojo;
+  @InjectMocks private StageMojo stageMojo;
 
   @Before
   public void configureStageMojo() throws IOException {
@@ -130,16 +120,16 @@ public class StageMojoTest {
   }
 
   @SuppressWarnings("unused") // used for testRun_packagingIsNotJarOrWar()
-  private Object[][] parametersForTestRun_packagingIsNotJarOrWar(){
-    return new Object[][]{
-        new Object[]{ null },
-        new Object[]{ "pom" },
-        new Object[]{ "ear" },
-        new Object[]{ "rar" },
-        new Object[]{ "par" },
-        new Object[]{ "ejb" },
-        new Object[]{ "maven-plugin" },
-        new Object[]{ "eclipse-plugin" }
+  private Object[][] parametersForTestRun_packagingIsNotJarOrWar() {
+    return new Object[][] {
+      new Object[] {null},
+      new Object[] {"pom"},
+      new Object[] {"ear"},
+      new Object[] {"rar"},
+      new Object[] {"par"},
+      new Object[] {"ejb"},
+      new Object[] {"maven-plugin"},
+      new Object[] {"eclipse-plugin"}
     };
   }
 }

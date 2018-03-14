@@ -19,7 +19,10 @@ package com.google.cloud.tools.maven;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.util.CollectionUtil;
-
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -28,14 +31,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Run App Engine Development App Server synchronously.
- */
+/** Run App Engine Development App Server synchronously. */
 @Mojo(name = "run")
 @Execute(phase = LifecyclePhase.PACKAGE)
 public class RunMojo extends CloudSdkMojo implements RunConfiguration {
@@ -53,9 +49,8 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   /**
    * Path to a yaml file, or a directory containing yaml files, or a directory containing
-   * WEB-INF/web.xml. Defaults to
-   * <code>${project.build.directory}/${project.build.finalName}</code>, unless {@code #appYamls}
-   * is set, in which case it will default to {@code #appYamls}' value.
+   * WEB-INF/web.xml. Defaults to <code>${project.build.directory}/${project.build.finalName}</code>
+   * , unless {@code #appYamls} is set, in which case it will default to {@code #appYamls}' value.
    */
   @Parameter(alias = "devserver.services", property = "app.devserver.services", required = true)
   protected List<File> services;
@@ -64,19 +59,19 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    * Version of the dev app server to use to run the services. Supported values are "1" and
    * "2-alpha". (default: "1")
    */
-  @Parameter(alias = "devserver.version", property = "app.devserver.version", required = true,
-      defaultValue = "1")
+  @Parameter(
+    alias = "devserver.version",
+    property = "app.devserver.version",
+    required = true,
+    defaultValue = "1"
+  )
   protected String devserverVersion;
 
-  /**
-   * Host name to which application modules should bind. (default: localhost)
-   */
+  /** Host name to which application modules should bind. (default: localhost) */
   @Parameter(alias = "devserver.host", property = "app.devserver.host")
   protected String host;
 
-  /**
-   * Lowest port to which application modules should bind. (default: 8080)
-   */
+  /** Lowest port to which application modules should bind. (default: 8080) */
   @Parameter(alias = "devserver.port", property = "app.devserver.port")
   protected Integer port;
 
@@ -113,8 +108,8 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   protected File storagePath;
 
   /**
-   *  Path to a file used to store datastore contents (defaults to a file in --storage_path if not
-   *  set). (default: None)
+   * Path to a file used to store datastore contents (defaults to a file in --storage_path if not
+   * set). (default: None)
    *
    * <p><i>Supported only for devserver version 2-alpha.</i>
    */
@@ -146,8 +141,10 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    *
    * <p><i>Supported only for devserver version 2-alpha.</i>
    */
-  @Parameter(alias = "devserver.useMtimeFileWatcher",
-      property = "app.devserver.useMtimeFileWatcher")
+  @Parameter(
+    alias = "devserver.useMtimeFileWatcher",
+    property = "app.devserver.useMtimeFileWatcher"
+  )
   protected Boolean useMtimeFileWatcher;
 
   /**
@@ -166,8 +163,10 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    *
    * <p><i>Supported only for devserver version 2-alpha.</i>
    */
-  @Parameter(alias = "devserver.pythonStartupScript",
-      property = "app.devserver.pythonStartupScript")
+  @Parameter(
+    alias = "devserver.pythonStartupScript",
+    property = "app.devserver.pythonStartupScript"
+  )
   protected String pythonStartupScript;
 
   /**
@@ -239,8 +238,10 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
    *
    * <p><i>Supported only for devserver version 2-alpha.</i>
    */
-  @Parameter(alias = "devserver.devAppserverLogLevel",
-      property = "app.devserver.devAppserverLogLevel")
+  @Parameter(
+    alias = "devserver.devAppserverLogLevel",
+    property = "app.devserver.devAppserverLogLevel"
+  )
   protected String devAppserverLogLevel;
 
   /**
@@ -251,11 +252,11 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Parameter(alias = "devserver.skipSdkUpdateCheck", property = "app.devserver.skipSdkUpdateCheck")
   protected Boolean skipSdkUpdateCheck;
 
-  /**
-   * Default Google Cloud Storage bucket name. (default: None)
-   */
-  @Parameter(alias = "devserver.defaultGcsBucketName",
-      property = "app.devserver.defaultGcsBucketName")
+  /** Default Google Cloud Storage bucket name. (default: None) */
+  @Parameter(
+    alias = "devserver.defaultGcsBucketName",
+    property = "app.devserver.defaultGcsBucketName"
+  )
   protected String defaultGcsBucketName;
 
   /**
@@ -266,21 +267,19 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Parameter(alias = "devserver.clearDatastore", property = "app.devserver.clearDatastore")
   protected Boolean clearDatastore;
 
-  /**
-   * Environment variables passed to the devappserver process.
-   */
+  /** Environment variables passed to the devappserver process. */
   @Parameter(alias = "devserver.environment", property = "app.devserver.environment")
   protected Map<String, String> environment;
 
-  /**
-   * Environment variables passed to the devappserver process.
-   */
-  @Parameter(alias = "devserver.additionalArguments",
-      property = "app.devserver.additionalArguments")
+  /** Environment variables passed to the devappserver process. */
+  @Parameter(
+    alias = "devserver.additionalArguments",
+    property = "app.devserver.additionalArguments"
+  )
   protected List<String> additionalArguments;
 
-  // RunAsyncMojo should override #runServer(version) so that other configuration changing code 
-  // shared between these classes is executed 
+  // RunAsyncMojo should override #runServer(version) so that other configuration changing code
+  // shared between these classes is executed
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     SupportedDevServerVersion convertedVersion = convertDevserverVersionString();
@@ -295,8 +294,9 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   /**
    * Verifies that {@code version} is of the supported values.
-   * @throws MojoExecutionException if {@code version} cannot be converted to
-   * {@link SupportedDevServerVersion}
+   *
+   * @throws MojoExecutionException if {@code version} cannot be converted to {@link
+   *     SupportedDevServerVersion}
    */
   protected SupportedDevServerVersion convertDevserverVersionString()
       throws MojoExecutionException {
@@ -308,13 +308,15 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   }
 
   /**
-   * <p>If &lt;appYamls&gt; is explicitly set by the user, we'll display a warning.</p>
+   * If &lt;appYamls&gt; is explicitly set by the user, we'll display a warning.
+   *
    * <p>If &lt;appYamls&gt; is explicitly set by the user and &lt;services&gt; is not (i.e. not
    * present in the configuration; <i>note: the </i>{@code services}<i> field will contain the
    * default value, so we cannot simply check if it's empty</i>), then we'll assign the value of
-   * &lt;appYamls&gt; to &lt;services&gt; to be used in the run configuration.</p>
+   * &lt;appYamls&gt; to &lt;services&gt; to be used in the run configuration.
+   *
    * <p>If both &lt;appYamls&gt; and &lt;services&gt; are explicitly set in the configuration, we'll
-   * throw an error.</p>
+   * throw an error.
    *
    * @throws MojoExecutionException if both &lt;appYamls&gt; and &lt;services&gt; are explicitly set
    *     in the configuration
@@ -324,8 +326,8 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       if (CollectionUtil.isNullOrEmpty(services)) {
         Build build = mavenProject.getBuild();
         services =
-            Collections.singletonList(new File(build.getDirectory()).toPath()
-                .resolve(build.getFinalName()).toFile());
+            Collections.singletonList(
+                new File(build.getDirectory()).toPath().resolve(build.getFinalName()).toFile());
       }
     } else {
       // no default value, so it was set by the user explicitly
@@ -333,21 +335,23 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       if (CollectionUtil.isNullOrEmpty(services)) {
         services = appYamls;
       } else {
-        throw new MojoExecutionException("Both <appYamls> and <services> are defined."
-            + " <appYamls> is deprecated, use <services> only.");
+        throw new MojoExecutionException(
+            "Both <appYamls> and <services> are defined."
+                + " <appYamls> is deprecated, use <services> only.");
       }
     }
   }
 
-  /**
-   * Determine if the built application is a Standard Environment app.
-   */
+  /** Determine if the built application is a Standard Environment app. */
   protected boolean isStandardEnvironmentApp() {
     return mavenProject != null
         && mavenProject.getBuild() != null
         && new File(
-            mavenProject.getBuild().getDirectory() + "/"  + mavenProject.getBuild().getFinalName()
-                + "/WEB-INF/appengine-web.xml").exists();
+                mavenProject.getBuild().getDirectory()
+                    + "/"
+                    + mavenProject.getBuild().getFinalName()
+                    + "/WEB-INF/appengine-web.xml")
+            .exists();
   }
 
   /**

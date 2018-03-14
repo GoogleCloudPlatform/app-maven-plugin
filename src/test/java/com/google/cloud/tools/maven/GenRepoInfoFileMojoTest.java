@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFile;
-
+import java.nio.file.Paths;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
@@ -16,21 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.nio.file.Paths;
-
-/**
- * {@link GenRepoInfoFileMojo} unit tests.
- */
+/** {@link GenRepoInfoFileMojo} unit tests. */
 @RunWith(MockitoJUnitRunner.class)
 public class GenRepoInfoFileMojoTest {
-  @Mock
-  private CloudSdkAppEngineFactory factory;
+  @Mock private CloudSdkAppEngineFactory factory;
 
-  @Mock
-  private GenRepoInfoFile genMock;
+  @Mock private GenRepoInfoFile genMock;
 
-  @InjectMocks
-  private GenRepoInfoFileMojo genMojo;
+  @InjectMocks private GenRepoInfoFileMojo genMojo;
 
   @Before
   public void init() {

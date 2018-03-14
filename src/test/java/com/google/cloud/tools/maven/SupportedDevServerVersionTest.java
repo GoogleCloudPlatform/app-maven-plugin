@@ -3,15 +3,13 @@ package com.google.cloud.tools.maven;
 import static org.junit.Assert.assertEquals;
 
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class SupportedDevServerVersionTest {
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+  @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void testParseV1() {

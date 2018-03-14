@@ -32,14 +32,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkMojoTest {
 
-  @Mock
-  private PluginDescriptor pluginDescriptorMock;
+  @Mock private PluginDescriptor pluginDescriptorMock;
 
-  @Mock
-  private MavenProject mavenProject;
+  @Mock private MavenProject mavenProject;
 
-  @InjectMocks
-  private CloudSdkMojoImpl mojo;
+  @InjectMocks private CloudSdkMojoImpl mojo;
 
   @Test
   public void testGetArtifactId() {
@@ -50,7 +47,6 @@ public class CloudSdkMojoTest {
 
     // invoke & verify
     assertEquals(ARTIFACT_ID, mojo.getArtifactId());
-
   }
 
   @Test
@@ -62,7 +58,6 @@ public class CloudSdkMojoTest {
 
     // invoke & verify
     assertEquals(ARTIFACT_VERSION, mojo.getArtifactVersion());
-
   }
 
   @Test
@@ -75,8 +70,6 @@ public class CloudSdkMojoTest {
   static class CloudSdkMojoImpl extends CloudSdkMojo {
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-
-    }
+    public void execute() throws MojoExecutionException, MojoFailureException {}
   }
 }

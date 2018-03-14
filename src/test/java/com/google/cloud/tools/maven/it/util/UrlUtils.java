@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.maven.it.util;
 
-
 import com.google.common.io.CharStreams;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -26,16 +24,13 @@ import java.net.URL;
 
 public class UrlUtils {
 
-  /**
-   * If the response code is 200, returns the content at the URL. Otherwise, returns null.
-   */
+  /** If the response code is 200, returns the content at the URL. Otherwise, returns null. */
   public static String getUrlContent(String url) {
     try {
       HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
       int responseCode = urlConnection.getResponseCode();
       if (responseCode == 200) {
-        return CharStreams
-            .toString(new InputStreamReader(urlConnection.getInputStream()));
+        return CharStreams.toString(new InputStreamReader(urlConnection.getInputStream()));
       }
     } catch (IOException e) {
     }
@@ -70,8 +65,8 @@ public class UrlUtils {
     return getUrlContentWithRetries(url, timeoutMs, retryDelayMs, true) == null;
   }
 
-  private static String getUrlContentWithRetries(String url, long timeoutMs, long retryDelayMs,
-      boolean waitForFailure)
+  private static String getUrlContentWithRetries(
+      String url, long timeoutMs, long retryDelayMs, boolean waitForFailure)
       throws InterruptedException {
     long totalWaitedMs = 0;
     String content = getUrlContent(url);

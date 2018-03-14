@@ -20,7 +20,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.maven.util.SingleYamlFlexibleDeployTestHelper;
-
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Rule;
@@ -30,22 +31,18 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 @RunWith(JUnitParamsRunner.class)
 public class FlexDeployDosMojoTest {
 
   private DeployDosMojo mojo = new DeployDosMojo();
-  
+
   private TemporaryFolder tempFolder = new TemporaryFolder();
-  
+
   private SingleYamlFlexibleDeployTestHelper<DeployDosMojo> testFixture =
       new SingleYamlFlexibleDeployTestHelper<>(mojo, tempFolder);
-  
-  @Rule
-  public TestRule testRule = RuleChain.outerRule(tempFolder).around(testFixture);
-  
+
+  @Rule public TestRule testRule = RuleChain.outerRule(tempFolder).around(testFixture);
+
   @Test
   @Parameters({"jar", "war"})
   public void testDeployFlexible(String packaging)

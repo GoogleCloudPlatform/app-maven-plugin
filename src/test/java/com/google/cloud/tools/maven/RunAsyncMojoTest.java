@@ -21,7 +21,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
-
+import java.io.IOException;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -32,22 +34,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 @RunWith(JUnitParamsRunner.class)
 public class RunAsyncMojoTest extends AbstractDevServerTest {
 
-  @Mock
-  private Log logMock;
+  @Mock private Log logMock;
 
-  @InjectMocks
-  private RunAsyncMojo runAsyncMojo;
+  @InjectMocks private RunAsyncMojo runAsyncMojo;
 
   @Before
-  public void setUp(){
+  public void setUp() {
     MockitoAnnotations.initMocks(this);
   }
 

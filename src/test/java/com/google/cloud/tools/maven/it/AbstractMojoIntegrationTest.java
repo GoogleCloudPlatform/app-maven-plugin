@@ -20,11 +20,9 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.maven.it.verifier.TailingVerifier;
-
+import java.util.Arrays;
 import org.apache.maven.it.VerificationException;
 import org.junit.BeforeClass;
-
-import java.util.Arrays;
 
 public abstract class AbstractMojoIntegrationTest {
 
@@ -42,9 +40,8 @@ public abstract class AbstractMojoIntegrationTest {
   }
 
   protected void deleteService(String service) throws ProcessRunnerException {
-    CloudSdk cloudSdk = new CloudSdk.Builder()
-        .exitListener(new NonZeroExceptionExitListener())
-        .build();
+    CloudSdk cloudSdk =
+        new CloudSdk.Builder().exitListener(new NonZeroExceptionExitListener()).build();
     cloudSdk.runAppCommand(Arrays.asList("services", "delete", service));
   }
 }

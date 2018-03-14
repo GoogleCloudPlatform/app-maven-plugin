@@ -27,5 +27,4 @@ public class DeployCronMojoIntegrationTest extends AbstractSingleYamlDeployInteg
   protected String getDeployGoal() {
     return "deployCron";
   }
-
 }

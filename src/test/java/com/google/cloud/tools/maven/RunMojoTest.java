@@ -25,8 +25,14 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
-
 import com.google.common.collect.ImmutableList;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Map;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -40,26 +46,15 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 @RunWith(JUnitParamsRunner.class)
 public class RunMojoTest extends AbstractDevServerTest {
 
-  @InjectMocks
-  private RunMojo runMojo;
+  @InjectMocks private RunMojo runMojo;
 
   @Captor
   private ArgumentCaptor<RunConfiguration> captor = ArgumentCaptor.forClass(RunConfiguration.class);
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+  @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before
   public void setUp() {
@@ -78,7 +73,7 @@ public class RunMojoTest extends AbstractDevServerTest {
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testRun(String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     // wire up
@@ -94,9 +89,9 @@ public class RunMojoTest extends AbstractDevServerTest {
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsSetAndOverridesNullServices(String version,
-      SupportedDevServerVersion mockVersion)
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRun_appYamlsSetAndOverridesNullServices(
+      String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -105,14 +100,13 @@ public class RunMojoTest extends AbstractDevServerTest {
 
     runMojo.execute();
 
-    assertArrayEquals(new File[]{ new File("src/main/appengine") },
-        runMojo.getServices().toArray());
+    assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsSetAndOverridesEmptyServices(String version,
-      SupportedDevServerVersion mockVersion)
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRun_appYamlsSetAndOverridesEmptyServices(
+      String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -122,14 +116,13 @@ public class RunMojoTest extends AbstractDevServerTest {
 
     runMojo.execute();
 
-    assertArrayEquals(new File[]{ new File("src/main/appengine") },
-        runMojo.getServices().toArray());
+    assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsNotSetServicesIsUsed(String version,
-      SupportedDevServerVersion mockVersion)
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRun_appYamlsNotSetServicesIsUsed(
+      String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -138,14 +131,13 @@ public class RunMojoTest extends AbstractDevServerTest {
 
     runMojo.execute();
 
-    assertArrayEquals(new File[]{ new File("src/main/appengine") },
-        runMojo.getServices().toArray());
+    assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsEmptyServicesIsUsed(String version,
-      SupportedDevServerVersion mockVersion)
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRun_appYamlsEmptyServicesIsUsed(
+      String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -155,14 +147,13 @@ public class RunMojoTest extends AbstractDevServerTest {
 
     runMojo.execute();
 
-    assertArrayEquals(new File[]{ new File("src/main/appengine") },
-        runMojo.getServices().toArray());
+    assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsEmptyServicesNullDefaultIsUsed(String version,
-      SupportedDevServerVersion mockVersion)
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRun_appYamlsEmptyServicesNullDefaultIsUsed(
+      String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -171,15 +162,15 @@ public class RunMojoTest extends AbstractDevServerTest {
 
     runMojo.execute();
 
-    assertArrayEquals(new File[]{
-        Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile() },
+    assertArrayEquals(
+        new File[] {Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile()},
         runMojo.getServices().toArray());
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlsEmptyServicesEmptyDefaultIsUsed(String version,
-      SupportedDevServerVersion mockVersion)
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRun_appYamlsEmptyServicesEmptyDefaultIsUsed(
+      String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -189,15 +180,15 @@ public class RunMojoTest extends AbstractDevServerTest {
 
     runMojo.execute();
 
-    assertArrayEquals(new File[]{
-        Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile() },
+    assertArrayEquals(
+        new File[] {Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile()},
         runMojo.getServices().toArray());
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
-  public void testRun_appYamlAndServicesSetCausesError(String version,
-      SupportedDevServerVersion mockVersion)
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
+  public void testRun_appYamlAndServicesSetCausesError(
+      String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
@@ -205,14 +196,15 @@ public class RunMojoTest extends AbstractDevServerTest {
     when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
 
     expectedException.expect(MojoExecutionException.class);
-    expectedException.expectMessage("Both <appYamls> and <services> are defined."
-        + " <appYamls> is deprecated, use <services> only.");
+    expectedException.expectMessage(
+        "Both <appYamls> and <services> are defined."
+            + " <appYamls> is deprecated, use <services> only.");
 
     runMojo.execute();
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testRunFlexible(String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     // wire up
@@ -230,7 +222,7 @@ public class RunMojoTest extends AbstractDevServerTest {
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testEnvironment(String version, SupportedDevServerVersion mockVersion)
       throws IOException, MojoExecutionException, MojoFailureException {
     runMojo.devserverVersion = version;
@@ -247,7 +239,7 @@ public class RunMojoTest extends AbstractDevServerTest {
   }
 
   @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA" })
+  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testAdditionalArguments(String version, SupportedDevServerVersion mockVersion)
       throws IOException, MojoExecutionException, MojoFailureException {
     runMojo.devserverVersion = version;
@@ -258,7 +250,7 @@ public class RunMojoTest extends AbstractDevServerTest {
     doNothing().when(devServerMock).run(captor.capture());
     runMojo.execute();
 
-    assertArrayEquals(new String[]{ "--ARG1", "--ARG2" },
-        captor.getValue().getAdditionalArguments().toArray());
+    assertArrayEquals(
+        new String[] {"--ARG1", "--ARG2"}, captor.getValue().getAdditionalArguments().toArray());
   }
 }

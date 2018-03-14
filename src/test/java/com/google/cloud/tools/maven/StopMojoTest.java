@@ -22,7 +22,9 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
-
+import java.io.IOException;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
@@ -34,11 +36,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 @RunWith(JUnitParamsRunner.class)
 public class StopMojoTest {
 
@@ -47,20 +44,16 @@ public class StopMojoTest {
   private static final String V1_VERSION = "1";
   private static final Object V2_VERSION = "2-alpha";
 
-  @Mock
-  private CloudSdkAppEngineFactory factoryMock;
+  @Mock private CloudSdkAppEngineFactory factoryMock;
 
-  @Mock
-  private AppEngineDevServer devServerMock;
+  @Mock private AppEngineDevServer devServerMock;
 
-  @InjectMocks
-  private StopMojo stopMojo;
+  @InjectMocks private StopMojo stopMojo;
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+  @Rule public ExpectedException expectedException = ExpectedException.none();
 
   @Before
-  public void setUp(){
+  public void setUp() {
     MockitoAnnotations.initMocks(this);
   }
 
@@ -115,8 +108,8 @@ public class StopMojoTest {
   @SuppressWarnings("unused") // used for testGetAdminPort()
   private Object[] parametersForTestGetAdminPort() {
     return new Object[] {
-      new Object[]{ PORT, ADMIN_PORT, V1_VERSION, PORT },
-      new Object[]{ PORT, ADMIN_PORT, V2_VERSION, ADMIN_PORT}
+      new Object[] {PORT, ADMIN_PORT, V1_VERSION, PORT},
+      new Object[] {PORT, ADMIN_PORT, V2_VERSION, ADMIN_PORT}
     };
   }
 }

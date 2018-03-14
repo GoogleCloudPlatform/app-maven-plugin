@@ -30,12 +30,9 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStagin
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFile;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
-
 import org.apache.maven.plugin.logging.Log;
 
-/**
- * Factory for App Engine dependencies.
- */
+/** Factory for App Engine dependencies. */
 public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   protected CloudSdkFactory cloudSdkFactory;
@@ -74,8 +71,8 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
     return createDevServerForVersion(version, defaultCloudSdkBuilder().build());
   }
 
-  private AppEngineDevServer createDevServerForVersion(SupportedDevServerVersion version,
-      CloudSdk cloudSdk) {
+  private AppEngineDevServer createDevServerForVersion(
+      SupportedDevServerVersion version, CloudSdk cloudSdk) {
     switch (version) {
       case V1:
         return cloudSdkFactory.devServer1(cloudSdk);
@@ -87,11 +84,10 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   @Override
-  public AppEngineDevServer devServerRunAsync(int startSuccessTimeout,
-      SupportedDevServerVersion version) {
-    CloudSdk.Builder builder = defaultCloudSdkBuilder()
-        .async(true)
-        .runDevAppServerWait(startSuccessTimeout);
+  public AppEngineDevServer devServerRunAsync(
+      int startSuccessTimeout, SupportedDevServerVersion version) {
+    CloudSdk.Builder builder =
+        defaultCloudSdkBuilder().async(true).runDevAppServerWait(startSuccessTimeout);
     return createDevServerForVersion(version, builder.build());
   }
 
@@ -109,7 +105,8 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());
 
-    return cloudSdkFactory.cloudSdkBuilder()
+    return cloudSdkFactory
+        .cloudSdkBuilder()
         .sdkPath(mojo.getCloudSdkPath())
         .addStdOutLineListener(lineListener)
         .addStdErrLineListener(lineListener)
@@ -165,5 +162,4 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
       return new CloudSdkGenRepoInfoFile(cloudSdk);
     }
   }
-
 }

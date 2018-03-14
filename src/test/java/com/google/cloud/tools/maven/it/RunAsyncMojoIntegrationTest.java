@@ -24,13 +24,11 @@ import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import com.google.cloud.tools.maven.util.SocketUtil;
-
+import java.io.IOException;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
@@ -58,15 +56,15 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
   private void test(String name, SupportedDevServerVersion version)
       throws IOException, VerificationException, InterruptedException {
     try {
-    Verifier verifier = createVerifier(name, version);
-    verifier.setSystemProperty("app.devserver.startSuccessTimeout", "60");
-    verifier.executeGoal("appengine:start");
+      Verifier verifier = createVerifier(name, version);
+      verifier.setSystemProperty("app.devserver.startSuccessTimeout", "60");
+      verifier.executeGoal("appengine:start");
 
-    String urlContent = UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000);
-    assertThat(urlContent, containsString("Hello from the App Engine Standard project."));
-    assertThat(urlContent, containsString("TEST_VAR=testVariableValue"));
-    verifier.verifyErrorFreeLog();
-    verifier.verifyTextInLog("Dev App Server is now running");
+      String urlContent = UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000);
+      assertThat(urlContent, containsString("Hello from the App Engine Standard project."));
+      assertThat(urlContent, containsString("TEST_VAR=testVariableValue"));
+      verifier.verifyErrorFreeLog();
+      verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
       Verifier stopVerifier = createVerifier(name + "_stop", version);
       stopVerifier.executeGoal("appengine:stop");

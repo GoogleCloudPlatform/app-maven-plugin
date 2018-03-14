@@ -16,17 +16,17 @@
 
 package com.google.cloud.tools.maven.it.verifier;
 
+import java.io.IOException;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.util.ResourceExtractor;
-
-import java.io.IOException;
 
 public class StandardVerifier extends TailingVerifier {
 
   public StandardVerifier(String testName) throws IOException, VerificationException {
-    super(testName,
-        ResourceExtractor
-            .simpleExtractResources(StandardVerifier.class, "/projects/standard-project")
+    super(
+        testName,
+        ResourceExtractor.simpleExtractResources(
+                StandardVerifier.class, "/projects/standard-project")
             .getAbsolutePath());
   }
 }

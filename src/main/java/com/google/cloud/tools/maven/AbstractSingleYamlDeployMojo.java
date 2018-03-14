@@ -18,15 +18,13 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
-
+import java.io.File;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
-
-public abstract class AbstractSingleYamlDeployMojo
-    extends StageMojo implements DeployProjectConfigurationConfiguration {
+public abstract class AbstractSingleYamlDeployMojo extends StageMojo
+    implements DeployProjectConfigurationConfiguration {
 
   /**
    * The Google Cloud Platform project name to use for this invocation. If omitted then the current
@@ -45,13 +43,13 @@ public abstract class AbstractSingleYamlDeployMojo
     super.execute();
     doDeploy(getAppEngineFactory().deployment(), this);
   }
-  
+
   /**
-   * Sets {@code appEngineDirectory} based on whether the project is GAE Standard or Flexible if
-   * the user has not set a value explicitly.
+   * Sets {@code appEngineDirectory} based on whether the project is GAE Standard or Flexible if the
+   * user has not set a value explicitly.
    *
-   * <p>For Standard it uses {@code <stagingDirectory>/WEB-INF/appengine-generated}, for Flexible
-   * it uses <code>${basedir}/src/main/appengine</code>.
+   * <p>For Standard it uses {@code <stagingDirectory>/WEB-INF/appengine-generated}, for Flexible it
+   * uses <code>${basedir}/src/main/appengine</code>.
    */
   @Override
   protected void configureAppEngineDirectory() {
@@ -64,7 +62,8 @@ public abstract class AbstractSingleYamlDeployMojo
     }
   }
 
-  protected abstract void doDeploy(AppEngineDeployment appEngineDeployment,
+  protected abstract void doDeploy(
+      AppEngineDeployment appEngineDeployment,
       DeployProjectConfigurationConfiguration configuration);
 
   @Override
@@ -76,5 +75,4 @@ public abstract class AbstractSingleYamlDeployMojo
   public String getProject() {
     return project;
   }
-
 }

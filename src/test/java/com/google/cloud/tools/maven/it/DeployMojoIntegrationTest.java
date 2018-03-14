@@ -19,12 +19,10 @@ package com.google.cloud.tools.maven.it;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
-
+import java.io.IOException;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
@@ -61,8 +59,8 @@ public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.verifyTextInLog("GCLOUD: Deployed service");
 
     // verify debugger required file generation
-    verifier.assertFilePresent("target/flexible-project-1.0-SNAPSHOT/WEB-INF/classes/"
-        + "source-context.json");
+    verifier.assertFilePresent(
+        "target/flexible-project-1.0-SNAPSHOT/WEB-INF/classes/" + "source-context.json");
 
     // cleanup
     deleteService("flexible-project");

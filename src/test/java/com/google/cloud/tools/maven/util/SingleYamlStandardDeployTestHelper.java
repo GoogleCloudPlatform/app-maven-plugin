@@ -10,7 +10,10 @@ import com.google.cloud.tools.maven.AbstractSingleYamlDeployMojo;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Properties;
 import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
 import org.junit.rules.ExternalResource;
@@ -19,28 +22,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Properties;
-
 public class SingleYamlStandardDeployTestHelper<M extends AbstractSingleYamlDeployMojo>
     extends ExternalResource {
-  
-  @Mock
-  private AppEngineStandardStaging standardStagingMock;
 
-  @Mock
-  private AppEngineDeployment deploymentMock;
+  @Mock private AppEngineStandardStaging standardStagingMock;
 
-  @Mock
-  private CloudSdkAppEngineFactory factoryMock;
+  @Mock private AppEngineDeployment deploymentMock;
 
-  @Mock
-  private MavenProject mavenProject;
+  @Mock private CloudSdkAppEngineFactory factoryMock;
 
-  @InjectMocks
-  protected M mojo;
+  @Mock private MavenProject mavenProject;
+
+  @InjectMocks protected M mojo;
 
   private TemporaryFolder temporaryFolder;
 
@@ -66,15 +59,20 @@ public class SingleYamlStandardDeployTestHelper<M extends AbstractSingleYamlDepl
     when(mavenProject.getProperties()).thenReturn(new Properties());
     when(mavenProject.getBasedir()).thenReturn(new File("/fake/project/base/dir"));
   }
-  
+
   @Override
   public void after() {
     verify(standardStagingMock).stageStandard(mojo);
-    assertEquals(Paths.get(temporaryFolder.getRoot().getAbsolutePath(),
-        "staging", "WEB-INF", "appengine-generated").toString(),
+    assertEquals(
+        Paths.get(
+                temporaryFolder.getRoot().getAbsolutePath(),
+                "staging",
+                "WEB-INF",
+                "appengine-generated")
+            .toString(),
         mojo.getAppEngineDirectory().getAbsolutePath());
   }
-    
+
   public AppEngineDeployment getDeploymentMock() {
     return deploymentMock;
   }

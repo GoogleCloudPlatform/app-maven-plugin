@@ -25,7 +25,13 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -39,41 +45,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
-
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 @RunWith(JUnitParamsRunner.class)
 public class DeployMojoTest {
 
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
-  @Mock
-  private CloudSdkAppEngineFactory factoryMock;
+  @Mock private CloudSdkAppEngineFactory factoryMock;
 
-  @Mock
-  private MavenProject project;
+  @Mock private MavenProject project;
 
-  @Mock
-  private AppEngineFlexibleStaging flexibleStagingMock;
+  @Mock private AppEngineFlexibleStaging flexibleStagingMock;
 
-  @Mock
-  private AppEngineStandardStaging standardStagingMock;
+  @Mock private AppEngineStandardStaging standardStagingMock;
 
-  @Mock
-  private AppEngineDeployment deploymentMock;
+  @Mock private AppEngineDeployment deploymentMock;
 
-  @Mock
-  private Log log;
+  @Mock private Log log;
 
-  @InjectMocks
-  private DeployMojo deployMojo;
+  @InjectMocks private DeployMojo deployMojo;
 
   @Before
   public void wireUpDeployMojo() throws IOException {
@@ -133,7 +122,7 @@ public class DeployMojoTest {
   public void testDeploySpecifiedAppYaml(String packaging) throws Exception {
     File appYaml = new File("myApp.yaml");
     deployMojo.deployables = Arrays.asList(appYaml);
-    
+
     // wire up
     when(project.getPackaging()).thenReturn(packaging);
     when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);

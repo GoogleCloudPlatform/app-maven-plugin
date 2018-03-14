@@ -16,15 +16,13 @@
 
 package com.google.cloud.tools.maven.it.verifier;
 
-
+import java.io.File;
+import java.io.IOException;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 import org.apache.commons.io.input.TailerListenerAdapter;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-
-import java.io.File;
-import java.io.IOException;
 
 public class TailingVerifier extends Verifier {
 
@@ -42,12 +40,13 @@ public class TailingVerifier extends Verifier {
   }
 
   private void startTailingLog() {
-    TailerListener listener = new TailerListenerAdapter() {
-      @Override
-      public void handle(String line) {
-        System.out.println(testName + ": " + line);
-      }
-    };
+    TailerListener listener =
+        new TailerListenerAdapter() {
+          @Override
+          public void handle(String line) {
+            System.out.println(testName + ": " + line);
+          }
+        };
 
     // Tail the log
     File file = new File(getBasedir() + File.separator + getLogFileName());
@@ -64,5 +63,4 @@ public class TailingVerifier extends Verifier {
     thread.setDaemon(true);
     thread.start();
   }
-
 }

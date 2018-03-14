@@ -19,10 +19,9 @@ package com.google.cloud.tools.maven.util;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import org.junit.Test;
 
 public class CollectionUtilTest {
 

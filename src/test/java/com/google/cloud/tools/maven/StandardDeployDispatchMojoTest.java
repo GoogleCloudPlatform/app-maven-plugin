@@ -20,7 +20,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.maven.util.SingleYamlStandardDeployTestHelper;
-
+import java.io.IOException;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Rule;
@@ -29,11 +31,6 @@ import org.junit.rules.RuleChain;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
-
-import java.io.IOException;
-
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
 public class StandardDeployDispatchMojoTest {
@@ -45,8 +42,7 @@ public class StandardDeployDispatchMojoTest {
   private SingleYamlStandardDeployTestHelper<DeployDispatchMojo> testFixture =
       new SingleYamlStandardDeployTestHelper<>(mojo, tempFolder);
 
-  @Rule
-  public TestRule testRule = RuleChain.outerRule(tempFolder).around(testFixture);
+  @Rule public TestRule testRule = RuleChain.outerRule(tempFolder).around(testFixture);
 
   @Test
   @Parameters({"jar", "war"})

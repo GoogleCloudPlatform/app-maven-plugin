@@ -27,5 +27,4 @@ public class DeployDosMojoIntegrationTest extends AbstractSingleYamlDeployIntegr
   protected String getDeployGoal() {
     return "deployDos";
   }
-
 }

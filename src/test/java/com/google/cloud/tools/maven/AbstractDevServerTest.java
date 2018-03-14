@@ -16,30 +16,24 @@
 
 package com.google.cloud.tools.maven;
 
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-
+import java.io.File;
+import java.io.IOException;
 import org.apache.maven.model.Build;
 import org.apache.maven.project.MavenProject;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mock;
 
-import java.io.File;
-import java.io.IOException;
-
 public abstract class AbstractDevServerTest {
 
-  @Mock
-  protected CloudSdkAppEngineFactory factoryMock;
+  @Mock protected CloudSdkAppEngineFactory factoryMock;
 
-  @Mock
-  protected AppEngineDevServer devServerMock;
+  @Mock protected AppEngineDevServer devServerMock;
 
-  @Mock
-  protected MavenProject mavenProjectMock;
+  @Mock protected MavenProject mavenProjectMock;
 
   protected void setUpAppEngineWebXml() throws IOException {
     TemporaryFolder tempFolder = new TemporaryFolder();

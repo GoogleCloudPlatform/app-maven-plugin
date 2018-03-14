@@ -16,25 +16,22 @@
 
 package com.google.cloud.tools.maven.it;
 
-
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
-
+import java.io.IOException;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   @Test
   public void testStageStandard() throws IOException, VerificationException {
 
-    String projectDir = ResourceExtractor
-        .simpleExtractResources(getClass(), "/projects/standard-project")
-        .getAbsolutePath();
+    String projectDir =
+        ResourceExtractor.simpleExtractResources(getClass(), "/projects/standard-project")
+            .getAbsolutePath();
 
     Verifier verifier = new StandardVerifier("testStageStandard");
 
@@ -49,8 +46,8 @@ public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.assertFilePresent("target/appengine-staging/WEB-INF");
     verifier.assertFilePresent("target/appengine-staging/WEB-INF/web.xml");
     verifier.assertFilePresent("target/appengine-staging/app.yaml");
-    verifier.assertFileMatches(projectDir + "/target/appengine-staging/app.yaml",
-        "(?s).*service: 'standard-project'.*");
+    verifier.assertFileMatches(
+        projectDir + "/target/appengine-staging/app.yaml", "(?s).*service: 'standard-project'.*");
 
     // repeat with staging directory present
     verifier.setLogFileName("testStageStandard_repeat.txt");
@@ -58,7 +55,6 @@ public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.executeGoal("appengine:stage");
     verifier.verifyTextInLog("Deleting the staging directory");
   }
-
 
   @Test
   public void testStageFlexible() throws IOException, VerificationException {
@@ -75,5 +71,4 @@ public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.assertFilePresent("target/appengine-staging/flexible-project-1.0-SNAPSHOT.war");
     verifier.assertFilePresent("target/appengine-staging/app.yaml");
   }
-
 }

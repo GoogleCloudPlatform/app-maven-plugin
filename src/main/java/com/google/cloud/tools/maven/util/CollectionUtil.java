@@ -20,8 +20,7 @@ import java.util.Collection;
 
 public class CollectionUtil {
 
-  private CollectionUtil() {
-  }
+  private CollectionUtil() {}
 
   public static <E> boolean isNullOrEmpty(Collection<E> collection) {
     return collection == null || collection.isEmpty();

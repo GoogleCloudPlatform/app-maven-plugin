@@ -19,7 +19,14 @@ package com.google.cloud.tools.maven;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.common.annotations.VisibleForTesting;
-
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -30,34 +37,26 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 /**
  * Generates a deploy-ready application directory for App Engine standard or flexible environment
  * deployment.
  */
 @Mojo(name = "stage")
 @Execute(phase = LifecyclePhase.PACKAGE)
-public class StageMojo extends CloudSdkMojo implements StageStandardConfiguration,
-    StageFlexibleConfiguration {
+public class StageMojo extends CloudSdkMojo
+    implements StageStandardConfiguration, StageFlexibleConfiguration {
 
   ///////////////////////////////////
   // Standard & Flexible params
   //////////////////////////////////
 
-  /**
-   * The directory to which to stage the application.
-   */
-  @Parameter(required = true, defaultValue = "${project.build.directory}/appengine-staging",
-      alias = "stage.stagingDirectory", property = "app.stage.stagingDirectory")
+  /** The directory to which to stage the application. */
+  @Parameter(
+    required = true,
+    defaultValue = "${project.build.directory}/appengine-staging",
+    alias = "stage.stagingDirectory",
+    property = "app.stage.stagingDirectory"
+  )
   protected File stagingDirectory;
 
   ///////////////////////////////////
@@ -79,11 +78,13 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
    *
    * <p>Applies to App Engine standard environment only.
    */
-  @Parameter(required = true,
-      defaultValue = "${project.build.directory}/${project.build.finalName}",
-      alias = "stage.sourceDirectory", property = "app.stage.sourceDirectory")
+  @Parameter(
+    required = true,
+    defaultValue = "${project.build.directory}/${project.build.finalName}",
+    alias = "stage.sourceDirectory",
+    property = "app.stage.sourceDirectory"
+  )
   protected File sourceDirectory;
-
 
   /**
    * Use jetty quickstart to process servlet annotations.
@@ -160,8 +161,8 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   /**
    * The directory that contains app.yaml and other supported App Engine configuration files.
    *
-   * <p>Applies to App Engine flexible environment only. Defaults to
-   * <code>${basedir}/src/main/appengine</code>
+   * <p>Applies to App Engine flexible environment only. Defaults to <code>
+   * ${basedir}/src/main/appengine</code>
    */
   @Parameter(alias = "stage.appEngineDirectory", property = "app.stage.appEngineDirectory")
   protected File appEngineDirectory;
@@ -171,19 +172,23 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
    *
    * <p>Applies to App Engine flexible environment only.
    */
-  @Parameter(defaultValue = "${basedir}/src/main/docker/",
-      alias = "stage.dockerDirectory", property = "app.stage.dockerDirectory")
+  @Parameter(
+    defaultValue = "${basedir}/src/main/docker/",
+    alias = "stage.dockerDirectory",
+    property = "app.stage.dockerDirectory"
+  )
   protected File dockerDirectory;
-
 
   /**
    * The location of the JAR or WAR archive to deploy.
    *
    * <p>Applies to App Engine flexible environment only.
    */
-  @Parameter(defaultValue =
-      "${project.build.directory}/${project.build.finalName}.${project.packaging}",
-      alias = "stage.artifact", property = "app.stage.artifact")
+  @Parameter(
+    defaultValue = "${project.build.directory}/${project.build.finalName}.${project.packaging}",
+    alias = "stage.artifact",
+    property = "app.stage.artifact"
+  )
   protected File artifact;
 
   private AppEngineWebXml appengineWebXml;
@@ -239,8 +244,7 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
 
   protected void configureDockerfileDefaultLocation() {
     if (dockerfile == null) {
-      if (dockerfilePrimaryDefaultLocation != null
-          && dockerfilePrimaryDefaultLocation.exists()) {
+      if (dockerfilePrimaryDefaultLocation != null && dockerfilePrimaryDefaultLocation.exists()) {
         dockerfile = dockerfilePrimaryDefaultLocation;
       } else if (dockerfileSecondaryDefaultLocation != null
           && dockerfileSecondaryDefaultLocation.exists()) {
@@ -252,8 +256,8 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
   /**
    * Sets {@link #appEngineDirectory} to <code>${basedir}/src/main/appengine</code>.
    *
-   * <p>Called during {@link #execute()}, subclasses can override to provide a different value
-   * for {@link #appEngineDirectory}.
+   * <p>Called during {@link #execute()}, subclasses can override to provide a different value for
+   * {@link #appEngineDirectory}.
    */
   protected void configureAppEngineDirectory() {
     if (appEngineDirectory == null) {
@@ -337,7 +341,6 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
     return runtime;
   }
 
-
   /**
    * Simple parser for appengine-web.xml, this should ideally not exist, but we need it to correctly
    * error when vm=false and the user is using java8 as the target platform
@@ -349,8 +352,8 @@ public class StageMojo extends CloudSdkMojo implements StageStandardConfiguratio
     private AppEngineWebXml(File appengineWebXml) throws MojoExecutionException {
       try {
         if (appengineWebXml.exists()) {
-          document = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-              .parse(appengineWebXml);
+          document =
+              DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(appengineWebXml);
         } else {
           document = null;
         }

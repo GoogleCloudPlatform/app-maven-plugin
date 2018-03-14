@@ -27,5 +27,4 @@ public class DeployQueueMojoIntegrationTest extends AbstractSingleYamlDeployInte
   protected String getDeployGoal() {
     return "deployQueue";
   }
-
 }

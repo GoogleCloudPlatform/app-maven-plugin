@@ -27,5 +27,4 @@ public class DeployDispatchMojoIntegrationTest extends AbstractSingleYamlDeployI
   protected String getDeployGoal() {
     return "deployDispatch";
   }
-
 }

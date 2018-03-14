@@ -7,7 +7,9 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.maven.AbstractSingleYamlDeployMojo;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 import org.apache.maven.project.MavenProject;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.TemporaryFolder;
@@ -15,27 +17,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-
 public class SingleYamlFlexibleDeployTestHelper<M extends AbstractSingleYamlDeployMojo>
     extends ExternalResource {
-  
-  @Mock
-  private AppEngineFlexibleStaging flexibleStagingMock;
-  
-  @Mock
-  private AppEngineDeployment deploymentMock;
 
-  @Mock
-  private CloudSdkAppEngineFactory factoryMock;
+  @Mock private AppEngineFlexibleStaging flexibleStagingMock;
 
-  @Mock
-  private MavenProject mavenProject;
+  @Mock private AppEngineDeployment deploymentMock;
 
-  @InjectMocks
-  protected M mojo;
+  @Mock private CloudSdkAppEngineFactory factoryMock;
+
+  @Mock private MavenProject mavenProject;
+
+  @InjectMocks protected M mojo;
 
   private TemporaryFolder temporaryFolder;
 
@@ -55,12 +48,12 @@ public class SingleYamlFlexibleDeployTestHelper<M extends AbstractSingleYamlDepl
     when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
     when(factoryMock.deployment()).thenReturn(deploymentMock);
   }
-  
+
   @Override
   public void after() {
     verify(flexibleStagingMock).stageFlexible(mojo);
   }
-    
+
   public AppEngineDeployment getDeploymentMock() {
     return deploymentMock;
   }

@@ -19,12 +19,10 @@ package com.google.cloud.tools.maven.it;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
-
+import java.io.IOException;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public abstract class AbstractSingleYamlDeployIntegrationTest extends AbstractMojoIntegrationTest {
 
@@ -59,6 +57,6 @@ public abstract class AbstractSingleYamlDeployIntegrationTest extends AbstractMo
   }
 
   protected abstract String getExpectedLogMessage();
-  
+
   protected abstract String getDeployGoal();
 }

@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.maven;
 
+import java.io.File;
+import java.nio.file.Path;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
@@ -23,17 +25,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
-import java.io.File;
-import java.nio.file.Path;
-
-/**
- * Abstract Mojo from which all goals inherit.
- */
+/** Abstract Mojo from which all goals inherit. */
 public abstract class CloudSdkMojo extends AbstractMojo {
 
-  /**
-   * Optional parameter to configure the location of the Google Cloud SDK.
-   */
+  /** Optional parameter to configure the location of the Google Cloud SDK. */
   @Parameter(property = "cloudSdkPath", required = false)
   private File cloudSdkPath;
 
@@ -72,13 +67,13 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     String javaVersion = "1.5";
     if (mavenProject != null) {
       // check the maven.compiler.target property first
-      String mavenCompilerTargetProperty = mavenProject.getProperties()
-          .getProperty("maven.compiler.target");
+      String mavenCompilerTargetProperty =
+          mavenProject.getProperties().getProperty("maven.compiler.target");
       if (mavenCompilerTargetProperty != null) {
         javaVersion = mavenCompilerTargetProperty;
       } else {
-        Plugin compilerPlugin = mavenProject
-            .getPlugin("org.apache.maven.plugins:maven-compiler-plugin");
+        Plugin compilerPlugin =
+            mavenProject.getPlugin("org.apache.maven.plugins:maven-compiler-plugin");
         if (compilerPlugin != null) {
           Xpp3Dom config = (Xpp3Dom) compilerPlugin.getConfiguration();
           if (config != null) {

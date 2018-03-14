@@ -27,5 +27,4 @@ public class DeployIndexMojoIntegrationTest extends AbstractSingleYamlDeployInte
   protected String getDeployGoal() {
     return "deployIndex";
   }
-
 }

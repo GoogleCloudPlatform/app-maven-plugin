@@ -18,15 +18,12 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/**
- * Stops a running App Engine Development App Server.
- */
+/** Stops a running App Engine Development App Server. */
 @Mojo(name = "stop")
 public class StopMojo extends CloudSdkMojo implements StopConfiguration {
 
@@ -34,31 +31,27 @@ public class StopMojo extends CloudSdkMojo implements StopConfiguration {
    * Version of the dev app server to use to run the services. Supported values are "1" and
    * "2-alpha". (default: "1")
    */
-  @Parameter(alias = "devserver.version", property = "app.devserver.version", required = true,
-      defaultValue = "1")
+  @Parameter(
+    alias = "devserver.version",
+    property = "app.devserver.version",
+    required = true,
+    defaultValue = "1"
+  )
   protected String devserverVersion;
 
-  /**
-   * Host name to which application modules should bind. (default: localhost)
-   */
+  /** Host name to which application modules should bind. (default: localhost) */
   @Parameter(alias = "devserver.host", property = "app.devserver.host")
   protected String host;
 
-  /**
-   * Lowest port to which application modules should bind. (default: 8080)
-   */
+  /** Lowest port to which application modules should bind. (default: 8080) */
   @Parameter(alias = "devserver.port", property = "app.devserver.port")
   protected Integer port;
 
-  /**
-   * Host name to which the admin server was bound. (default: localhost)
-   */
+  /** Host name to which the admin server was bound. (default: localhost) */
   @Parameter(alias = "devserver.adminHost", property = "app.devserver.adminHost")
   protected String adminHost;
 
-  /**
-   * Port to which the admin server was bound. (default: 8000)
-   */
+  /** Port to which the admin server was bound. (default: 8000) */
   @Parameter(alias = "devserver.adminPort", property = "app.devserver.adminPort")
   protected Integer adminPort;
 

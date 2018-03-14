@@ -23,7 +23,8 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.DefaultProcessOutputLineListener;
-
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,9 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFactoryTest {
 
@@ -42,21 +40,16 @@ public class CloudSdkAppEngineFactoryTest {
   private final String ARTIFACT_ID = "appengine-maven-plugin";
   private final String ARTIFACT_VERSION = "0.1.0";
 
-  @Mock
-  private CloudSdkMojo mojoMock;
+  @Mock private CloudSdkMojo mojoMock;
 
-  @Mock
-  private CloudSdkAppEngineFactory.CloudSdkFactory cloudSdkFactoryMock;
+  @Mock private CloudSdkAppEngineFactory.CloudSdkFactory cloudSdkFactoryMock;
 
   @Mock(answer = Answers.RETURNS_SELF)
   private CloudSdk.Builder cloudSdkBuilderMock;
 
-  @Mock
-  private CloudSdk cloudSdkMock;
+  @Mock private CloudSdk cloudSdkMock;
 
-  @InjectMocks
-  private CloudSdkAppEngineFactory factory;
-
+  @InjectMocks private CloudSdkAppEngineFactory factory;
 
   @Before
   public void wireUp() {

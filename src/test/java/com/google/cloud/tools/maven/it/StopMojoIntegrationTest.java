@@ -16,20 +16,17 @@
 
 package com.google.cloud.tools.maven.it;
 
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import com.google.cloud.tools.maven.util.SocketUtil;
-
+import java.io.IOException;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
@@ -41,8 +38,7 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
   }
 
   @Test
-  public void testStopStandard()
-      throws IOException, VerificationException, InterruptedException {
+  public void testStopStandard() throws IOException, VerificationException, InterruptedException {
 
     Verifier verifier = new StandardVerifier("testStopStandard_start");
 
@@ -64,9 +60,8 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.verifyErrorFreeLog();
     // wait up to 5 seconds for the server to stop
     assertTrue(UrlUtils.isUrlDownWithRetries(getServerUrl(), 5000, 100));
-
   }
-  
+
   private String getServerUrl() {
     return "http://localhost:" + serverPort;
   }
