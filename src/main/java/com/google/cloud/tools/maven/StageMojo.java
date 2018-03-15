@@ -195,6 +195,9 @@ public class StageMojo extends CloudSdkMojo
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    // Handle cloud sdk installation
+    super.execute();
+
     if (!"war".equals(getPackaging()) && !"jar".equals(getPackaging())) {
       // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/85
       getLog().info("Staging is only executed for war and jar modules.");

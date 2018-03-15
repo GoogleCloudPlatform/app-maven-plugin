@@ -16,13 +16,19 @@
 
 package com.google.cloud.tools.maven;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.nio.file.Paths;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,11 +38,66 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkMojoTest {
 
+  private final File CLOUD_SDK_PATH = Paths.get("google-cloud-sdk").toFile();
+  private final String CLOUD_SDK_VERSION = "192.0.0";
+
   @Mock private PluginDescriptor pluginDescriptorMock;
 
   @Mock private MavenProject mavenProject;
 
+  @Mock private CloudSdkAppEngineFactory factory;
+
   @InjectMocks private CloudSdkMojoImpl mojo;
+
+  @Before
+  public void setup() {
+    doNothing().when(factory).downloadCloudSdk();
+    doNothing().when(factory).checkCloudSdk();
+  }
+
+  @Test
+  public void testExecute_downloadVersion() throws MojoFailureException, MojoExecutionException {
+    mojo.setCloudSdkPath(null);
+    mojo.setCloudSdkVersion(CLOUD_SDK_VERSION);
+
+    mojo.execute();
+
+    verify(factory).downloadCloudSdk();
+    verify(factory, never()).checkCloudSdk();
+  }
+
+  @Test
+  public void testExecute_downloadLatest() throws MojoFailureException, MojoExecutionException {
+    mojo.setCloudSdkPath(null);
+    mojo.setCloudSdkVersion(null);
+
+    mojo.execute();
+
+    verify(factory).downloadCloudSdk();
+    verify(factory, never()).checkCloudSdk();
+  }
+
+  @Test
+  public void testExecute_check() throws MojoFailureException, MojoExecutionException {
+    mojo.setCloudSdkPath(CLOUD_SDK_PATH);
+    mojo.setCloudSdkVersion(CLOUD_SDK_VERSION);
+
+    mojo.execute();
+
+    verify(factory, never()).downloadCloudSdk();
+    verify(factory).checkCloudSdk();
+  }
+
+  @Test
+  public void testExecute_noCheck() throws MojoFailureException, MojoExecutionException {
+    mojo.setCloudSdkPath(CLOUD_SDK_PATH);
+    mojo.setCloudSdkVersion(null);
+
+    mojo.execute();
+
+    verify(factory, never()).downloadCloudSdk();
+    verify(factory, never()).checkCloudSdk();
+  }
 
   @Test
   public void testGetArtifactId() {
@@ -67,9 +128,5 @@ public class CloudSdkMojoTest {
     assertEquals("this-is-a-test-packaging", mojo.getPackaging());
   }
 
-  static class CloudSdkMojoImpl extends CloudSdkMojo {
-
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {}
-  }
+  static class CloudSdkMojoImpl extends CloudSdkMojo {}
 }

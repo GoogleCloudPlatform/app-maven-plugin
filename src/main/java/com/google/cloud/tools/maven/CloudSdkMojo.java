@@ -16,10 +16,13 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.nio.file.Path;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -32,13 +35,17 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(property = "cloudSdkPath", required = false)
   private File cloudSdkPath;
 
+  /** Optional parameter to configure the version of the Google Cloud SDK. */
+  @Parameter(property = "cloudSdkVersion", required = false)
+  private String cloudSdkVersion;
+
   @Parameter(defaultValue = "${plugin}", readonly = true)
   private PluginDescriptor pluginDescriptor;
 
   @Parameter(defaultValue = "${project}", readonly = true)
   protected MavenProject mavenProject;
 
-  private AppEngineFactory factory = new CloudSdkAppEngineFactory(this);
+  private CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 
   public String getArtifactId() {
     return pluginDescriptor.getArtifactId();
@@ -52,8 +59,31 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return cloudSdkPath != null ? cloudSdkPath.toPath() : null;
   }
 
-  public AppEngineFactory getAppEngineFactory() {
+  public String getCloudSdkVersion() {
+    return cloudSdkVersion;
+  }
+
+  public CloudSdkAppEngineFactory getAppEngineFactory() {
     return factory;
+  }
+
+  @VisibleForTesting
+  public void setCloudSdkPath(File cloudSdkPath) {
+    this.cloudSdkPath = cloudSdkPath;
+  }
+
+  @VisibleForTesting
+  public void setCloudSdkVersion(String cloudSdkVersion) {
+    this.cloudSdkVersion = cloudSdkVersion;
+  }
+
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    if (cloudSdkPath == null) {
+      factory.downloadCloudSdk();
+    } else if (cloudSdkVersion != null) {
+      factory.checkCloudSdk();
+    }
   }
 
   /**

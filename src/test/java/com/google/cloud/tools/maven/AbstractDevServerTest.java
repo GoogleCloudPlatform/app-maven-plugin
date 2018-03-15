@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,5 +45,7 @@ public abstract class AbstractDevServerTest {
     when(mavenProjectMock.getBuild().getDirectory())
         .thenReturn(webInf.getParentFile().getParentFile().getAbsolutePath());
     when(mavenProjectMock.getBuild().getFinalName()).thenReturn("artifact");
+    doNothing().when(factoryMock).downloadCloudSdk();
+    doNothing().when(factoryMock).checkCloudSdk();
   }
 }

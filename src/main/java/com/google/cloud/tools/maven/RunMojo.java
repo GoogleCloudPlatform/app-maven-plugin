@@ -282,6 +282,9 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   // shared between these classes is executed
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    // Handle cloud sdk installation
+    super.execute();
+
     SupportedDevServerVersion convertedVersion = convertDevserverVersionString();
     handleAppYamlsDeprecation();
     verifyAppEngineStandardApp();

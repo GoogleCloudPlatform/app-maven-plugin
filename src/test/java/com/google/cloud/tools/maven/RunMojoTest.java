@@ -48,7 +48,6 @@ import org.mockito.MockitoAnnotations;
 
 @RunWith(JUnitParamsRunner.class)
 public class RunMojoTest extends AbstractDevServerTest {
-
   @InjectMocks private RunMojo runMojo;
 
   @Captor
