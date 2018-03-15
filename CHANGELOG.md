@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+## 1.3.3
+### Added
+* Configuration parameter `app.deploy.server` now applies to `deployCron`, `deployDispatch`, `deployDos`, `deployIndex`,
+and `deployQueue` goals as well.
+
 ## 1.3.2
 ### Added
 * New `<additionalArguments>` parameter to pass additional arguments to Dev App Server ([#219](../../pulls/219)),

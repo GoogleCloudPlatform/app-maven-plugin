@@ -33,6 +33,12 @@ public abstract class AbstractSingleYamlDeployMojo extends StageMojo
   @Parameter(alias = "deploy.project", property = "app.deploy.project")
   protected String project;
 
+  /**
+   * The App Engine server to connect to. You will not typically need to change this value.
+   */
+  @Parameter(alias = "deploy.server", property = "app.deploy.server")
+  protected String server;
+
   public AbstractSingleYamlDeployMojo() {
     super();
   }
@@ -69,6 +75,11 @@ public abstract class AbstractSingleYamlDeployMojo extends StageMojo
   @Override
   public File getAppEngineDirectory() {
     return appEngineDirectory;
+  }
+
+  @Override
+  public String getServer() {
+    return server;
   }
 
   @Override
