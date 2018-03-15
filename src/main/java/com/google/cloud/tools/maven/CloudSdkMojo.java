@@ -52,7 +52,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return pluginDescriptor.getVersion();
   }
 
-  public Path getcloudSdkPath() {
+  public Path getCloudSdkPath() {
     return cloudSdkPath != null ? cloudSdkPath.toPath() : null;
   }
 

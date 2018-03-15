@@ -102,7 +102,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
-    if (mojo.getcloudSdkPath() == null) {
+    if (mojo.getCloudSdkPath() == null) {
       mojo.downloadCloudSdk();
     } else if (mojo.getCloudSdkVersion() != null) {
       mojo.checkCloudSdk();
@@ -112,7 +112,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
     return cloudSdkFactory
         .cloudSdkBuilder()
-        .sdkPath(mojo.getcloudSdkPath())
+        .sdkPath(mojo.getCloudSdkPath())
         .addStdOutLineListener(lineListener)
         .addStdErrLineListener(lineListener)
         .exitListener(new NonZeroExceptionExitListener())

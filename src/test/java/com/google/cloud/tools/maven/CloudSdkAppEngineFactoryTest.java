@@ -56,7 +56,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Before
   public void wireUp() {
-    when(mojoMock.getcloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
+    when(mojoMock.getCloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
     when(mojoMock.getArtifactId()).thenReturn(ARTIFACT_ID);
     when(mojoMock.getArtifactVersion()).thenReturn(ARTIFACT_VERSION);
@@ -169,7 +169,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_downloadWithVersion() {
-    when(mojoMock.getcloudSdkPath()).thenReturn(null);
+    when(mojoMock.getCloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
 
     // invoke
@@ -183,7 +183,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_downloadWithoutVersion() {
-    when(mojoMock.getcloudSdkPath()).thenReturn(null);
+    when(mojoMock.getCloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
 
     // invoke
@@ -197,7 +197,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_check() {
-    when(mojoMock.getcloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
+    when(mojoMock.getCloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
 
     // invoke
@@ -211,7 +211,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_noCheck() {
-    when(mojoMock.getcloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
+    when(mojoMock.getCloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
 
     // invoke
