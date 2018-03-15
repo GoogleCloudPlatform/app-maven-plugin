@@ -101,6 +101,15 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
     return cloudSdkFactory.genRepoInfoFile(defaultCloudSdkBuilder().build());
   }
 
+  public void downloadCloudSdk() {
+    // Just logging a warning here for now so tests don't fail
+    mojo.getLog().warn("Downloading Cloud SDK (not implemented)");
+  }
+
+  public void checkCloudSdk() {
+    mojo.getLog().warn("Checking Cloud SDK (not implemented)");
+  }
+
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
 
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());

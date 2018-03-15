@@ -71,6 +71,9 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo implements GenRepoInfoFile
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    // Handle cloud sdk installation
+    super.execute();
+
     try {
       getAppEngineFactory().genRepoInfoFile().generate(this);
     } catch (AppEngineException aee) {

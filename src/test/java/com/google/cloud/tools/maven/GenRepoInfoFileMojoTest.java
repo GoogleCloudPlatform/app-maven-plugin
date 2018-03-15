@@ -1,5 +1,6 @@
 package com.google.cloud.tools.maven;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +31,8 @@ public class GenRepoInfoFileMojoTest {
     genMojo.sourceDirectory = Paths.get("/a/b/c/source").toFile();
     genMojo.outputDirectory = "/e/f/g/output";
     when(factory.genRepoInfoFile()).thenReturn(genMock);
+    doNothing().when(factory).downloadCloudSdk();
+    doNothing().when(factory).checkCloudSdk();
   }
 
   @Test

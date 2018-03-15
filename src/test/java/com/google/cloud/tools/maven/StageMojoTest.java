@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import static org.mockito.Matchers.contains;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -68,6 +69,8 @@ public class StageMojoTest {
     stageMojo.sourceDirectory = tempFolder.newFolder("source");
     when(mavenProject.getProperties()).thenReturn(new Properties());
     when(mavenProject.getBasedir()).thenReturn(new File("/fake/project/base/dir"));
+    doNothing().when(factoryMock).downloadCloudSdk();
+    doNothing().when(factoryMock).checkCloudSdk();
   }
 
   @Test
