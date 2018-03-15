@@ -38,7 +38,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFactoryTest {
 
-  private final Path CLOUD_SDK_HOME = Paths.get("google-cloud-sdk");
+  private final Path CLOUD_SDK_PATH = Paths.get("google-cloud-sdk");
   private final String CLOUD_SDK_VERSION = "192.0.0";
   private final String ARTIFACT_ID = "appengine-maven-plugin";
   private final String ARTIFACT_VERSION = "0.1.0";
@@ -56,7 +56,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Before
   public void wireUp() {
-    when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
+    when(mojoMock.getcloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
     when(mojoMock.getArtifactId()).thenReturn(ARTIFACT_ID);
     when(mojoMock.getArtifactVersion()).thenReturn(ARTIFACT_VERSION);
@@ -169,7 +169,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_downloadWithVersion() {
-    when(mojoMock.getCloudSdkHome()).thenReturn(null);
+    when(mojoMock.getcloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
 
     // invoke
@@ -183,7 +183,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_downloadWithoutVersion() {
-    when(mojoMock.getCloudSdkHome()).thenReturn(null);
+    when(mojoMock.getcloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
 
     // invoke
@@ -197,7 +197,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_check() {
-    when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
+    when(mojoMock.getcloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
 
     // invoke
@@ -211,7 +211,7 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Test
   public void testDefaultCloudSdkBuilder_noCheck() {
-    when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
+    when(mojoMock.getcloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
 
     // invoke
@@ -224,11 +224,11 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   private void verifyDefaultCloudSdkBuilder() {
-    verifyDefaultCloudSdkBuilder(CLOUD_SDK_HOME);
+    verifyDefaultCloudSdkBuilder(CLOUD_SDK_PATH);
   }
 
-  private void verifyDefaultCloudSdkBuilder(Path cloudSdkHome) {
-    verify(cloudSdkBuilderMock).sdkPath(cloudSdkHome);
+  private void verifyDefaultCloudSdkBuilder(Path cloudSdkPath) {
+    verify(cloudSdkBuilderMock).sdkPath(cloudSdkPath);
     verify(cloudSdkBuilderMock).addStdOutLineListener(any(DefaultProcessOutputLineListener.class));
     verify(cloudSdkBuilderMock).addStdErrLineListener(any(DefaultProcessOutputLineListener.class));
     verify(cloudSdkBuilderMock).appCommandMetricsEnvironment(ARTIFACT_ID);

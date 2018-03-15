@@ -29,8 +29,8 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 public abstract class CloudSdkMojo extends AbstractMojo {
 
   /** Optional parameter to configure the location of the Google Cloud SDK. */
-  @Parameter(property = "cloudSdkHome", required = false)
-  private File cloudSdkHome;
+  @Parameter(property = "cloudSdkPath", required = false)
+  private File cloudSdkPath;
 
   /** Optional parameter to configure the version of the Google Cloud SDK. */
   @Parameter(property = "cloudSdkVersion", required = false)
@@ -52,8 +52,8 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return pluginDescriptor.getVersion();
   }
 
-  public Path getCloudSdkHome() {
-    return cloudSdkHome != null ? cloudSdkHome.toPath() : null;
+  public Path getcloudSdkPath() {
+    return cloudSdkPath != null ? cloudSdkPath.toPath() : null;
   }
 
   public String getCloudSdkVersion() {
