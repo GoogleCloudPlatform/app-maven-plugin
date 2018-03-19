@@ -34,7 +34,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,7 +54,9 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Mock private CloudSdk cloudSdkMock;
 
-  @Spy @InjectMocks private CloudSdkAppEngineFactory factory;
+  @Mock private CloudSdkDownloader cloudSdkDownloader;
+
+  @InjectMocks private CloudSdkAppEngineFactory factory;
 
   @Before
   public void wireUp() {
@@ -63,6 +64,7 @@ public class CloudSdkAppEngineFactoryTest {
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
     when(mojoMock.getArtifactId()).thenReturn(ARTIFACT_ID);
     when(mojoMock.getArtifactVersion()).thenReturn(ARTIFACT_VERSION);
+
     when(cloudSdkFactoryMock.cloudSdkBuilder()).thenReturn(cloudSdkBuilderMock);
     when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
   }
@@ -172,64 +174,64 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_downloadWithVersion() {
     when(mojoMock.getCloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
-    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
-    doNothing().when(factory).checkCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(cloudSdkDownloader).downloadCloudSdk();
+    doNothing().when(cloudSdkDownloader).checkCloudSdk();
 
     // invoke
     factory.defaultCloudSdkBuilder();
 
     // verify
     verifyDefaultCloudSdkBuilder(INSTALL_SDK_PATH);
-    verify(factory).downloadCloudSdk();
-    verify(factory, never()).checkCloudSdk();
+    verify(cloudSdkDownloader).downloadCloudSdk();
+    verify(cloudSdkDownloader, never()).checkCloudSdk();
   }
 
   @Test
   public void testDefaultCloudSdkBuilder_downloadWithoutVersion() {
     when(mojoMock.getCloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
-    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
-    doNothing().when(factory).checkCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(cloudSdkDownloader).downloadCloudSdk();
+    doNothing().when(cloudSdkDownloader).checkCloudSdk();
 
     // invoke
     factory.defaultCloudSdkBuilder();
 
     // verify
     verifyDefaultCloudSdkBuilder(INSTALL_SDK_PATH);
-    verify(factory).downloadCloudSdk();
-    verify(factory, never()).checkCloudSdk();
+    verify(cloudSdkDownloader).downloadCloudSdk();
+    verify(cloudSdkDownloader, never()).checkCloudSdk();
   }
 
   @Test
   public void testDefaultCloudSdkBuilder_check() {
     when(mojoMock.getCloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
-    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
-    doNothing().when(factory).checkCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(cloudSdkDownloader).downloadCloudSdk();
+    doNothing().when(cloudSdkDownloader).checkCloudSdk();
 
     // invoke
     factory.defaultCloudSdkBuilder();
 
     // verify
     verifyDefaultCloudSdkBuilder();
-    verify(factory, never()).downloadCloudSdk();
-    verify(factory).checkCloudSdk();
+    verify(cloudSdkDownloader, never()).downloadCloudSdk();
+    verify(cloudSdkDownloader).checkCloudSdk();
   }
 
   @Test
   public void testDefaultCloudSdkBuilder_noCheck() {
     when(mojoMock.getCloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
-    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
-    doNothing().when(factory).checkCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(cloudSdkDownloader).downloadCloudSdk();
+    doNothing().when(cloudSdkDownloader).checkCloudSdk();
 
     // invoke
     factory.defaultCloudSdkBuilder();
 
     // verify
     verifyDefaultCloudSdkBuilder();
-    verify(factory, never()).downloadCloudSdk();
-    verify(factory, never()).checkCloudSdk();
+    verify(cloudSdkDownloader, never()).downloadCloudSdk();
+    verify(cloudSdkDownloader, never()).checkCloudSdk();
   }
 
   private void verifyDefaultCloudSdkBuilder() {

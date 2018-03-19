@@ -38,14 +38,22 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   protected CloudSdkFactory cloudSdkFactory;
   private CloudSdkMojo mojo;
+  private CloudSdkDownloader cloudSdkDownloader;
 
+  /**
+   * Constructs a new CloudSdkAppEngineFactory
+   *
+   * @param mojo The mojo containing Cloud Sdk configuration parameters
+   */
   public CloudSdkAppEngineFactory(CloudSdkMojo mojo) {
-    this(mojo, new CloudSdkFactory());
+    this(mojo, new CloudSdkFactory(), new CloudSdkDownloader(mojo));
   }
 
-  public CloudSdkAppEngineFactory(CloudSdkMojo mojo, CloudSdkFactory cloudSdkFactory) {
+  private CloudSdkAppEngineFactory(
+      CloudSdkMojo mojo, CloudSdkFactory cloudSdkFactory, CloudSdkDownloader cloudSdkDownloader) {
     this.mojo = mojo;
     this.cloudSdkFactory = cloudSdkFactory;
+    this.cloudSdkDownloader = cloudSdkDownloader;
   }
 
   @Override
@@ -105,9 +113,9 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
     Path sdkPath = mojo.getCloudSdkPath();
     if (mojo.getCloudSdkPath() == null) {
-      sdkPath = downloadCloudSdk();
+      sdkPath = cloudSdkDownloader.downloadCloudSdk();
     } else if (mojo.getCloudSdkVersion() != null) {
-      checkCloudSdk();
+      cloudSdkDownloader.checkCloudSdk();
     }
 
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());
@@ -120,22 +128,6 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
         .exitListener(new NonZeroExceptionExitListener())
         .appCommandMetricsEnvironment(mojo.getArtifactId())
         .appCommandMetricsEnvironmentVersion(mojo.getArtifactVersion());
-  }
-
-  /**
-   * Downloads/installs/updates the Cloud SDK
-   *
-   * @return The cloud SDK installation directory
-   */
-  public Path downloadCloudSdk() {
-    // Just logging a warning here for now so tests don't fail
-    mojo.getLog().warn("Downloading Cloud SDK (not implemented)");
-    return null;
-  }
-
-  /** Verifies the cloud sdk installation */
-  public void checkCloudSdk() {
-    mojo.getLog().warn("Checking Cloud SDK (not implemented)");
   }
 
   /**
