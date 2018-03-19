@@ -96,15 +96,6 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return javaVersion;
   }
 
-  public void downloadCloudSdk() {
-    // Just logging a warning here for now so tests don't fail
-    getLog().warn("Downloading Cloud SDK (not implemented)");
-  }
-
-  public void checkCloudSdk() {
-    getLog().warn("Checking Cloud SDK (not implemented)");
-  }
-
   protected String getPackaging() {
     return mavenProject.getPackaging();
   }
