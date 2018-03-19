@@ -20,7 +20,6 @@ import java.io.File;
 import java.nio.file.Path;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -90,9 +89,8 @@ public abstract class CloudSdkMojo extends AbstractMojo {
         cloudSdkHome = cloudSdkPath;
       } else {
         throw new RuntimeException(
-            new MojoExecutionException(
-                "Both <cloudSdkPath> and <cloudSdkHome> are defined."
-                    + " <cloudSdkPath> is deprecated, use <cloudSdkHome> only."));
+            "Both <cloudSdkPath> and <cloudSdkHome> are defined. <cloudSdkPath> is deprecated, "
+                + "use <cloudSdkHome> only.");
       }
     }
   }
