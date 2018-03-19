@@ -103,8 +103,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
-    Path sdkPath = mojo.getCloudSdkPath();
-    if (mojo.getCloudSdkPath() == null) {
+
+    mojo.handleCloudSdkPathDeprecation();
+
+    Path sdkPath = mojo.getCloudSdkHome();
+    if (mojo.getCloudSdkHome() == null) {
       sdkPath = downloadCloudSdk();
     } else if (mojo.getCloudSdkVersion() != null) {
       checkCloudSdk();
