@@ -18,6 +18,7 @@ package com.google.cloud.tools.maven;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,6 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class CloudSdkAppEngineFactoryTest {
 
   private final Path CLOUD_SDK_PATH = Paths.get("google-cloud-sdk");
+  private final Path INSTALL_SDK_PATH = Paths.get("installed-cloud-sdk");
   private final String CLOUD_SDK_VERSION = "192.0.0";
   private final String ARTIFACT_ID = "appengine-maven-plugin";
   private final String ARTIFACT_VERSION = "0.1.0";
@@ -170,14 +172,14 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_downloadWithVersion() {
     when(mojoMock.getCloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
-    doNothing().when(factory).downloadCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
     doNothing().when(factory).checkCloudSdk();
 
     // invoke
     factory.defaultCloudSdkBuilder();
 
     // verify
-    verifyDefaultCloudSdkBuilder(null);
+    verifyDefaultCloudSdkBuilder(INSTALL_SDK_PATH);
     verify(factory).downloadCloudSdk();
     verify(factory, never()).checkCloudSdk();
   }
@@ -186,14 +188,14 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_downloadWithoutVersion() {
     when(mojoMock.getCloudSdkPath()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
-    doNothing().when(factory).downloadCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
     doNothing().when(factory).checkCloudSdk();
 
     // invoke
     factory.defaultCloudSdkBuilder();
 
     // verify
-    verifyDefaultCloudSdkBuilder(null);
+    verifyDefaultCloudSdkBuilder(INSTALL_SDK_PATH);
     verify(factory).downloadCloudSdk();
     verify(factory, never()).checkCloudSdk();
   }
@@ -202,7 +204,7 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_check() {
     when(mojoMock.getCloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
-    doNothing().when(factory).downloadCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
     doNothing().when(factory).checkCloudSdk();
 
     // invoke
@@ -218,7 +220,7 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_noCheck() {
     when(mojoMock.getCloudSdkPath()).thenReturn(CLOUD_SDK_PATH);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
-    doNothing().when(factory).downloadCloudSdk();
+    doReturn(INSTALL_SDK_PATH).when(factory).downloadCloudSdk();
     doNothing().when(factory).checkCloudSdk();
 
     // invoke
