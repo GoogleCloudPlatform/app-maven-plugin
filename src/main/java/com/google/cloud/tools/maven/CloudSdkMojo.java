@@ -28,9 +28,18 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 /** Abstract Mojo from which all goals inherit. */
 public abstract class CloudSdkMojo extends AbstractMojo {
 
-  /** Optional parameter to configure the location of the Google Cloud SDK. */
+  /**
+   * Optional parameter to configure the location of the Google Cloud SDK.
+   *
+   * @deprecated 1.3.3
+   */
   @Parameter(property = "cloudSdkPath", required = false)
+  @Deprecated
   private File cloudSdkPath;
+
+  /** Optional parameter to configure the location of the Google Cloud SDK. */
+  @Parameter(property = "cloudSdkHome", required = false)
+  private File cloudSdkHome;
 
   /** Optional parameter to configure the version of the Google Cloud SDK. */
   @Parameter(property = "cloudSdkVersion", required = false)
@@ -56,12 +65,34 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return cloudSdkPath != null ? cloudSdkPath.toPath() : null;
   }
 
+  public Path getCloudSdkHome() {
+    return cloudSdkHome != null ? cloudSdkHome.toPath() : null;
+  }
+
   public String getCloudSdkVersion() {
     return cloudSdkVersion;
   }
 
   public AppEngineFactory getAppEngineFactory() {
     return factory;
+  }
+
+  /**
+   * Update &lt;cloudSdkHome&gt; to the value of &lt;cloudSdkPath&gt; and display a warning if set.
+   *
+   * @throws RuntimeException if both &lt;cloudSdkHome&gt; and &lt;cloudSdkPath&gt; are defined.
+   */
+  public void handleCloudSdkPathDeprecation() {
+    if (cloudSdkPath != null) {
+      getLog().warn("<cloudSdkPath> is deprecated, use <cloudSdkHome> instead.");
+      if (cloudSdkHome == null) {
+        cloudSdkHome = cloudSdkPath;
+      } else {
+        throw new RuntimeException(
+            "Both <cloudSdkPath> and <cloudSdkHome> are defined. <cloudSdkPath> is deprecated, "
+                + "use <cloudSdkHome> only.");
+      }
+    }
   }
 
   /**

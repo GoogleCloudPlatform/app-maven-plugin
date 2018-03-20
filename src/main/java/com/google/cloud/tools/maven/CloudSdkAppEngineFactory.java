@@ -113,8 +113,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
-    Path sdkPath = mojo.getCloudSdkPath();
-    if (mojo.getCloudSdkPath() == null) {
+
+    mojo.handleCloudSdkPathDeprecation();
+
+    Path sdkPath = mojo.getCloudSdkHome();
+    if (mojo.getCloudSdkHome() == null) {
       sdkPath = cloudSdkOperationsFactory.newDownloader().downloadCloudSdk(mojo.getLog());
     } else if (mojo.getCloudSdkVersion() != null) {
       cloudSdkOperationsFactory.newChecker().checkCloudSdk(mojo.getLog());
@@ -139,7 +142,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
     private Log log;
 
-    public DefaultProcessOutputLineListener(Log log) {
+    DefaultProcessOutputLineListener(Log log) {
       this.log = log;
     }
 
