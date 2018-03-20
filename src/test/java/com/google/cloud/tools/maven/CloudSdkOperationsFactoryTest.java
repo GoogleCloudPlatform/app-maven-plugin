@@ -16,14 +16,22 @@
 
 package com.google.cloud.tools.maven;
 
+import static org.mockito.Mockito.when;
+
 import com.google.cloud.tools.managedcloudsdk.BadCloudSdkVersionException;
 import com.google.cloud.tools.managedcloudsdk.ManagedCloudSdk;
 import com.google.cloud.tools.managedcloudsdk.UnsupportedOsException;
 import com.google.cloud.tools.managedcloudsdk.Version;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CloudSdkOperationsFactoryTest {
+
+  @Mock CloudSdkMojo mojo;
 
   @Test
   public void testNewManagedSdk_null() throws UnsupportedOsException, BadCloudSdkVersionException {
@@ -35,7 +43,8 @@ public class CloudSdkOperationsFactoryTest {
   @Test
   public void testNewManagedSdk_specific()
       throws UnsupportedOsException, BadCloudSdkVersionException {
-    ManagedCloudSdk sdk = new CloudSdkOperationsFactory("191.0.0").newManagedSdk();
+    when(mojo.getCloudSdkVersion()).thenReturn("191.0.0");
+    ManagedCloudSdk sdk = new CloudSdkOperationsFactory(mojo).newManagedSdk();
     Assert.assertEquals(
         ManagedCloudSdk.newManagedSdk(new Version("191.0.0")).getSdkHome(), sdk.getSdkHome());
   }

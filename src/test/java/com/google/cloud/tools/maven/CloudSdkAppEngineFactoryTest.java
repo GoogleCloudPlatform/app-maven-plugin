@@ -189,7 +189,7 @@ public class CloudSdkAppEngineFactoryTest {
     // verify
     verifyDefaultCloudSdkBuilder(INSTALL_SDK_PATH);
     verify(cloudSdkDownloader).downloadCloudSdk(logMock);
-    verify(cloudSdkChecker, never()).checkCloudSdk(logMock);
+    verify(cloudSdkChecker, never()).checkCloudSdk(cloudSdkMock);
   }
 
   @Test
@@ -204,14 +204,14 @@ public class CloudSdkAppEngineFactoryTest {
     // verify
     verifyDefaultCloudSdkBuilder(INSTALL_SDK_PATH);
     verify(cloudSdkDownloader).downloadCloudSdk(logMock);
-    verify(cloudSdkChecker, never()).checkCloudSdk(logMock);
+    verify(cloudSdkChecker, never()).checkCloudSdk(cloudSdkMock);
   }
 
   @Test
   public void testDefaultCloudSdkBuilder_check() {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
-    doNothing().when(cloudSdkChecker).checkCloudSdk(logMock);
+    doNothing().when(cloudSdkChecker).checkCloudSdk(cloudSdkMock);
 
     // invoke
     factory.defaultCloudSdkBuilder();
@@ -219,14 +219,14 @@ public class CloudSdkAppEngineFactoryTest {
     // verify
     verifyDefaultCloudSdkBuilder();
     verify(cloudSdkDownloader, never()).downloadCloudSdk(logMock);
-    verify(cloudSdkChecker).checkCloudSdk(logMock);
+    verify(cloudSdkChecker).checkCloudSdk(cloudSdkMock);
   }
 
   @Test
   public void testDefaultCloudSdkBuilder_noCheck() {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
-    doNothing().when(cloudSdkChecker).checkCloudSdk(logMock);
+    doNothing().when(cloudSdkChecker).checkCloudSdk(cloudSdkMock);
 
     // invoke
     factory.defaultCloudSdkBuilder();
@@ -234,7 +234,7 @@ public class CloudSdkAppEngineFactoryTest {
     // verify
     verifyDefaultCloudSdkBuilder();
     verify(cloudSdkDownloader, never()).downloadCloudSdk(logMock);
-    verify(cloudSdkChecker, never()).checkCloudSdk(logMock);
+    verify(cloudSdkChecker, never()).checkCloudSdk(cloudSdkMock);
   }
 
   private void verifyDefaultCloudSdkBuilder() {

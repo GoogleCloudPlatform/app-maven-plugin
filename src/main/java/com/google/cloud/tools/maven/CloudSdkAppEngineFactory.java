@@ -46,7 +46,7 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
    * @param mojo The mojo containing Cloud Sdk configuration parameters
    */
   public CloudSdkAppEngineFactory(CloudSdkMojo mojo) {
-    this(mojo, new CloudSdkFactory(), new CloudSdkOperationsFactory(mojo.getCloudSdkVersion()));
+    this(mojo, new CloudSdkFactory(), new CloudSdkOperationsFactory(mojo));
   }
 
   private CloudSdkAppEngineFactory(
@@ -119,15 +119,17 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
     Path sdkPath = mojo.getCloudSdkHome();
     if (mojo.getCloudSdkHome() == null) {
       sdkPath = cloudSdkOperationsFactory.newDownloader().downloadCloudSdk(mojo.getLog());
-    } else if (mojo.getCloudSdkVersion() != null) {
-      cloudSdkOperationsFactory.newChecker().checkCloudSdk(mojo.getLog());
+    }
+
+    CloudSdk.Builder cloudSdkBuilder = cloudSdkFactory.cloudSdkBuilder().sdkPath(sdkPath);
+
+    if (mojo.getCloudSdkHome() != null && mojo.getCloudSdkVersion() != null) {
+      cloudSdkOperationsFactory.newChecker().checkCloudSdk(cloudSdkBuilder.build());
     }
 
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());
 
-    return cloudSdkFactory
-        .cloudSdkBuilder()
-        .sdkPath(sdkPath)
+    return cloudSdkBuilder
         .addStdOutLineListener(lineListener)
         .addStdErrLineListener(lineListener)
         .exitListener(new NonZeroExceptionExitListener())

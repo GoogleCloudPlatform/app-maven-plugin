@@ -23,19 +23,22 @@ import com.google.cloud.tools.managedcloudsdk.Version;
 import com.google.common.base.Strings;
 
 public class CloudSdkOperationsFactory {
-  private String version;
 
-  CloudSdkOperationsFactory(String version) {
-    this.version = version;
+  // At the factory's creation time, the sdk version isn't configured yet, so we can't pass that in
+  // by itself. So we pass in a reference to the CloudSdkMojo and get the version when we need it.
+  private final CloudSdkMojo mojo;
+
+  CloudSdkOperationsFactory(CloudSdkMojo mojo) {
+    this.mojo = mojo;
   }
 
   /** Build a new ManagedCloudSdk from a given version */
   public ManagedCloudSdk newManagedSdk()
       throws UnsupportedOsException, BadCloudSdkVersionException {
-    if (Strings.isNullOrEmpty(version)) {
+    if (mojo == null || Strings.isNullOrEmpty(mojo.getCloudSdkVersion())) {
       return ManagedCloudSdk.newManagedSdk();
     } else {
-      return ManagedCloudSdk.newManagedSdk(new Version(version));
+      return ManagedCloudSdk.newManagedSdk(new Version(mojo.getCloudSdkVersion()));
     }
   }
 
@@ -50,6 +53,6 @@ public class CloudSdkOperationsFactory {
 
   /** Build a new CloudSdkChecker */
   public CloudSdkChecker newChecker() {
-    return new CloudSdkChecker();
+    return new CloudSdkChecker(mojo.getCloudSdkVersion());
   }
 }
