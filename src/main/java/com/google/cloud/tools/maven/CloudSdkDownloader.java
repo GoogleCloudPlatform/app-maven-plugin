@@ -16,37 +16,24 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.managedcloudsdk.BadCloudSdkVersionException;
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.ManagedCloudSdk;
 import com.google.cloud.tools.managedcloudsdk.ManagedSdkVerificationException;
 import com.google.cloud.tools.managedcloudsdk.ManagedSdkVersionMismatchException;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
-import com.google.cloud.tools.managedcloudsdk.UnsupportedOsException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstallerException;
-import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Path;
+import org.apache.maven.plugin.logging.Log;
 
 public class CloudSdkDownloader {
 
-  private ManagedCloudSdk managedCloudSdk;
-  private CloudSdkMojo mojo;
+  private final ManagedCloudSdk managedCloudSdk;
 
-  CloudSdkDownloader(CloudSdkMojo mojo) {
-    this.mojo = mojo;
-    try {
-      this.managedCloudSdk = new ManagedCloudSdkFactory(mojo.getCloudSdkVersion()).newManagedSdk();
-    } catch (UnsupportedOsException | BadCloudSdkVersionException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @VisibleForTesting
-  public void setManagedCloudSdk(ManagedCloudSdk managedCloudSdk) {
+  CloudSdkDownloader(ManagedCloudSdk managedCloudSdk) {
     this.managedCloudSdk = managedCloudSdk;
   }
 
@@ -55,10 +42,10 @@ public class CloudSdkDownloader {
    *
    * @return The cloud SDK installation directory
    */
-  public Path downloadCloudSdk() {
+  public Path downloadCloudSdk(Log log) {
     try {
       ProgressListener progressListener = new NoOpProgressListener();
-      ConsoleListener consoleListener = new CloudSdkDownloaderConsoleListener(mojo.getLog());
+      ConsoleListener consoleListener = new CloudSdkDownloaderConsoleListener(log);
 
       if (!managedCloudSdk.isInstalled()) {
         managedCloudSdk.newInstaller().install(progressListener, consoleListener);
@@ -84,10 +71,5 @@ public class CloudSdkDownloader {
         | ManagedSdkVerificationException ex) {
       throw new RuntimeException(ex);
     }
-  }
-
-  /** Verifies the cloud sdk installation */
-  public void checkCloudSdk() {
-    mojo.getLog().warn("Checking Cloud SDK (not implemented)");
   }
 }

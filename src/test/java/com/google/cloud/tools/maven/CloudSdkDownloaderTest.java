@@ -27,6 +27,7 @@ import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponentInstaller;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstaller;
 import com.google.cloud.tools.managedcloudsdk.update.SdkUpdater;
+import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +38,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkDownloaderTest {
 
-  @Mock private CloudSdkMojo mojo;
+  @Mock private Log log;
   @Mock private ManagedCloudSdk managedCloudSdk;
 
   @Mock private SdkInstaller installer;
@@ -51,14 +52,13 @@ public class CloudSdkDownloaderTest {
     when(managedCloudSdk.newInstaller()).thenReturn(installer);
     when(managedCloudSdk.newComponentInstaller()).thenReturn(componentInstaller);
     when(managedCloudSdk.newUpdater()).thenReturn(updater);
-    downloader.setManagedCloudSdk(managedCloudSdk);
   }
 
   @Test
   public void testDownloadCloudSdk_install()
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(false);
-    downloader.downloadCloudSdk();
+    downloader.downloadCloudSdk(log);
     verify(managedCloudSdk).newInstaller();
   }
 
@@ -67,7 +67,7 @@ public class CloudSdkDownloaderTest {
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
     when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(false);
-    downloader.downloadCloudSdk();
+    downloader.downloadCloudSdk(log);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk).newComponentInstaller();
   }
@@ -78,7 +78,7 @@ public class CloudSdkDownloaderTest {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
     when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(true);
     when(managedCloudSdk.isUpToDate()).thenReturn(false);
-    downloader.downloadCloudSdk();
+    downloader.downloadCloudSdk(log);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk, never()).newComponentInstaller();
     verify(managedCloudSdk).newUpdater();

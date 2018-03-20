@@ -23,19 +23,19 @@ import com.google.cloud.tools.managedcloudsdk.Version;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ManagedCloudSdkFactoryTest {
+public class CloudSdkOperationsFactoryTest {
 
   @Test
   public void testNewManagedSdk_null() throws UnsupportedOsException, BadCloudSdkVersionException {
     // There's no way of testing for direct ManagedCloudSdk equality, so compare home paths
-    ManagedCloudSdk sdk = new ManagedCloudSdkFactory(null).newManagedSdk();
+    ManagedCloudSdk sdk = new CloudSdkOperationsFactory(null).newManagedSdk();
     Assert.assertEquals(ManagedCloudSdk.newManagedSdk().getSdkHome(), sdk.getSdkHome());
   }
 
   @Test
   public void testNewManagedSdk_specific()
       throws UnsupportedOsException, BadCloudSdkVersionException {
-    ManagedCloudSdk sdk = new ManagedCloudSdkFactory("191.0.0").newManagedSdk();
+    ManagedCloudSdk sdk = new CloudSdkOperationsFactory("191.0.0").newManagedSdk();
     Assert.assertEquals(
         ManagedCloudSdk.newManagedSdk(new Version("191.0.0")).getSdkHome(), sdk.getSdkHome());
   }

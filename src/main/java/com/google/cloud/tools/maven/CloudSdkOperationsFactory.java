@@ -22,10 +22,10 @@ import com.google.cloud.tools.managedcloudsdk.UnsupportedOsException;
 import com.google.cloud.tools.managedcloudsdk.Version;
 import com.google.common.base.Strings;
 
-public class ManagedCloudSdkFactory {
+public class CloudSdkOperationsFactory {
   private String version;
 
-  public ManagedCloudSdkFactory(String version) {
+  CloudSdkOperationsFactory(String version) {
     this.version = version;
   }
 
@@ -37,5 +37,19 @@ public class ManagedCloudSdkFactory {
     } else {
       return ManagedCloudSdk.newManagedSdk(new Version(version));
     }
+  }
+
+  /** Build a new CloudSdkDownloader */
+  public CloudSdkDownloader newDownloader() {
+    try {
+      return new CloudSdkDownloader(newManagedSdk());
+    } catch (UnsupportedOsException | BadCloudSdkVersionException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  /** Build a new CloudSdkChecker */
+  public CloudSdkChecker newChecker() {
+    return new CloudSdkChecker();
   }
 }

@@ -36,9 +36,9 @@ import org.apache.maven.plugin.logging.Log;
 /** Factory for App Engine dependencies. */
 public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
-  protected CloudSdkFactory cloudSdkFactory;
+  private CloudSdkFactory cloudSdkFactory;
   private CloudSdkMojo mojo;
-  private CloudSdkDownloader cloudSdkDownloader;
+  private CloudSdkOperationsFactory cloudSdkOperationsFactory;
 
   /**
    * Constructs a new CloudSdkAppEngineFactory
@@ -46,14 +46,16 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
    * @param mojo The mojo containing Cloud Sdk configuration parameters
    */
   public CloudSdkAppEngineFactory(CloudSdkMojo mojo) {
-    this(mojo, new CloudSdkFactory(), new CloudSdkDownloader(mojo));
+    this(mojo, new CloudSdkFactory(), new CloudSdkOperationsFactory(mojo.getCloudSdkVersion()));
   }
 
   private CloudSdkAppEngineFactory(
-      CloudSdkMojo mojo, CloudSdkFactory cloudSdkFactory, CloudSdkDownloader cloudSdkDownloader) {
+      CloudSdkMojo mojo,
+      CloudSdkFactory cloudSdkFactory,
+      CloudSdkOperationsFactory cloudSdkOperationsFactory) {
     this.mojo = mojo;
     this.cloudSdkFactory = cloudSdkFactory;
-    this.cloudSdkDownloader = cloudSdkDownloader;
+    this.cloudSdkOperationsFactory = cloudSdkOperationsFactory;
   }
 
   @Override
@@ -113,9 +115,9 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
     Path sdkPath = mojo.getCloudSdkPath();
     if (mojo.getCloudSdkPath() == null) {
-      sdkPath = cloudSdkDownloader.downloadCloudSdk();
+      sdkPath = cloudSdkOperationsFactory.newDownloader().downloadCloudSdk(mojo.getLog());
     } else if (mojo.getCloudSdkVersion() != null) {
-      cloudSdkDownloader.checkCloudSdk();
+      cloudSdkOperationsFactory.newChecker().checkCloudSdk(mojo.getLog());
     }
 
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());
