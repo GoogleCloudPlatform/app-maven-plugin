@@ -35,8 +35,10 @@ public class CloudSdkOperationsFactoryTest {
 
   @Test
   public void testNewManagedSdk_null() throws UnsupportedOsException, BadCloudSdkVersionException {
+    when(mojo.getCloudSdkVersion()).thenReturn(null);
+
     // There's no way of testing for direct ManagedCloudSdk equality, so compare home paths
-    ManagedCloudSdk sdk = new CloudSdkOperationsFactory(null).newManagedSdk();
+    ManagedCloudSdk sdk = new CloudSdkOperationsFactory(mojo).newManagedSdk();
     Assert.assertEquals(ManagedCloudSdk.newManagedSdk().getSdkHome(), sdk.getSdkHome());
   }
 
@@ -44,6 +46,7 @@ public class CloudSdkOperationsFactoryTest {
   public void testNewManagedSdk_specific()
       throws UnsupportedOsException, BadCloudSdkVersionException {
     when(mojo.getCloudSdkVersion()).thenReturn("191.0.0");
+
     ManagedCloudSdk sdk = new CloudSdkOperationsFactory(mojo).newManagedSdk();
     Assert.assertEquals(
         ManagedCloudSdk.newManagedSdk(new Version("191.0.0")).getSdkHome(), sdk.getSdkHome());

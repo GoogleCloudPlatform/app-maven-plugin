@@ -28,7 +28,6 @@ import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -37,11 +36,11 @@ public class CloudSdkCheckerTest {
 
   @Mock private CloudSdk sdk;
 
-  @InjectMocks private CloudSdkChecker cloudSdkChecker;
+  private CloudSdkChecker cloudSdkChecker;
 
   @Test
   public void testCheckCloudSdk_versionMismatch() {
-    cloudSdkChecker.setVersion("191.0.0");
+    cloudSdkChecker = new CloudSdkChecker("191.0.0");
     when(sdk.getVersion()).thenReturn(new CloudSdkVersion("190.0.0"));
     try {
       cloudSdkChecker.checkCloudSdk(sdk);
@@ -55,7 +54,7 @@ public class CloudSdkCheckerTest {
 
   @Test
   public void testCheckCloudSdk_sdkInstallationException() {
-    cloudSdkChecker.setVersion("192.0.0");
+    cloudSdkChecker = new CloudSdkChecker("192.0.0");
     when(sdk.getVersion()).thenReturn(new CloudSdkVersion("192.0.0"));
 
     doThrow(CloudSdkNotFoundException.class).when(sdk).validateCloudSdk();
@@ -69,7 +68,7 @@ public class CloudSdkCheckerTest {
 
   @Test
   public void testCheckCloudSdk_outOfDateException() {
-    cloudSdkChecker.setVersion("192.0.0");
+    cloudSdkChecker = new CloudSdkChecker("192.0.0");
     when(sdk.getVersion()).thenReturn(new CloudSdkVersion("192.0.0"));
 
     doThrow(CloudSdkOutOfDateException.class).when(sdk).validateCloudSdk();
@@ -83,7 +82,7 @@ public class CloudSdkCheckerTest {
 
   @Test
   public void testCheckCloudSdk_versionFileException() {
-    cloudSdkChecker.setVersion("192.0.0");
+    cloudSdkChecker = new CloudSdkChecker("192.0.0");
     when(sdk.getVersion()).thenReturn(new CloudSdkVersion("192.0.0"));
 
     doThrow(CloudSdkVersionFileException.class).when(sdk).validateCloudSdk();
@@ -97,7 +96,7 @@ public class CloudSdkCheckerTest {
 
   @Test
   public void testCheckCloudSdk_appEngineInstallationExceptions() {
-    cloudSdkChecker.setVersion("192.0.0");
+    cloudSdkChecker = new CloudSdkChecker("192.0.0");
     when(sdk.getVersion()).thenReturn(new CloudSdkVersion("192.0.0"));
 
     doThrow(AppEngineJavaComponentsNotInstalledException.class)
