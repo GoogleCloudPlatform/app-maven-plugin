@@ -72,10 +72,9 @@ public class CloudSdkAppEngineFactoryTest {
 
     when(cloudSdkFactoryMock.cloudSdkBuilder()).thenReturn(cloudSdkBuilderMock);
     when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
-    when(cloudSdkOperationsFactoryMock.newDownloader(CLOUD_SDK_VERSION))
-        .thenReturn(cloudSdkDownloader);
-    when(cloudSdkOperationsFactoryMock.newDownloader(null)).thenReturn(cloudSdkDownloader);
-    when(cloudSdkOperationsFactoryMock.newChecker(CLOUD_SDK_VERSION)).thenReturn(cloudSdkChecker);
+
+    doReturn(INSTALL_SDK_PATH).when(cloudSdkDownloader).downloadCloudSdk(logMock);
+    doNothing().when(cloudSdkChecker).checkCloudSdk(cloudSdkMock);
   }
 
   @Test
@@ -183,7 +182,8 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_downloadWithVersion() {
     when(mojoMock.getCloudSdkHome()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
-    doReturn(INSTALL_SDK_PATH).when(cloudSdkDownloader).downloadCloudSdk(logMock);
+    when(cloudSdkOperationsFactoryMock.newDownloader(CLOUD_SDK_VERSION))
+        .thenReturn(cloudSdkDownloader);
 
     // invoke
     factory.defaultCloudSdkBuilder();
@@ -198,7 +198,7 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_downloadWithoutVersion() {
     when(mojoMock.getCloudSdkHome()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
-    doReturn(INSTALL_SDK_PATH).when(cloudSdkDownloader).downloadCloudSdk(logMock);
+    when(cloudSdkOperationsFactoryMock.newDownloader(null)).thenReturn(cloudSdkDownloader);
 
     // invoke
     factory.defaultCloudSdkBuilder();
@@ -213,7 +213,7 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_check() {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
-    doNothing().when(cloudSdkChecker).checkCloudSdk(cloudSdkMock);
+    when(cloudSdkOperationsFactoryMock.newChecker(CLOUD_SDK_VERSION)).thenReturn(cloudSdkChecker);
 
     // invoke
     factory.defaultCloudSdkBuilder();
@@ -228,7 +228,6 @@ public class CloudSdkAppEngineFactoryTest {
   public void testDefaultCloudSdkBuilder_noCheck() {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
-    doNothing().when(cloudSdkChecker).checkCloudSdk(cloudSdkMock);
 
     // invoke
     factory.defaultCloudSdkBuilder();
