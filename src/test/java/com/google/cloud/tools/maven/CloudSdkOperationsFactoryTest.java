@@ -42,4 +42,20 @@ public class CloudSdkOperationsFactoryTest {
     Assert.assertEquals(
         ManagedCloudSdk.newManagedSdk(new Version("191.0.0")).getSdkHome(), sdk.getSdkHome());
   }
+
+  @Test
+  public void testNewDownloader() throws BadCloudSdkVersionException, UnsupportedOsException {
+    CloudSdkDownloader expected =
+        new CloudSdkDownloader(ManagedCloudSdk.newManagedSdk(new Version("191.0.0")));
+    CloudSdkDownloader actual = new CloudSdkOperationsFactory().newDownloader("191.0.0");
+    Assert.assertEquals(
+        expected.getManagedCloudSdk().getSdkHome(), actual.getManagedCloudSdk().getSdkHome());
+  }
+
+  @Test
+  public void testNewChecker() {
+    CloudSdkChecker expected = new CloudSdkChecker("191.0.0");
+    CloudSdkChecker actual = new CloudSdkOperationsFactory().newChecker("191.0.0");
+    Assert.assertEquals(expected.getVersion(), actual.getVersion());
+  }
 }
