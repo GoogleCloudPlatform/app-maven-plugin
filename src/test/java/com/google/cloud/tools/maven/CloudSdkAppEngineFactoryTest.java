@@ -72,8 +72,10 @@ public class CloudSdkAppEngineFactoryTest {
 
     when(cloudSdkFactoryMock.cloudSdkBuilder()).thenReturn(cloudSdkBuilderMock);
     when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
-    when(cloudSdkOperationsFactoryMock.newDownloader()).thenReturn(cloudSdkDownloader);
-    when(cloudSdkOperationsFactoryMock.newChecker()).thenReturn(cloudSdkChecker);
+    when(cloudSdkOperationsFactoryMock.newDownloader(CLOUD_SDK_VERSION))
+        .thenReturn(cloudSdkDownloader);
+    when(cloudSdkOperationsFactoryMock.newDownloader(null)).thenReturn(cloudSdkDownloader);
+    when(cloudSdkOperationsFactoryMock.newChecker(CLOUD_SDK_VERSION)).thenReturn(cloudSdkChecker);
   }
 
   @Test

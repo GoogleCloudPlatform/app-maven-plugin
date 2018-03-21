@@ -25,6 +25,7 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstallerException;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.apache.maven.plugin.logging.Log;
@@ -35,6 +36,11 @@ public class CloudSdkDownloader {
 
   CloudSdkDownloader(ManagedCloudSdk managedCloudSdk) {
     this.managedCloudSdk = managedCloudSdk;
+  }
+
+  @VisibleForTesting
+  public ManagedCloudSdk getManagedCloudSdk() {
+    return managedCloudSdk;
   }
 
   /**

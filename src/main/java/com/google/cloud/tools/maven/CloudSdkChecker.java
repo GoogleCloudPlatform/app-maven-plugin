@@ -21,6 +21,7 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
+import com.google.common.annotations.VisibleForTesting;
 
 public class CloudSdkChecker {
 
@@ -28,6 +29,11 @@ public class CloudSdkChecker {
 
   CloudSdkChecker(String version) {
     this.version = version;
+  }
+
+  @VisibleForTesting
+  public String getVersion() {
+    return version;
   }
 
   /**
