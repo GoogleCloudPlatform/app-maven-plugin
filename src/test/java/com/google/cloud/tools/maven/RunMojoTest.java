@@ -28,7 +28,6 @@ import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 import junitparams.JUnitParamsRunner;
@@ -90,39 +89,7 @@ public class RunMojoTest extends AbstractDevServerTest {
 
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testRun_appYamlsSetAndOverridesNullServices(
-      String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
-    runMojo.devserverVersion = version;
-    setUpAppEngineWebXml();
-    runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
-    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
-
-    runMojo.execute();
-
-    assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
-  }
-
-  @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testRun_appYamlsSetAndOverridesEmptyServices(
-      String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
-    runMojo.devserverVersion = version;
-    setUpAppEngineWebXml();
-    runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
-    runMojo.services = Collections.emptyList();
-    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
-
-    runMojo.execute();
-
-    assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
-  }
-
-  @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testRun_appYamlsNotSetServicesIsUsed(
-      String version, SupportedDevServerVersion mockVersion)
+  public void testRun_servicesIsUsed(String version, SupportedDevServerVersion mockVersion)
       throws MojoFailureException, MojoExecutionException, IOException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -132,75 +99,6 @@ public class RunMojoTest extends AbstractDevServerTest {
     runMojo.execute();
 
     assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
-  }
-
-  @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testRun_appYamlsEmptyServicesIsUsed(
-      String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
-    runMojo.devserverVersion = version;
-    setUpAppEngineWebXml();
-    runMojo.appYamls = Collections.emptyList();
-    runMojo.services = Collections.singletonList(new File("src/main/appengine"));
-    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
-
-    runMojo.execute();
-
-    assertArrayEquals(new File[] {new File("src/main/appengine")}, runMojo.getServices().toArray());
-  }
-
-  @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testRun_appYamlsEmptyServicesNullDefaultIsUsed(
-      String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
-    runMojo.devserverVersion = version;
-    setUpAppEngineWebXml();
-    runMojo.appYamls = Collections.emptyList();
-    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
-
-    runMojo.execute();
-
-    assertArrayEquals(
-        new File[] {Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile()},
-        runMojo.getServices().toArray());
-  }
-
-  @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testRun_appYamlsEmptyServicesEmptyDefaultIsUsed(
-      String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
-    runMojo.devserverVersion = version;
-    setUpAppEngineWebXml();
-    runMojo.appYamls = Collections.emptyList();
-    runMojo.services = Collections.emptyList();
-    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
-
-    runMojo.execute();
-
-    assertArrayEquals(
-        new File[] {Paths.get(mavenProjectMock.getBuild().getDirectory(), "artifact").toFile()},
-        runMojo.getServices().toArray());
-  }
-
-  @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testRun_appYamlAndServicesSetCausesError(
-      String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
-    runMojo.devserverVersion = version;
-    runMojo.appYamls = Collections.singletonList(new File("src/main/appengine"));
-    runMojo.services = Collections.singletonList(new File("src/main/appengine2"));
-    when(factoryMock.devServerRunSync(mockVersion)).thenReturn(devServerMock);
-
-    expectedException.expect(MojoExecutionException.class);
-    expectedException.expectMessage(
-        "Both <appYamls> and <services> are defined."
-            + " <appYamls> is deprecated, use <services> only.");
-
-    runMojo.execute();
   }
 
   @Test

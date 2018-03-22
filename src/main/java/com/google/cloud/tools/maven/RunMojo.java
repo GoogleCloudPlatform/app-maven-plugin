@@ -36,21 +36,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Execute(phase = LifecyclePhase.PACKAGE)
 public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
-  // TODO remove this: https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/162
   /**
-   * Path to a yaml file, or a directory containing yaml files, or a directory containing
-   * WEB-INF/web.xml.
-   *
-   * @deprecated 1.2.2
-   */
-  @Parameter(alias = "devserver.appYamls", property = "app.devserver.appYamls")
-  @Deprecated
-  protected List<File> appYamls;
-
-  /**
-   * Path to a yaml file, or a directory containing yaml files, or a directory containing
-   * WEB-INF/web.xml. Defaults to <code>${project.build.directory}/${project.build.finalName}</code>
-   * , unless {@code #appYamls} is set, in which case it will default to {@code #appYamls}' value.
+   * Path to a yaml file, or a directory containing yaml files, or a directory containing WEB-INF/
+   * web.xml. Defaults to <code>${project.build.directory}/${project.build.finalName}</code>.
    */
   @Parameter(alias = "devserver.services", property = "app.devserver.services", required = true)
   protected List<File> services;
@@ -283,7 +271,12 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     SupportedDevServerVersion convertedVersion = convertDevserverVersionString();
-    handleAppYamlsDeprecation();
+    if (CollectionUtil.isNullOrEmpty(services)) {
+      Build build = mavenProject.getBuild();
+      services =
+          Collections.singletonList(
+              new File(build.getDirectory()).toPath().resolve(build.getFinalName()).toFile());
+    }
     verifyAppEngineStandardApp();
     runServer(convertedVersion);
   }
@@ -304,41 +297,6 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
       return SupportedDevServerVersion.parse(devserverVersion);
     } catch (IllegalArgumentException ex) {
       throw new MojoExecutionException("Invalid version", ex);
-    }
-  }
-
-  /**
-   * If &lt;appYamls&gt; is explicitly set by the user, we'll display a warning.
-   *
-   * <p>If &lt;appYamls&gt; is explicitly set by the user and &lt;services&gt; is not (i.e. not
-   * present in the configuration; <i>note: the </i>{@code services}<i> field will contain the
-   * default value, so we cannot simply check if it's empty</i>), then we'll assign the value of
-   * &lt;appYamls&gt; to &lt;services&gt; to be used in the run configuration.
-   *
-   * <p>If both &lt;appYamls&gt; and &lt;services&gt; are explicitly set in the configuration, we'll
-   * throw an error.
-   *
-   * @throws MojoExecutionException if both &lt;appYamls&gt; and &lt;services&gt; are explicitly set
-   *     in the configuration
-   */
-  protected void handleAppYamlsDeprecation() throws MojoExecutionException {
-    if (CollectionUtil.isNullOrEmpty(appYamls)) {
-      if (CollectionUtil.isNullOrEmpty(services)) {
-        Build build = mavenProject.getBuild();
-        services =
-            Collections.singletonList(
-                new File(build.getDirectory()).toPath().resolve(build.getFinalName()).toFile());
-      }
-    } else {
-      // no default value, so it was set by the user explicitly
-      getLog().warn("<appYamls> is deprecated, use <services> instead.");
-      if (CollectionUtil.isNullOrEmpty(services)) {
-        services = appYamls;
-      } else {
-        throw new MojoExecutionException(
-            "Both <appYamls> and <services> are defined."
-                + " <appYamls> is deprecated, use <services> only.");
-      }
     }
   }
 

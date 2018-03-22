@@ -35,8 +35,7 @@
   </build>
 
   <profiles>
-    <!-- base profile for integration tests using appYamls/services to configure
-      devappserver -->
+    <!-- base profile for integration tests using services to configure devappserver -->
     <profile>
       <id>base-it-profile</id>
       <build>
@@ -54,32 +53,7 @@
       </build>
     </profile>
 
-    <!-- integration test for configuring the devappserver via the appYamls
-      element -->
-    <profile>
-      <id>appyamls</id>
-      <properties>
-        <it-with-profiles>1</it-with-profiles>
-        <it.sourceWebAppDir>webapp-for-appyamls</it.sourceWebAppDir>
-        <it.targetWebAppDir>appYamlsWar</it.targetWebAppDir>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.google.cloud.tools</groupId>
-            <artifactId>appengine-maven-plugin</artifactId>
-            <configuration>
-              <appYamls>
-                <appYaml>${project.build.directory}/appYamlsWar</appYaml>
-              </appYamls>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!-- integration test for configuring the devappserver via the services
-      element -->
+    <!-- integration test for configuring the devappserver via the services element -->
     <profile>
       <id>services</id>
       <properties>
@@ -95,28 +69,6 @@
             <configuration>
               <services>
                 <service>${project.build.directory}/servicesWar</service>
-              </services>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!-- integration test to verify behavior if both appYamls and services
-      element is set (i.e. should fail) -->
-    <profile>
-      <id>appYamlsAndServices</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.google.cloud.tools</groupId>
-            <artifactId>appengine-maven-plugin</artifactId>
-            <configuration>
-              <appYamls>
-                <appYaml>${project.build.directory}/${finalName}</appYaml>
-              </appYamls>
-              <services>
-                <service>${project.build.directory}/${finalName}</service>
               </services>
             </configuration>
           </plugin>

@@ -113,28 +113,10 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
       result.add(new Object[] {serverVersion, new String[0], "standard-project"});
       result.add(
           new Object[] {
-            serverVersion, new String[] {"base-it-profile", "appyamls"}, "standard-project-appyamls"
-          });
-      result.add(
-          new Object[] {
             serverVersion, new String[] {"base-it-profile", "services"}, "standard-project-services"
           });
     }
     return result.toArray(new Object[0]);
-  }
-
-  @Test
-  public void testRun_failsWhenAppYamlsAndServicesBothSet()
-      throws IOException, VerificationException {
-    expectedException.expect(VerificationException.class);
-    expectedException.expectMessage(
-        "Both <appYamls> and <services> are defined."
-            + " <appYamls> is deprecated, use <services> only.");
-    expectedException.expectMessage("BUILD FAILURE");
-    final Verifier verifier =
-        createVerifier("testRunAppYamlsAndServices", SupportedDevServerVersion.V1);
-    verifier.addCliOption("-PappYamlsAndServices");
-    verifier.executeGoal("appengine:run");
   }
 
   private Verifier createVerifier(String name, SupportedDevServerVersion version)
