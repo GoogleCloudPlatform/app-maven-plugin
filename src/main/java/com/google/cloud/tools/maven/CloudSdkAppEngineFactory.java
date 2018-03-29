@@ -220,7 +220,8 @@ public class CloudSdkAppEngineFactory {
         .addStdErrLineListener(lineListener)
         .exitListener(new NonZeroExceptionExitListener())
         .appCommandMetricsEnvironment(mojo.getArtifactId())
-        .appCommandMetricsEnvironmentVersion(mojo.getArtifactVersion());
+        .appCommandMetricsEnvironmentVersion(mojo.getArtifactVersion())
+        .appCommandCredentialFile(mojo.getServiceAccountKeyFile());
   }
 
   /**
