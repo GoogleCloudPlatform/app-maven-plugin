@@ -45,13 +45,17 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(property = "cloudSdkVersion", required = false)
   private String cloudSdkVersion;
 
+  /** Optional parameter to configure the key file used for gcloud authentication */
+  @Parameter(property = "serviceAccountKeyFile", required = false)
+  private File serviceAccountKeyFile;
+
   @Parameter(defaultValue = "${plugin}", readonly = true)
   private PluginDescriptor pluginDescriptor;
 
   @Parameter(defaultValue = "${project}", readonly = true)
   protected MavenProject mavenProject;
 
-  private AppEngineFactory factory = new CloudSdkAppEngineFactory(this);
+  private CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 
   public String getArtifactId() {
     return pluginDescriptor.getArtifactId();
@@ -73,7 +77,11 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return cloudSdkVersion;
   }
 
-  public AppEngineFactory getAppEngineFactory() {
+  public File getServiceAccountKeyFile() {
+    return serviceAccountKeyFile;
+  }
+
+  public CloudSdkAppEngineFactory getAppEngineFactory() {
     return factory;
   }
 
