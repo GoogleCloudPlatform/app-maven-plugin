@@ -34,5 +34,12 @@ public class CloudSdkLoginMojo extends CloudSdkMojo {
     } catch (AppEngineException ex) {
       throw new RuntimeException(ex);
     }
+
+    if (getServiceAccountKeyFile() != null) {
+      getLog()
+          .warn(
+              "serviceAccountKeyFile is configured and will be used instead of Cloud SDK auth "
+                  + "state.");
+    }
   }
 }
