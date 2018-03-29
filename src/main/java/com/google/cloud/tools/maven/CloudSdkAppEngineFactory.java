@@ -28,6 +28,7 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFile;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import java.nio.file.Path;
@@ -60,7 +61,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   @Override
   public AppEngineStandardStaging standardStaging() {
-    return cloudSdkFactory.standardStaging(defaultCloudSdkBuilder().build());
+    try {
+      return cloudSdkFactory.standardStaging(defaultCloudSdkBuilder().build());
+    } catch (CloudSdkNotFoundException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   @Override
@@ -70,7 +75,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   @Override
   public AppEngineDeployment deployment() {
-    return cloudSdkFactory.deployment(defaultCloudSdkBuilder().build());
+    try {
+      return cloudSdkFactory.deployment(defaultCloudSdkBuilder().build());
+    } catch (CloudSdkNotFoundException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   @Override
@@ -79,7 +88,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
   }
 
   private AppEngineDevServer createDevServerForVersion(SupportedDevServerVersion version) {
-    return createDevServerForVersion(version, defaultCloudSdkBuilder().build());
+    try {
+      return createDevServerForVersion(version, defaultCloudSdkBuilder().build());
+    } catch (CloudSdkNotFoundException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   private AppEngineDevServer createDevServerForVersion(
@@ -99,7 +112,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
       int startSuccessTimeout, SupportedDevServerVersion version) {
     CloudSdk.Builder builder =
         defaultCloudSdkBuilder().async(true).runDevAppServerWait(startSuccessTimeout);
-    return createDevServerForVersion(version, builder.build());
+    try {
+      return createDevServerForVersion(version, builder.build());
+    } catch (CloudSdkNotFoundException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   @Override
@@ -109,7 +126,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
 
   @Override
   public GenRepoInfoFile genRepoInfoFile() {
-    return cloudSdkFactory.genRepoInfoFile(defaultCloudSdkBuilder().build());
+    try {
+      return cloudSdkFactory.genRepoInfoFile(defaultCloudSdkBuilder().build());
+    } catch (CloudSdkNotFoundException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
@@ -127,9 +148,13 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
     CloudSdk.Builder cloudSdkBuilder = cloudSdkFactory.cloudSdkBuilder().sdkPath(sdkPath);
 
     if (mojo.getCloudSdkHome() != null && mojo.getCloudSdkVersion() != null) {
-      cloudSdkOperationsFactory
-          .newChecker(mojo.getCloudSdkVersion())
-          .checkCloudSdk(cloudSdkBuilder.build());
+      try {
+        cloudSdkOperationsFactory
+            .newChecker(mojo.getCloudSdkVersion())
+            .checkCloudSdk(cloudSdkBuilder.build());
+      } catch (CloudSdkNotFoundException ex) {
+        throw new RuntimeException(ex);
+      }
     }
 
     ProcessOutputLineListener lineListener = new DefaultProcessOutputLineListener(mojo.getLog());

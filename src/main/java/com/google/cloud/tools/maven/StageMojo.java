@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.common.annotations.VisibleForTesting;
@@ -231,10 +232,18 @@ public class StageMojo extends CloudSdkMojo
       // Dockerfile default location
       configureDockerfileDefaultLocation();
 
-      getAppEngineFactory().standardStaging().stageStandard(this);
+      try {
+        getAppEngineFactory().standardStaging().stageStandard(this);
+      } catch (AppEngineException ex) {
+        throw new RuntimeException(ex);
+      }
     } else {
       getLog().info("Detected App Engine flexible environment application.");
-      getAppEngineFactory().flexibleStaging().stageFlexible(this);
+      try {
+        getAppEngineFactory().flexibleStaging().stageFlexible(this);
+      } catch (AppEngineException ex) {
+        throw new RuntimeException(ex);
+      }
     }
   }
 

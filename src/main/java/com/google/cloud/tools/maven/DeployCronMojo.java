@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import org.apache.maven.plugins.annotations.Execute;
@@ -30,6 +31,10 @@ public class DeployCronMojo extends AbstractSingleYamlDeployMojo {
   protected void doDeploy(
       AppEngineDeployment appEngineDeployment,
       DeployProjectConfigurationConfiguration configuration) {
-    appEngineDeployment.deployCron(this);
+    try {
+      appEngineDeployment.deployCron(this);
+    } catch (AppEngineException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 }

@@ -20,6 +20,7 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import java.io.IOException;
 import junitparams.JUnitParamsRunner;
@@ -49,7 +50,7 @@ public class RunAsyncMojoTest extends AbstractDevServerTest {
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testRunAsync(String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
+      throws MojoFailureException, MojoExecutionException, IOException, AppEngineException {
     final int START_SUCCESS_TIMEOUT = 25;
 
     // wire up

@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import java.io.File;
 import java.util.List;
@@ -94,7 +95,11 @@ public class DeployMojo extends StageMojo implements DeployConfiguration {
       deployables.add(stagingDirectory);
     }
 
-    getAppEngineFactory().deployment().deploy(this);
+    try {
+      getAppEngineFactory().deployment().deploy(this);
+    } catch (AppEngineException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   @Override

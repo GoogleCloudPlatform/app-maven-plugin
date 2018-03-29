@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.util.CollectionUtil;
@@ -282,7 +283,11 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   }
 
   protected void runServer(SupportedDevServerVersion convertedVersion) {
-    getAppEngineFactory().devServerRunSync(convertedVersion).run(this);
+    try {
+      getAppEngineFactory().devServerRunSync(convertedVersion).run(this);
+    } catch (AppEngineException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   /**

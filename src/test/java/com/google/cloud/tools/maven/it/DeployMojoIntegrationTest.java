@@ -16,6 +16,10 @@
 
 package com.google.cloud.tools.maven.it;
 
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
+import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
@@ -28,7 +32,8 @@ public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   @Test
   public void testDeployStandard()
-      throws IOException, VerificationException, ProcessRunnerException {
+      throws IOException, VerificationException, ProcessRunnerException, CloudSdkNotFoundException,
+          CloudSdkOutOfDateException, CloudSdkVersionFileException, InvalidJavaSdkException {
 
     Verifier verifier = new StandardVerifier("testDeployStandard");
 
@@ -46,7 +51,8 @@ public class DeployMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   @Test
   public void testDeployFlexible()
-      throws IOException, VerificationException, ProcessRunnerException {
+      throws IOException, VerificationException, ProcessRunnerException, CloudSdkNotFoundException,
+          CloudSdkOutOfDateException, CloudSdkVersionFileException, InvalidJavaSdkException {
 
     Verifier verifier = new FlexibleVerifier("testDeployFlexible");
 

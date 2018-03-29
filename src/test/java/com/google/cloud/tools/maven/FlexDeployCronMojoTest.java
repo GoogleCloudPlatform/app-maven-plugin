@@ -19,6 +19,7 @@ package com.google.cloud.tools.maven;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.maven.util.SingleYamlFlexibleDeployTestHelper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -46,7 +47,7 @@ public class FlexDeployCronMojoTest {
   @Test
   @Parameters({"jar", "war"})
   public void testDeployFlexible(String packaging)
-      throws MojoExecutionException, MojoFailureException {
+      throws MojoExecutionException, MojoFailureException, AppEngineException {
     when(mojo.mavenProject.getPackaging()).thenReturn(packaging);
 
     mojo.execute();

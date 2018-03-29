@@ -33,7 +33,8 @@ public class GenRepoInfoFileMojoTest {
   }
 
   @Test
-  public void testExecute() throws MojoFailureException, MojoExecutionException {
+  public void testExecute()
+      throws MojoFailureException, MojoExecutionException, AppEngineException {
     genMojo.ignoreErrors = true;
     genMojo.execute();
 
@@ -41,7 +42,8 @@ public class GenRepoInfoFileMojoTest {
   }
 
   @Test(expected = MojoExecutionException.class)
-  public void testExecute_noIgnoreErrors() throws MojoFailureException, MojoExecutionException {
+  public void testExecute_noIgnoreErrors()
+      throws MojoFailureException, MojoExecutionException, AppEngineException {
     doThrow(new AppEngineException("Bad")).when(genMock).generate(genMojo);
 
     genMojo.execute();

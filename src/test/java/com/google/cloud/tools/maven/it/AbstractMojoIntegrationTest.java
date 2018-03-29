@@ -17,6 +17,10 @@
 package com.google.cloud.tools.maven.it;
 
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
+import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.maven.it.verifier.TailingVerifier;
@@ -39,7 +43,9 @@ public abstract class AbstractMojoIntegrationTest {
     }
   }
 
-  protected void deleteService(String service) throws ProcessRunnerException {
+  protected void deleteService(String service)
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     CloudSdk cloudSdk =
         new CloudSdk.Builder().exitListener(new NonZeroExceptionExitListener()).build();
     cloudSdk.runAppCommand(Arrays.asList("services", "delete", service));

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.maven.AbstractSingleYamlDeployMojo;
@@ -62,7 +63,11 @@ public class SingleYamlStandardDeployTestHelper<M extends AbstractSingleYamlDepl
 
   @Override
   public void after() {
-    verify(standardStagingMock).stageStandard(mojo);
+    try {
+      verify(standardStagingMock).stageStandard(mojo);
+    } catch (AppEngineException ex) {
+      Assert.fail(ex.getMessage());
+    }
     assertEquals(
         Paths.get(
                 temporaryFolder.getRoot().getAbsolutePath(),

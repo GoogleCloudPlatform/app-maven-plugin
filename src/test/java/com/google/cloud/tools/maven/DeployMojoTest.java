@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
@@ -77,7 +78,7 @@ public class DeployMojoTest {
   @Test
   @Parameters({"jar", "war"})
   public void testDeployStandard(String packaging)
-      throws IOException, MojoFailureException, MojoExecutionException {
+      throws IOException, MojoFailureException, MojoExecutionException, AppEngineException {
 
     // wire up
     when(project.getPackaging()).thenReturn(packaging);

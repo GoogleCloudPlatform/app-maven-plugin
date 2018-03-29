@@ -23,6 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.common.collect.ImmutableList;
@@ -74,7 +75,7 @@ public class RunMojoTest extends AbstractDevServerTest {
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testRun(String version, SupportedDevServerVersion mockVersion)
-      throws MojoFailureException, MojoExecutionException, IOException {
+      throws MojoFailureException, MojoExecutionException, IOException, AppEngineException {
     // wire up
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
@@ -122,7 +123,7 @@ public class RunMojoTest extends AbstractDevServerTest {
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testEnvironment(String version, SupportedDevServerVersion mockVersion)
-      throws IOException, MojoExecutionException, MojoFailureException {
+      throws IOException, MojoExecutionException, MojoFailureException, AppEngineException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
     runMojo.services = Collections.singletonList(new File("src/main/appengine"));
@@ -139,7 +140,7 @@ public class RunMojoTest extends AbstractDevServerTest {
   @Test
   @Parameters({"1,V1", "2-alpha,V2ALPHA"})
   public void testAdditionalArguments(String version, SupportedDevServerVersion mockVersion)
-      throws IOException, MojoExecutionException, MojoFailureException {
+      throws IOException, MojoExecutionException, MojoFailureException, AppEngineException {
     runMojo.devserverVersion = version;
     setUpAppEngineWebXml();
     runMojo.services = Collections.singletonList(new File("src/main/appengine"));

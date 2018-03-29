@@ -21,6 +21,7 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
+import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.common.annotations.VisibleForTesting;
 
 public class CloudSdkChecker {
@@ -42,22 +43,23 @@ public class CloudSdkChecker {
    * @param cloudSdk CloudSdk with a configured sdk home directory
    */
   public void checkCloudSdk(CloudSdk cloudSdk) {
-    if (!version.equals(cloudSdk.getVersion().toString())) {
-      throw new RuntimeException(
-          "Specified Cloud SDK version ("
-              + version
-              + ") does not match installed version ("
-              + cloudSdk.getVersion()
-              + ").");
-    }
-
     try {
+      if (!version.equals(cloudSdk.getVersion().toString())) {
+        throw new RuntimeException(
+            "Specified Cloud SDK version ("
+                + version
+                + ") does not match installed version ("
+                + cloudSdk.getVersion()
+                + ").");
+      }
+
       cloudSdk.validateCloudSdk();
       cloudSdk.validateAppEngineJavaComponents();
     } catch (CloudSdkNotFoundException
         | CloudSdkOutOfDateException
         | CloudSdkVersionFileException
-        | AppEngineJavaComponentsNotInstalledException ex) {
+        | AppEngineJavaComponentsNotInstalledException
+        | InvalidJavaSdkException ex) {
       throw new RuntimeException(ex);
     }
   }
