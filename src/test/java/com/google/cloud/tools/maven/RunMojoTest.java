@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
+import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;

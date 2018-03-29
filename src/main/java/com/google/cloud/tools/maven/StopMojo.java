@@ -18,7 +18,7 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
+import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;

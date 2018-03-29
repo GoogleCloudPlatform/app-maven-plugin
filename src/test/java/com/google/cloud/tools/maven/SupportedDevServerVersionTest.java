@@ -2,7 +2,7 @@ package com.google.cloud.tools.maven;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
+import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

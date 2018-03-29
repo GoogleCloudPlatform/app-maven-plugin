@@ -51,7 +51,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project}", readonly = true)
   protected MavenProject mavenProject;
 
-  private AppEngineFactory factory = new CloudSdkAppEngineFactory(this);
+  private CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 
   public String getArtifactId() {
     return pluginDescriptor.getArtifactId();
@@ -73,7 +73,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
     return cloudSdkVersion;
   }
 
-  public AppEngineFactory getAppEngineFactory() {
+  public CloudSdkAppEngineFactory getAppEngineFactory() {
     return factory;
   }
 
