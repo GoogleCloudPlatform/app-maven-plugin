@@ -21,6 +21,7 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
+import com.google.cloud.tools.appengine.cloudsdk.AppEngineJavaComponentsNotInstalledException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1;
@@ -29,6 +30,9 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStagin
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFile;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
+import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import java.nio.file.Path;
@@ -152,7 +156,11 @@ public class CloudSdkAppEngineFactory implements AppEngineFactory {
         cloudSdkOperationsFactory
             .newChecker(mojo.getCloudSdkVersion())
             .checkCloudSdk(cloudSdkBuilder.build());
-      } catch (CloudSdkNotFoundException ex) {
+      } catch (CloudSdkNotFoundException
+          | CloudSdkVersionFileException
+          | InvalidJavaSdkException
+          | AppEngineJavaComponentsNotInstalledException
+          | CloudSdkOutOfDateException ex) {
         throw new RuntimeException(ex);
       }
     }

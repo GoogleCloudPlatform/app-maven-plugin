@@ -23,8 +23,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.cloudsdk.AppEngineJavaComponentsNotInstalledException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
+import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.maven.AppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.DefaultProcessOutputLineListener;
 import java.nio.file.Path;
@@ -64,7 +68,9 @@ public class CloudSdkAppEngineFactoryTest {
   @InjectMocks private CloudSdkAppEngineFactory factory;
 
   @Before
-  public void wireUp() throws CloudSdkNotFoundException {
+  public void wireUp()
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, InvalidJavaSdkException,
+          CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
     when(mojoMock.getArtifactId()).thenReturn(ARTIFACT_ID);
@@ -180,7 +186,9 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   @Test
-  public void testDefaultCloudSdkBuilder_downloadWithVersion() {
+  public void testDefaultCloudSdkBuilder_downloadWithVersion()
+      throws CloudSdkOutOfDateException, CloudSdkNotFoundException, InvalidJavaSdkException,
+          CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException {
     when(mojoMock.getCloudSdkHome()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
     when(cloudSdkOperationsFactoryMock.newDownloader(CLOUD_SDK_VERSION))
@@ -196,7 +204,9 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   @Test
-  public void testDefaultCloudSdkBuilder_downloadWithoutVersion() {
+  public void testDefaultCloudSdkBuilder_downloadWithoutVersion()
+      throws CloudSdkOutOfDateException, CloudSdkNotFoundException, InvalidJavaSdkException,
+          CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException {
     when(mojoMock.getCloudSdkHome()).thenReturn(null);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
     when(cloudSdkOperationsFactoryMock.newDownloader(null)).thenReturn(cloudSdkDownloader);
@@ -211,7 +221,9 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   @Test
-  public void testDefaultCloudSdkBuilder_check() {
+  public void testDefaultCloudSdkBuilder_check()
+      throws CloudSdkOutOfDateException, CloudSdkNotFoundException, InvalidJavaSdkException,
+          CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(CLOUD_SDK_VERSION);
     when(cloudSdkOperationsFactoryMock.newChecker(CLOUD_SDK_VERSION)).thenReturn(cloudSdkChecker);
@@ -226,7 +238,9 @@ public class CloudSdkAppEngineFactoryTest {
   }
 
   @Test
-  public void testDefaultCloudSdkBuilder_noCheck() {
+  public void testDefaultCloudSdkBuilder_noCheck()
+      throws CloudSdkOutOfDateException, CloudSdkNotFoundException, InvalidJavaSdkException,
+          CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
 
