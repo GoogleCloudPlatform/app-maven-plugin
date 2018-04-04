@@ -23,6 +23,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
+/** Login and set the Cloud SDK common configuration user. */
 @Mojo(name = "cloudSdkLogin")
 public class CloudSdkLoginMojo extends CloudSdkMojo {
 
