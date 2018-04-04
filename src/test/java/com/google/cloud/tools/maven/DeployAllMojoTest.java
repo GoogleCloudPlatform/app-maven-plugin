@@ -100,4 +100,27 @@ public class DeployAllMojoTest {
     verify(standardStagingMock).stageStandard(deployAllMojo);
     verify(deploymentMock).deploy(deployAllMojo);
   }
+
+  @Test
+  @Parameters({"jar", "war"})
+  public void testExecute_validInDifferentDir(String packaging)
+      throws IOException, MojoFailureException, MojoExecutionException, AppEngineException {
+    when(project.getPackaging()).thenReturn(packaging);
+
+    // create appengine-web.xml to mark it as standard environment
+    File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
+    appengineWebXml.createNewFile();
+    Files.write("<appengine-web-app></appengine-web-app>", appengineWebXml, Charsets.UTF_8);
+
+    // Make YAMLS
+    File appYaml = tempFolder.newFile("staging/app.yaml");
+    File validInDifferentDirYaml = tempFolder.newFile("queue.yaml");
+
+    deployAllMojo.execute();
+
+    assertTrue(deployAllMojo.deployables.contains(appYaml));
+    assertFalse(deployAllMojo.deployables.contains(validInDifferentDirYaml));
+    verify(standardStagingMock).stageStandard(deployAllMojo);
+    verify(deploymentMock).deploy(deployAllMojo);
+  }
 }
