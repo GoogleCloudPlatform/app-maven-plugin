@@ -3,8 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 ### Added
+* New `cloudSdkVersion` parameter to specify desired Cloud SDK version.
+* Cloud SDK and java app-engine components are automatically installed when `cloudSdkHome` is not provided. ([#247](../../issues/247))
+* Cloud SDK installation is verified when `cloudSdkHome` and `cloudSdkVersion` are configured. ([#248](../../issues/248))
+* New `<serviceAccountKeyFile>` configuration parameter, and `appengine:cloudSdkLogin` goal. ([#268](../../issues/268))
 
 ### Changed
+* Upgrade App Engine Plugins Core dependency to 0.5.2.
+* `cloudSdkPath` is deprecated in favor of `cloudSdkHome` ([#257](../../issues/257)).
+* Remove deprecated `appYamls` parameter. ([#162](../../issues/162))
 
 ### Fixed
 
