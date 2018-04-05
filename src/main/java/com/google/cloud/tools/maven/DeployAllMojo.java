@@ -46,6 +46,15 @@ public class DeployAllMojo extends DeployMojo {
       if (yaml.exists()) {
         getLog().info("deployAll: Preparing to deploy " + yamlName);
         deployables.add(yaml);
+      } else if (!isStandardStaging()) {
+        // If this is a flexible project, need to check source directory for yamls instead of just
+        // staging directory
+        configureAppEngineDirectory();
+        yaml = appEngineDirectory.toPath().resolve(yamlName).toFile();
+        if (yaml.exists()) {
+          getLog().info("deployAll: Preparing to deploy " + yamlName);
+          deployables.add(yaml);
+        }
       }
     }
 

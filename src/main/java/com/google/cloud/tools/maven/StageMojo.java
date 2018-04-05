@@ -216,9 +216,6 @@ public class StageMojo extends CloudSdkMojo
 
     getLog().info("Staging the application to: " + stagingDirectory);
 
-    appengineWebXml =
-        new AppEngineWebXml(new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
-
     configureAppEngineDirectory();
 
     if (isStandardStaging()) {
@@ -247,7 +244,11 @@ public class StageMojo extends CloudSdkMojo
     }
   }
 
-  protected boolean isStandardStaging() {
+  protected boolean isStandardStaging() throws MojoExecutionException {
+    if (appengineWebXml == null) {
+      appengineWebXml =
+          new AppEngineWebXml(new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
+    }
     return appengineWebXml.exists();
   }
 
@@ -268,7 +269,7 @@ public class StageMojo extends CloudSdkMojo
    * <p>Called during {@link #execute()}, subclasses can override to provide a different value for
    * {@link #appEngineDirectory}.
    */
-  protected void configureAppEngineDirectory() {
+  protected void configureAppEngineDirectory() throws MojoExecutionException {
     if (appEngineDirectory == null) {
       appEngineDirectory =
           mavenProject.getBasedir().toPath().resolve("src/main/appengine").toFile();
