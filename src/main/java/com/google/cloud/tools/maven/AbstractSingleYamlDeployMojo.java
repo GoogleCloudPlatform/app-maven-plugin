@@ -56,7 +56,7 @@ public abstract class AbstractSingleYamlDeployMojo extends StageMojo
    * uses <code>${basedir}/src/main/appengine</code>.
    */
   @Override
-  protected void configureAppEngineDirectory() throws MojoExecutionException {
+  protected void configureAppEngineDirectory() {
     if (isStandardStaging()) {
       appEngineDirectory =
           stagingDirectory.toPath().resolve("WEB-INF/appengine-generated").toFile();

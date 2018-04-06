@@ -22,6 +22,7 @@ import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -192,8 +193,6 @@ public class StageMojo extends CloudSdkMojo
   )
   protected File artifact;
 
-  private AppEngineWebXml appengineWebXml;
-
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     if (!"war".equals(getPackaging()) && !"jar".equals(getPackaging())) {
@@ -222,6 +221,9 @@ public class StageMojo extends CloudSdkMojo
       getLog().info("Detected App Engine standard environment application.");
 
       // force runtime to 'java' for compat projects using Java version >1.7
+      AppEngineWebXml appengineWebXml =
+          new AppEngineWebXml(
+              new File(sourceDirectory.toPath().resolve("WEB-INF/appengine-web.xml").toString()));
       if (Float.parseFloat(getCompileTargetVersion()) > 1.7f && appengineWebXml.isVm()) {
         runtime = "java";
       }
@@ -244,13 +246,8 @@ public class StageMojo extends CloudSdkMojo
     }
   }
 
-  protected boolean isStandardStaging() throws MojoExecutionException {
-    if (appengineWebXml == null) {
-      appengineWebXml =
-          new AppEngineWebXml(
-              new File(sourceDirectory.toPath().resolve("WEB-INF/appengine-web.xml").toString()));
-    }
-    return appengineWebXml.exists();
+  protected boolean isStandardStaging() {
+    return Files.exists(sourceDirectory.toPath().resolve("WEB-INF/appengine-web.xml"));
   }
 
   protected void configureDockerfileDefaultLocation() {
@@ -270,7 +267,7 @@ public class StageMojo extends CloudSdkMojo
    * <p>Called during {@link #execute()}, subclasses can override to provide a different value for
    * {@link #appEngineDirectory}.
    */
-  protected void configureAppEngineDirectory() throws MojoExecutionException {
+  protected void configureAppEngineDirectory() {
     if (appEngineDirectory == null) {
       appEngineDirectory =
           mavenProject.getBasedir().toPath().resolve("src/main/appengine").toFile();
