@@ -115,9 +115,8 @@ public class DeployAllMojoTest {
 
     // Make YAMLS
     File appYaml = tempFolder.newFile("staging/app.yaml");
-    File cronYaml = tempFolder.newFile("staging/cron.yaml");
-    File dispatchYaml = tempFolder.newFile("staging/dispatch.yaml");
-
+    File cronYaml = tempFolder.newFile("appengine/cron.yaml");
+    File dispatchYaml = tempFolder.newFile("appengine/dispatch.yaml");
     File dosYaml = tempFolder.newFile("appengine/dos.yaml");
     File indexYaml = tempFolder.newFile("appengine/index.yaml");
     File queueYaml = tempFolder.newFile("appengine/queue.yaml");

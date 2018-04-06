@@ -38,26 +38,48 @@ public class DeployAllMojo extends DeployMojo {
       deployables.clear();
     }
 
-    String[] validYamls = {
-      "app.yaml", "cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"
-    };
-    for (String yamlName : validYamls) {
-      File yaml = stagingDirectory.toPath().resolve(yamlName).toFile();
+    if (isStandardStaging()) {
+      // Check staging directory for all yamls
+      String[] validYamls = {
+        "app.yaml", "cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"
+      };
+      for (String yamlName : validYamls) {
+        File yaml = stagingDirectory.toPath().resolve(yamlName).toFile();
+        if (yaml.exists()) {
+          addDeployable(yaml);
+        }
+      }
+    } else {
+      // Look for app.yaml in staging directory
+      configureAppEngineDirectory();
+      File yaml = stagingDirectory.toPath().resolve("app.yaml").toFile();
       if (yaml.exists()) {
-        getLog().info("deployAll: Preparing to deploy " + yamlName);
-        deployables.add(yaml);
-      } else if (!isStandardStaging()) {
-        // If this is a flexible project, need to check source directory for yamls instead of just
-        // staging directory
-        configureAppEngineDirectory();
+        addDeployable(yaml);
+      } else {
+        // Check in source directory if it's missing
+        yaml = appEngineDirectory.toPath().resolve("app.yaml").toFile();
+        if (yaml.exists()) {
+          addDeployable(yaml);
+        } else {
+          throw new MojoExecutionException("Failed to deploy all: app.yaml not found.");
+        }
+      }
+
+      // Look for config yamls in appengine directory
+      String[] validYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
+      for (String yamlName : validYamls) {
         yaml = appEngineDirectory.toPath().resolve(yamlName).toFile();
         if (yaml.exists()) {
-          getLog().info("deployAll: Preparing to deploy " + yamlName);
-          deployables.add(yaml);
+          addDeployable(yaml);
         }
       }
     }
 
     super.execute();
+  }
+
+  private void addDeployable(File yaml) {
+    getLog().info("deployAll: Preparing to deploy " + yaml.getName());
+    deployables.add(yaml);
   }
 }
