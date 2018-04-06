@@ -40,12 +40,13 @@ public class DeployAllMojo extends DeployMojo {
 
     String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
     File appYaml = stagingDirectory.toPath().resolve("app.yaml").toFile();
+    if (appYaml.exists()) {
+      addDeployable(appYaml);
+    }
 
     if (isStandardStaging()) {
       // Check staging directory for app.yaml
-      if (appYaml.exists()) {
-        addDeployable(appYaml);
-      } else {
+      if (!appYaml.exists()) {
         throw new MojoExecutionException("Failed to deploy all: app.yaml not found.");
       }
 
@@ -57,12 +58,9 @@ public class DeployAllMojo extends DeployMojo {
         }
       }
     } else {
-      // Look for app.yaml in staging directory
-      configureAppEngineDirectory();
-      if (appYaml.exists()) {
-        addDeployable(appYaml);
-      } else {
-        // Check in source directory if it's missing
+      if (!appYaml.exists()) {
+        // Check source directory if app.yaml is missing
+        appYaml = appEngineDirectory.toPath().resolve("app.yaml").toFile();
         if (appYaml.exists()) {
           addDeployable(appYaml);
         } else {
@@ -70,7 +68,8 @@ public class DeployAllMojo extends DeployMojo {
         }
       }
 
-      // Look for config yamls in appengine directory
+      // Look appengine directory for config yamls
+      configureAppEngineDirectory();
       for (String yamlName : configYamls) {
         File yaml = appEngineDirectory.toPath().resolve(yamlName).toFile();
         if (yaml.exists()) {
