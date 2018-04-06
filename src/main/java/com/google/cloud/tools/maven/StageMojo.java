@@ -223,7 +223,12 @@ public class StageMojo extends CloudSdkMojo
       // force runtime to 'java' for compat projects using Java version >1.7
       AppEngineWebXml appengineWebXml =
           new AppEngineWebXml(
-              new File(sourceDirectory.toPath().resolve("WEB-INF/appengine-web.xml").toString()));
+              new File(
+                  sourceDirectory
+                      .toPath()
+                      .resolve("WEB-INF")
+                      .resolve("appengine-web.xml")
+                      .toString()));
       if (Float.parseFloat(getCompileTargetVersion()) > 1.7f && appengineWebXml.isVm()) {
         runtime = "java";
       }
