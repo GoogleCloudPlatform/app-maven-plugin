@@ -247,7 +247,8 @@ public class StageMojo extends CloudSdkMojo
   protected boolean isStandardStaging() throws MojoExecutionException {
     if (appengineWebXml == null) {
       appengineWebXml =
-          new AppEngineWebXml(new File(sourceDirectory.toString() + "/WEB-INF/appengine-web.xml"));
+          new AppEngineWebXml(
+              new File(sourceDirectory.toPath().resolve("WEB-INF/appengine-web.xml").toString()));
     }
     return appengineWebXml.exists();
   }
