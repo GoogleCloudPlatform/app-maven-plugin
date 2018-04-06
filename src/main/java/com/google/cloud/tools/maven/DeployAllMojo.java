@@ -40,23 +40,18 @@ public class DeployAllMojo extends DeployMojo {
 
     configureAppEngineDirectory();
 
-    // Look for app.yaml in staging directory
-    File appYaml = stagingDirectory.toPath().resolve("app.yaml").toFile();
-    addDeployable(appYaml);
-
-    // Also check source directory if flexible project
-    if (!appYaml.exists() && !isStandardStaging()) {
-      appYaml = appEngineDirectory.toPath().resolve("app.yaml").toFile();
-      addDeployable(appYaml);
-    }
-
-    if (!appYaml.exists()) {
+    // Make sure app.yaml is in the staging directory. Also check source directory for flexible
+    // projects.
+    if (!stagingDirectory.toPath().resolve("app.yaml").toFile().exists()
+        && (isStandardStaging()
+            || !appEngineDirectory.toPath().resolve("app.yaml").toFile().exists())) {
       throw new MojoExecutionException("Failed to deploy all: could not find app.yaml.");
     }
 
-    // Look for config yamls
+    // Add app.yaml and config yamls to deployables
     String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
     File configDir = isStandardStaging() ? stagingDirectory : appEngineDirectory;
+    addDeployable(stagingDirectory.toPath().resolve("app.yaml").toFile());
     for (String yamlName : configYamls) {
       addDeployable(configDir.toPath().resolve(yamlName).toFile());
     }
