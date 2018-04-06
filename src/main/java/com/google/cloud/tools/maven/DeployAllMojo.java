@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import java.io.File;
+import java.nio.file.Path;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -42,7 +43,7 @@ public class DeployAllMojo extends DeployMojo {
 
     // Look for app.yaml
     File appYaml = stagingDirectory.toPath().resolve("app.yaml").toFile();
-    if (!appYaml.exists() && !isStandardStaging()) {
+    if (!isStandardStaging() && !appYaml.exists()) {
       appYaml = appEngineDirectory.toPath().resolve("app.yaml").toFile();
     }
     if (!appYaml.exists()) {
@@ -54,11 +55,11 @@ public class DeployAllMojo extends DeployMojo {
 
     // Look for config yamls
     String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
-    File configDir = isStandardStaging() ? stagingDirectory : appEngineDirectory;
+    Path configPath = isStandardStaging() ? stagingDirectory.toPath() : appEngineDirectory.toPath();
     for (String yamlName : configYamls) {
-      File yaml = configDir.toPath().resolve(yamlName).toFile();
+      File yaml = configPath.resolve(yamlName).toFile();
       if (yaml.exists()) {
-        getLog().info("deployAll: Preparing to deploy " + yaml.getName());
+        getLog().info("deployAll: Preparing to deploy " + yamlName);
         deployables.add(yaml);
       }
     }
