@@ -38,51 +38,36 @@ public class DeployAllMojo extends DeployMojo {
       deployables.clear();
     }
 
-    String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
+    configureAppEngineDirectory();
+
+    // Look for app.yaml in staging directory
     File appYaml = stagingDirectory.toPath().resolve("app.yaml").toFile();
-    if (appYaml.exists()) {
+    addDeployable(appYaml);
+
+    // Also check source directory if flexible project
+    if (!appYaml.exists() && !isStandardStaging()) {
+      appYaml = appEngineDirectory.toPath().resolve("app.yaml").toFile();
       addDeployable(appYaml);
     }
 
-    if (isStandardStaging()) {
-      // Check staging directory for app.yaml
-      if (!appYaml.exists()) {
-        throw new MojoExecutionException("Failed to deploy all: app.yaml not found.");
-      }
+    if (!appYaml.exists()) {
+      throw new MojoExecutionException("Failed to deploy all: could not find app.yaml.");
+    }
 
-      // Check staging directory for config yamls
-      for (String yamlName : configYamls) {
-        File yaml = stagingDirectory.toPath().resolve(yamlName).toFile();
-        if (yaml.exists()) {
-          addDeployable(yaml);
-        }
-      }
-    } else {
-      if (!appYaml.exists()) {
-        // Check source directory if app.yaml is missing
-        appYaml = appEngineDirectory.toPath().resolve("app.yaml").toFile();
-        if (appYaml.exists()) {
-          addDeployable(appYaml);
-        } else {
-          throw new MojoExecutionException("Failed to deploy all: app.yaml not found.");
-        }
-      }
-
-      // Look appengine directory for config yamls
-      configureAppEngineDirectory();
-      for (String yamlName : configYamls) {
-        File yaml = appEngineDirectory.toPath().resolve(yamlName).toFile();
-        if (yaml.exists()) {
-          addDeployable(yaml);
-        }
-      }
+    // Look for config yamls
+    String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
+    File configDir = isStandardStaging() ? stagingDirectory : appEngineDirectory;
+    for (String yamlName : configYamls) {
+      addDeployable(configDir.toPath().resolve(yamlName).toFile());
     }
 
     super.execute();
   }
 
   private void addDeployable(File yaml) {
-    getLog().info("deployAll: Preparing to deploy " + yaml.getName());
-    deployables.add(yaml);
+    if (yaml.exists()) {
+      getLog().info("deployAll: Preparing to deploy " + yaml.getName());
+      deployables.add(yaml);
+    }
   }
 }
