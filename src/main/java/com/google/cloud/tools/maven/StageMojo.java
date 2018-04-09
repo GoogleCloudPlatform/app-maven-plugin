@@ -252,7 +252,7 @@ public class StageMojo extends CloudSdkMojo
   }
 
   protected boolean isStandardStaging() {
-    return Files.exists(sourceDirectory.toPath().resolve("WEB-INF/appengine-web.xml"));
+    return Files.exists(sourceDirectory.toPath().resolve("WEB-INF").resolve("appengine-web.xml"));
   }
 
   protected void configureDockerfileDefaultLocation() {
@@ -275,7 +275,13 @@ public class StageMojo extends CloudSdkMojo
   protected void configureAppEngineDirectory() {
     if (appEngineDirectory == null) {
       appEngineDirectory =
-          mavenProject.getBasedir().toPath().resolve("src/main/appengine").toFile();
+          mavenProject
+              .getBasedir()
+              .toPath()
+              .resolve("src")
+              .resolve("main")
+              .resolve("appengine")
+              .toFile();
     }
   }
 
