@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 * Cloud SDK and java app-engine components are automatically installed when `cloudSdkHome` is not provided. ([#247](../../issues/247))
 * Cloud SDK installation is verified when `cloudSdkHome` and `cloudSdkVersion` are configured. ([#248](../../issues/248))
 * New `<serviceAccountKeyFile>` configuration parameter, and `appengine:cloudSdkLogin` goal. ([#268](../../issues/268))
+* New `appengineDeployAll` task to deploy application with all valid yaml configs simultaneously. ([#273](../../issues/273), [#277](../../issues/277))
 
 ### Changed
 * Upgrade App Engine Plugins Core dependency to 0.5.2.
