@@ -25,9 +25,12 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.maven.it.verifier.TailingVerifier;
 import java.util.Arrays;
+import junitparams.JUnitParamsRunner;
 import org.apache.maven.it.VerificationException;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 
+@RunWith(JUnitParamsRunner.class)
 public abstract class AbstractMojoIntegrationTest {
 
   private static boolean doneInstallPlugin = false;

@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import java.io.File;
 import java.nio.file.Path;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -30,10 +31,18 @@ import org.apache.maven.plugins.annotations.Mojo;
  */
 @Mojo(name = "deployAll")
 @Execute(phase = LifecyclePhase.PACKAGE)
-public class DeployAllMojo extends DeployMojo {
+public class DeployAllMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    if (!"war".equals(getPackaging()) && !"jar".equals(getPackaging())) {
+      getLog().info("deployAll is only executed for war and jar modules.");
+      return;
+    }
+
+    // execute stage
+    super.execute();
+
     if (!deployables.isEmpty()) {
       getLog().warn("Ignoring configured deployables for deployAll.");
       deployables.clear();
@@ -55,7 +64,10 @@ public class DeployAllMojo extends DeployMojo {
 
     // Look for config yamls
     String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
-    Path configPath = isStandardStaging() ? stagingDirectory.toPath() : appEngineDirectory.toPath();
+    Path configPath =
+        isStandardStaging()
+            ? stagingDirectory.toPath().resolve("WEB-INF").resolve("appengine-generated")
+            : appEngineDirectory.toPath();
     for (String yamlName : configYamls) {
       File yaml = configPath.resolve(yamlName).toFile();
       if (yaml.exists()) {
@@ -64,6 +76,10 @@ public class DeployAllMojo extends DeployMojo {
       }
     }
 
-    super.execute();
+    try {
+      getAppEngineFactory().deployment().deploy(this);
+    } catch (AppEngineException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 }
