@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.nio.file.Path;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -43,6 +44,12 @@ public class DeployAllMojo extends AbstractDeployMojo {
     // execute stage
     super.execute();
 
+    doDeployAll();
+  }
+
+  /** Performs the deployAll goal using the staged directory */
+  @VisibleForTesting
+  public void doDeployAll() throws MojoExecutionException {
     if (!deployables.isEmpty()) {
       getLog().warn("Ignoring configured deployables for deployAll.");
       deployables.clear();

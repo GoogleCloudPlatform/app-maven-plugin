@@ -34,7 +34,6 @@ import java.util.Properties;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Rule;
@@ -76,7 +75,7 @@ public class DeployAllMojoTest {
   @Test
   @Parameters({"jar", "war"})
   public void testExecute_standard(String packaging)
-      throws IOException, MojoFailureException, MojoExecutionException, AppEngineException {
+      throws IOException, MojoExecutionException, AppEngineException {
     when(project.getPackaging()).thenReturn(packaging);
 
     // create appengine-web.xml to mark it as standard environment
@@ -85,16 +84,17 @@ public class DeployAllMojoTest {
     Files.write("<appengine-web-app></appengine-web-app>", appengineWebXml, Charsets.UTF_8);
 
     // Make YAMLS
+    tempFolder.newFolder("staging", "WEB-INF", "appengine-generated");
     File appYaml = tempFolder.newFile("staging/app.yaml");
-    File cronYaml = tempFolder.newFile("staging/cron.yaml");
-    File dispatchYaml = tempFolder.newFile("staging/dispatch.yaml");
-    File dosYaml = tempFolder.newFile("staging/dos.yaml");
-    File indexYaml = tempFolder.newFile("staging/index.yaml");
-    File queueYaml = tempFolder.newFile("staging/queue.yaml");
+    File cronYaml = tempFolder.newFile("staging/WEB-INF/appengine-generated/cron.yaml");
+    File dispatchYaml = tempFolder.newFile("staging/WEB-INF/appengine-generated/dispatch.yaml");
+    File dosYaml = tempFolder.newFile("staging/WEB-INF/appengine-generated/dos.yaml");
+    File indexYaml = tempFolder.newFile("staging/WEB-INF/appengine-generated/index.yaml");
+    File queueYaml = tempFolder.newFile("staging/WEB-INF/appengine-generated/queue.yaml");
 
-    File invalidYaml = tempFolder.newFile("staging/invalid.yaml");
+    File invalidYaml = tempFolder.newFile("staging/WEB-INF/appengine-generated/invalid.yaml");
 
-    deployAllMojo.execute();
+    deployAllMojo.doDeployAll();
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertTrue(deployAllMojo.deployables.contains(cronYaml));
@@ -103,14 +103,13 @@ public class DeployAllMojoTest {
     assertTrue(deployAllMojo.deployables.contains(indexYaml));
     assertTrue(deployAllMojo.deployables.contains(queueYaml));
     assertFalse(deployAllMojo.deployables.contains(invalidYaml));
-    verify(standardStagingMock).stageStandard(deployAllMojo);
     verify(deploymentMock).deploy(deployAllMojo);
   }
 
   @Test
   @Parameters({"jar", "war"})
   public void testExecute_flexible(String packaging)
-      throws IOException, MojoFailureException, MojoExecutionException, AppEngineException {
+      throws IOException, MojoExecutionException, AppEngineException {
     when(project.getPackaging()).thenReturn(packaging);
 
     // Make YAMLS
@@ -124,7 +123,7 @@ public class DeployAllMojoTest {
     File invalidYamlStaging = tempFolder.newFile("staging/invalid.yaml");
     File invalidYamlAppEngine = tempFolder.newFile("appengine/invalid.yaml");
 
-    deployAllMojo.execute();
+    deployAllMojo.doDeployAll();
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertTrue(deployAllMojo.deployables.contains(cronYaml));
@@ -134,14 +133,13 @@ public class DeployAllMojoTest {
     assertTrue(deployAllMojo.deployables.contains(queueYaml));
     assertFalse(deployAllMojo.deployables.contains(invalidYamlStaging));
     assertFalse(deployAllMojo.deployables.contains(invalidYamlAppEngine));
-    verify(flexibleStagingMock).stageFlexible(deployAllMojo);
     verify(deploymentMock).deploy(deployAllMojo);
   }
 
   @Test
   @Parameters({"jar", "war"})
   public void testExecute_validInDifferentDirStandard(String packaging)
-      throws IOException, MojoFailureException, MojoExecutionException, AppEngineException {
+      throws IOException, MojoExecutionException, AppEngineException {
     when(project.getPackaging()).thenReturn(packaging);
 
     // create appengine-web.xml to mark it as standard environment
@@ -153,18 +151,17 @@ public class DeployAllMojoTest {
     File appYaml = tempFolder.newFile("staging/app.yaml");
     File validInDifferentDirYaml = tempFolder.newFile("queue.yaml");
 
-    deployAllMojo.execute();
+    deployAllMojo.doDeployAll();
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertFalse(deployAllMojo.deployables.contains(validInDifferentDirYaml));
-    verify(standardStagingMock).stageStandard(deployAllMojo);
     verify(deploymentMock).deploy(deployAllMojo);
   }
 
   @Test
   @Parameters({"jar", "war"})
   public void testExecute_validInDifferentDirFlexible(String packaging)
-      throws IOException, MojoFailureException, MojoExecutionException, AppEngineException {
+      throws IOException, MojoExecutionException, AppEngineException {
     when(project.getPackaging()).thenReturn(packaging);
 
     // Make YAMLS
@@ -172,12 +169,11 @@ public class DeployAllMojoTest {
     File cronYaml = tempFolder.newFile("appengine/cron.yaml");
     File validInDifferentDirYaml = tempFolder.newFile("queue.yaml");
 
-    deployAllMojo.execute();
+    deployAllMojo.doDeployAll();
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertTrue(deployAllMojo.deployables.contains(cronYaml));
     assertFalse(deployAllMojo.deployables.contains(validInDifferentDirYaml));
-    verify(flexibleStagingMock).stageFlexible(deployAllMojo);
     verify(deploymentMock).deploy(deployAllMojo);
   }
 }
