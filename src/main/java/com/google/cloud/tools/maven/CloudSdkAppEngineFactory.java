@@ -35,6 +35,9 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
 import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import org.apache.maven.plugin.logging.Log;
 
@@ -154,8 +157,16 @@ public class CloudSdkAppEngineFactory {
    */
   public AppEngineDevServer devServerRunAsync(
       int startSuccessTimeout, SupportedDevServerVersion version) {
+    File logFile = new File(mojo.mavenProject.getBuild().getDirectory(), "dev_appserver.out");
+    FileOutputLineListener fileListener = new FileOutputLineListener(logFile);
+    mojo.getLog().info("Dev App Server output written to : " + logFile);
+
     CloudSdk.Builder builder =
-        defaultCloudSdkBuilder().async(true).runDevAppServerWait(startSuccessTimeout);
+        defaultCloudSdkBuilder()
+            .async(true)
+            .addStdOutLineListener(fileListener)
+            .addStdErrLineListener(fileListener)
+            .runDevAppServerWait(startSuccessTimeout);
     try {
       return createDevServerForVersion(version, builder.build());
     } catch (CloudSdkNotFoundException ex) {
@@ -229,7 +240,7 @@ public class CloudSdkAppEngineFactory {
    */
   protected static class DefaultProcessOutputLineListener implements ProcessOutputLineListener {
 
-    private Log log;
+    private final Log log;
 
     DefaultProcessOutputLineListener(Log log) {
       this.log = log;
@@ -238,6 +249,25 @@ public class CloudSdkAppEngineFactory {
     @Override
     public void onOutputLine(String line) {
       log.info("GCLOUD: " + line);
+    }
+  }
+
+  /** A listener that redirects process output to a file. */
+  protected static class FileOutputLineListener implements ProcessOutputLineListener {
+
+    private final PrintStream logFilePrinter;
+
+    public FileOutputLineListener(File logFile) {
+      try {
+        logFilePrinter = new PrintStream(logFile, "UTF-8");
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+
+    @Override
+    public void onOutputLine(String line) {
+      logFilePrinter.println(line);
     }
   }
 

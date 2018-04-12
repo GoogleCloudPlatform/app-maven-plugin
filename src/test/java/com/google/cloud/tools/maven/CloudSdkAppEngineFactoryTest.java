@@ -20,6 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,12 +31,19 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
 import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.DefaultProcessOutputLineListener;
+import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.FileOutputLineListener;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerVersion;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.apache.maven.model.Build;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
@@ -51,7 +59,11 @@ public class CloudSdkAppEngineFactoryTest {
   private final String ARTIFACT_ID = "appengine-maven-plugin";
   private final String ARTIFACT_VERSION = "0.1.0";
 
+  @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
+
   @Mock private CloudSdkMojo mojoMock;
+  @Mock private MavenProject projectMock;
+  @Mock private Build buildMock;
   @Mock private Log logMock;
 
   @Mock private CloudSdkAppEngineFactory.CloudSdkFactory cloudSdkFactoryMock;
@@ -70,12 +82,17 @@ public class CloudSdkAppEngineFactoryTest {
   @Before
   public void wireUp()
       throws CloudSdkNotFoundException, CloudSdkOutOfDateException, InvalidJavaSdkException,
-          CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException {
+          CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException, IOException {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
     when(mojoMock.getArtifactId()).thenReturn(ARTIFACT_ID);
     when(mojoMock.getArtifactVersion()).thenReturn(ARTIFACT_VERSION);
     when(mojoMock.getLog()).thenReturn(logMock);
+
+    mojoMock.mavenProject = projectMock;
+    when(projectMock.getBuild()).thenReturn(buildMock);
+    File outFolder = tempFolder.newFolder("tempOut");
+    when(buildMock.getDirectory()).thenReturn(outFolder.getAbsolutePath());
 
     when(cloudSdkFactoryMock.cloudSdkBuilder()).thenReturn(cloudSdkBuilderMock);
     when(cloudSdkBuilderMock.build()).thenReturn(cloudSdkMock);
@@ -149,7 +166,16 @@ public class CloudSdkAppEngineFactoryTest {
     verify(cloudSdkFactoryMock).devServer1(cloudSdkMock);
     verify(cloudSdkBuilderMock).async(true);
     verify(cloudSdkBuilderMock).runDevAppServerWait(START_SUCCESS_TIMEOUT);
-    verifyDefaultCloudSdkBuilder();
+
+    verify(cloudSdkBuilderMock).sdkPath(CLOUD_SDK_HOME);
+    verify(cloudSdkBuilderMock, times(2))
+        .addStdOutLineListener(any(DefaultProcessOutputLineListener.class));
+    verify(cloudSdkBuilderMock, times(2))
+        .addStdErrLineListener(any(DefaultProcessOutputLineListener.class));
+    verify(cloudSdkBuilderMock, times(2)).addStdOutLineListener(any(FileOutputLineListener.class));
+    verify(cloudSdkBuilderMock, times(2)).addStdErrLineListener(any(FileOutputLineListener.class));
+    verify(cloudSdkBuilderMock).appCommandMetricsEnvironment(ARTIFACT_ID);
+    verify(cloudSdkBuilderMock).appCommandMetricsEnvironmentVersion(ARTIFACT_VERSION);
   }
 
   @Test
@@ -164,7 +190,16 @@ public class CloudSdkAppEngineFactoryTest {
     verify(cloudSdkFactoryMock).devServer(cloudSdkMock);
     verify(cloudSdkBuilderMock).async(true);
     verify(cloudSdkBuilderMock).runDevAppServerWait(START_SUCCESS_TIMEOUT);
-    verifyDefaultCloudSdkBuilder();
+
+    verify(cloudSdkBuilderMock).sdkPath(CLOUD_SDK_HOME);
+    verify(cloudSdkBuilderMock, times(2))
+        .addStdOutLineListener(any(DefaultProcessOutputLineListener.class));
+    verify(cloudSdkBuilderMock, times(2))
+        .addStdErrLineListener(any(DefaultProcessOutputLineListener.class));
+    verify(cloudSdkBuilderMock, times(2)).addStdOutLineListener(any(FileOutputLineListener.class));
+    verify(cloudSdkBuilderMock, times(2)).addStdErrLineListener(any(FileOutputLineListener.class));
+    verify(cloudSdkBuilderMock).appCommandMetricsEnvironment(ARTIFACT_ID);
+    verify(cloudSdkBuilderMock).appCommandMetricsEnvironmentVersion(ARTIFACT_VERSION);
   }
 
   @Test

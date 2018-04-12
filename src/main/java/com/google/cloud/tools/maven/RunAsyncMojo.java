@@ -36,6 +36,7 @@ public class RunAsyncMojo extends RunMojo {
   )
   protected int startSuccessTimeout;
 
+  @Override
   protected void runServer(SupportedDevServerVersion version) {
     getLog()
         .info(
