@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.maven.plugin.logging.Log;
 
 /** Factory for App Engine dependencies. */
@@ -158,12 +159,14 @@ public class CloudSdkAppEngineFactory {
    */
   public AppEngineDevServer devServerRunAsync(
       int startSuccessTimeout, SupportedDevServerVersion version) {
-    File logFile =
-        new File(
-            mojo.mavenProject.getBuild().getDirectory() + "/dev-appserver-out/dev_appserver.out");
-    if (!logFile.getParentFile().exists() && !logFile.getParentFile().mkdirs()) {
+    File logDir =
+        Paths.get(mojo.mavenProject.getBuild().getDirectory())
+            .resolve("dev-appserver-out")
+            .toFile();
+    if (!logDir.exists() && !logDir.mkdirs()) {
       throw new RuntimeException("Failed to create dev-appserver logging directory.");
     }
+    File logFile = new File(logDir, "dev_appserver.out");
     FileOutputLineListener fileListener = new FileOutputLineListener(logFile);
     mojo.getLog().info("Dev App Server output written to : " + logFile);
 
