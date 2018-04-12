@@ -100,7 +100,6 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
     assertThat(
         urlContent.toString(), containsString("Hello from the App Engine Standard project."));
     assertThat(urlContent.toString(), containsString("TEST_VAR=testVariableValue"));
-
     verifier.verifyErrorFreeLog();
     verifier.verifyTextInLog("Dev App Server is now running");
     verifier.verifyTextInLog("Module instance " + expectedModuleName + " is running");
