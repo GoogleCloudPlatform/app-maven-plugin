@@ -158,7 +158,12 @@ public class CloudSdkAppEngineFactory {
    */
   public AppEngineDevServer devServerRunAsync(
       int startSuccessTimeout, SupportedDevServerVersion version) {
-    File logFile = new File(mojo.mavenProject.getBuild().getDirectory(), "dev_appserver.out");
+    File logFile =
+        new File(
+            mojo.mavenProject.getBuild().getDirectory() + "/dev-appserver-out/dev_appserver.out");
+    if (!logFile.getParentFile().exists() && !logFile.getParentFile().mkdirs()) {
+      throw new RuntimeException("Failed to create dev-appserver logging directory.");
+    }
     FileOutputLineListener fileListener = new FileOutputLineListener(logFile);
     mojo.getLog().info("Dev App Server output written to : " + logFile);
 
@@ -258,9 +263,16 @@ public class CloudSdkAppEngineFactory {
 
     private final PrintStream logFilePrinter;
 
-    FileOutputLineListener(File logFile) {
+    FileOutputLineListener(final File logFile) {
       try {
         logFilePrinter = new PrintStream(logFile, StandardCharsets.UTF_8.name());
+        Runtime.getRuntime()
+            .addShutdownHook(
+                new Thread() {
+                  public void run() {
+                    logFilePrinter.close();
+                  }
+                });
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }
