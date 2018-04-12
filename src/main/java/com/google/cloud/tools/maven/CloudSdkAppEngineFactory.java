@@ -38,6 +38,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListen
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import org.apache.maven.plugin.logging.Log;
 
@@ -238,7 +239,7 @@ public class CloudSdkAppEngineFactory {
   /**
    * Default output listener that copies output to the Maven Mojo logger with a 'GCLOUD: ' prefix.
    */
-  protected static class DefaultProcessOutputLineListener implements ProcessOutputLineListener {
+  static class DefaultProcessOutputLineListener implements ProcessOutputLineListener {
 
     private final Log log;
 
@@ -253,13 +254,13 @@ public class CloudSdkAppEngineFactory {
   }
 
   /** A listener that redirects process output to a file. */
-  protected static class FileOutputLineListener implements ProcessOutputLineListener {
+  static class FileOutputLineListener implements ProcessOutputLineListener {
 
     private final PrintStream logFilePrinter;
 
-    public FileOutputLineListener(File logFile) {
+    FileOutputLineListener(File logFile) {
       try {
-        logFilePrinter = new PrintStream(logFile, "UTF-8");
+        logFilePrinter = new PrintStream(logFile, StandardCharsets.UTF_8.name());
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

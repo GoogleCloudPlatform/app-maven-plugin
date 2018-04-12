@@ -24,10 +24,10 @@ import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerV
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import com.google.cloud.tools.maven.util.SocketUtil;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
@@ -67,17 +67,16 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
       assertThat(urlContent, containsString("Hello from the App Engine Standard project."));
       assertThat(urlContent, containsString("TEST_VAR=testVariableValue"));
 
-      File expectedLog =
+      Path expectedLog =
           Paths.get(
-                  "target",
-                  "test-classes",
-                  "projects",
-                  "standard-project",
-                  "target",
-                  "dev_appserver.out")
-              .toFile();
-      assertTrue(expectedLog.exists());
-      String devAppServerOutput = FileUtils.readFileToString(expectedLog, "UTF-8");
+              "target",
+              "test-classes",
+              "projects",
+              "standard-project",
+              "target",
+              "dev_appserver.out");
+      assertTrue(expectedLog.toFile().exists());
+      String devAppServerOutput = new String(Files.readAllBytes(expectedLog));
       assertTrue(devAppServerOutput.contains("Dev App Server is now running"));
 
       verifier.verifyErrorFreeLog();
