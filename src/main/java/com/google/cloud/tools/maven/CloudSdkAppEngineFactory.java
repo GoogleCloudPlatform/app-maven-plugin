@@ -35,7 +35,13 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
 import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.maven.plugin.logging.Log;
 
 /** Factory for App Engine dependencies. */
@@ -154,8 +160,25 @@ public class CloudSdkAppEngineFactory {
    */
   public AppEngineDevServer devServerRunAsync(
       int startSuccessTimeout, SupportedDevServerVersion version) {
+    Path logDir =
+        Paths.get(mojo.mavenProject.getBuild().getDirectory()).resolve("dev-appserver-out");
+    if (!Files.exists(logDir)) {
+      try {
+        logDir = Files.createDirectories(logDir);
+      } catch (IOException e) {
+        throw new RuntimeException("Failed to create dev-appserver logging directory.");
+      }
+    }
+    File logFile = logDir.resolve("dev_appserver.out").toFile();
+    FileOutputLineListener fileListener = new FileOutputLineListener(logFile);
+    mojo.getLog().info("Dev App Server output written to : " + logFile);
+
     CloudSdk.Builder builder =
-        defaultCloudSdkBuilder().async(true).runDevAppServerWait(startSuccessTimeout);
+        defaultCloudSdkBuilder()
+            .async(true)
+            .addStdOutLineListener(fileListener)
+            .addStdErrLineListener(fileListener)
+            .runDevAppServerWait(startSuccessTimeout);
     try {
       return createDevServerForVersion(version, builder.build());
     } catch (CloudSdkNotFoundException ex) {
@@ -227,9 +250,9 @@ public class CloudSdkAppEngineFactory {
   /**
    * Default output listener that copies output to the Maven Mojo logger with a 'GCLOUD: ' prefix.
    */
-  protected static class DefaultProcessOutputLineListener implements ProcessOutputLineListener {
+  static class DefaultProcessOutputLineListener implements ProcessOutputLineListener {
 
-    private Log log;
+    private final Log log;
 
     DefaultProcessOutputLineListener(Log log) {
       this.log = log;
@@ -238,6 +261,32 @@ public class CloudSdkAppEngineFactory {
     @Override
     public void onOutputLine(String line) {
       log.info("GCLOUD: " + line);
+    }
+  }
+
+  /** A listener that redirects process output to a file. */
+  static class FileOutputLineListener implements ProcessOutputLineListener {
+
+    private final PrintStream logFilePrinter;
+
+    FileOutputLineListener(final File logFile) {
+      try {
+        logFilePrinter = new PrintStream(logFile, StandardCharsets.UTF_8.name());
+        Runtime.getRuntime()
+            .addShutdownHook(
+                new Thread() {
+                  public void run() {
+                    logFilePrinter.close();
+                  }
+                });
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+
+    @Override
+    public void onOutputLine(String line) {
+      logFilePrinter.println(line);
     }
   }
 

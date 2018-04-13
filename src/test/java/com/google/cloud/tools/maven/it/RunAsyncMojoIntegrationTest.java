@@ -25,6 +25,10 @@ import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import com.google.cloud.tools.maven.util.SocketUtil;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
@@ -63,6 +67,21 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
       String urlContent = UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000);
       assertThat(urlContent, containsString("Hello from the App Engine Standard project."));
       assertThat(urlContent, containsString("TEST_VAR=testVariableValue"));
+
+      Path expectedLog =
+          Paths.get(
+              "target",
+              "test-classes",
+              "projects",
+              "standard-project",
+              "target",
+              "dev-appserver-out",
+              "dev_appserver.out");
+      assertTrue(Files.exists(expectedLog));
+      String devAppServerOutput =
+          new String(Files.readAllBytes(expectedLog), StandardCharsets.UTF_8);
+      assertTrue(devAppServerOutput.contains("Dev App Server is now running"));
+
       verifier.verifyErrorFreeLog();
       verifier.verifyTextInLog("Dev App Server is now running");
     } finally {
