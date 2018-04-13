@@ -79,7 +79,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
               "dev_appserver.out");
       assertTrue(Files.exists(expectedLog));
       String devAppServerOutput =
-          new String(Files.readAllBytes(expectedLog), StandardCharsets.UTF_8.name());
+          new String(Files.readAllBytes(expectedLog), StandardCharsets.UTF_8);
       assertTrue(devAppServerOutput.contains("Dev App Server is now running"));
 
       verifier.verifyErrorFreeLog();
