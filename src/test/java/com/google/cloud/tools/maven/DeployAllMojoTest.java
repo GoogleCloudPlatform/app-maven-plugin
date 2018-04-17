@@ -64,6 +64,8 @@ public class DeployAllMojoTest {
     deployAllMojo.stagingDirectory = tempFolder.newFolder("staging");
     deployAllMojo.sourceDirectory = tempFolder.newFolder("source");
     deployAllMojo.appEngineDirectory = tempFolder.newFolder("appengine");
+    deployAllMojo.project = "project";
+    deployAllMojo.version = "version";
 
     when(project.getProperties()).thenReturn(new Properties());
     when(project.getBasedir()).thenReturn(new File("/fake/project/base/dir"));
