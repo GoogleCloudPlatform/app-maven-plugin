@@ -86,7 +86,9 @@ public class DeployAllMojo extends AbstractDeployMojo {
     }
 
     try {
-      updatePropertiesFromAppEngineWebXml();
+      if (isStandardStaging()) {
+        updatePropertiesFromAppEngineWebXml();
+      }
       getAppEngineFactory().deployment().deploy(this);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new RuntimeException(ex);

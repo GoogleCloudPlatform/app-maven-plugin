@@ -117,10 +117,6 @@ public abstract class AbstractDeployMojo extends StageMojo implements DeployConf
   }
 
   void updatePropertiesFromAppEngineWebXml() throws IOException, SAXException, AppEngineException {
-    if (!isStandardStaging()) {
-      return;
-    }
-
     AppEngineDescriptor appengineWebXmlDoc =
         AppEngineDescriptor.parse(
             new FileInputStream(
@@ -128,40 +124,34 @@ public abstract class AbstractDeployMojo extends StageMojo implements DeployConf
     String xmlProject = appengineWebXmlDoc.getProjectId();
     String xmlVersion = appengineWebXmlDoc.getProjectVersion();
 
-    // Verify that project and version are set somewhere
-    if (project == null && xmlProject == null || version == null && xmlVersion == null) {
+    // Verify that project is set somewhere
+    if (project == null && xmlProject == null) {
       throw new RuntimeException(
           "appengine-plugin does not use gcloud global project state. Please configure the "
-              + "application ID and version in your build.gradle or appengine-web.xml.");
+              + "application ID in your build.gradle or appengine-web.xml.");
     }
 
-    // Check system property
-    boolean readAppEngineWebXml =
-        System.getProperty("deploy.read.appengine.web.xml") != null
-            && System.getProperty("deploy.read.appengine.web.xml").equals("true");
-    if (readAppEngineWebXml) {
-      // Use properties from appengine-web.xml if not also set in build.gradle
-      if (project != null && xmlProject != null || version != null && xmlVersion != null) {
-        throw new RuntimeException(
-            "Cannot override appengine.deploy config with appengine-web.xml. Either remove "
-                + "the project/version properties from your build.gradle, or clear the "
-                + "deploy.read.appengine.web.xml system property to read from build.gradle.");
-      } else {
-        if (xmlProject != null) {
-          project = xmlProject;
-        }
-        if (xmlVersion != null) {
-          version = xmlVersion;
-        }
-      }
-    } else {
-      // Make sure properties are set in build.gradle
-      if (project == null || version == null) {
-        throw new RuntimeException(
-            "appengine-plugin does not use gcloud global project state. If you would like to "
-                + "use the state from appengine-web.xml, please set the system property "
-                + "deploy.read.appengine.web.xml");
-      }
+    boolean readAppEngineWebXml = Boolean.getBoolean("deploy.read.appengine.web.xml");
+    if (readAppEngineWebXml && (project != null || version != null)) {
+      // Should read from appengine-web.xml, but configured in pom.xml
+      throw new RuntimeException(
+          "Cannot override appengine.deploy config with appengine-web.xml. Either remove "
+              + "the project/version properties from your build.gradle, or clear the "
+              + "deploy.read.appengine.web.xml system property to read from build.gradle.");
+    } else if (!readAppEngineWebXml
+        && (project == null && xmlProject != null || version == null && xmlVersion != null)) {
+      // System property not set, but configuration is only in appengine-web.xml
+      throw new RuntimeException(
+          "appengine-plugin does not use gcloud global project/version state. If you would like to "
+              + "use the state from appengine-web.xml, please set the system property "
+              + "deploy.read.appengine.web.xml=true.");
+    }
+
+    if (project == null) {
+      project = xmlProject;
+    }
+    if (version == null) {
+      version = xmlVersion;
     }
   }
 }

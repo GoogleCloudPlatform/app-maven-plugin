@@ -59,17 +59,7 @@ public class AbstractDeployMojoTest {
   }
 
   @Test
-  public void testWithPropertiesFromAppEngineWebXml_flexible()
-      throws AppEngineException, SAXException, IOException {
-    abstractDeployMojo.version = VERSION_BUILD;
-    abstractDeployMojo.project = PROJECT_BUILD;
-    abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
-    Assert.assertEquals(VERSION_BUILD, abstractDeployMojo.getVersion());
-    Assert.assertEquals(PROJECT_BUILD, abstractDeployMojo.getProject());
-  }
-
-  @Test
-  public void testWithPropertiesFromAppEngineWebXml_buildConfig()
+  public void testUpdatePropertiesFromAppEngineWebXml_buildConfig()
       throws AppEngineException, SAXException, IOException {
     createAppEngineWebXml(true);
     abstractDeployMojo.version = VERSION_BUILD;
@@ -80,7 +70,7 @@ public class AbstractDeployMojoTest {
   }
 
   @Test
-  public void testWithPropertiesFromAppEngineWebXml_xml()
+  public void testUpdatePropertiesFromAppEngineWebXml_xml()
       throws AppEngineException, SAXException, IOException {
     System.setProperty("deploy.read.appengine.web.xml", "true");
     createAppEngineWebXml(true);
@@ -90,22 +80,32 @@ public class AbstractDeployMojoTest {
   }
 
   @Test
-  public void testWithPropertiesFromAppEngineWebXml_nothingSet()
+  public void testUpdatePropertiesFromAppEngineWebXml_projectNotSet()
       throws IOException, AppEngineException, SAXException {
     createAppEngineWebXml(false);
+    abstractDeployMojo.version = VERSION_BUILD;
     try {
       abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(
           "appengine-plugin does not use gcloud global project state. Please configure the "
-              + "application ID and version in your build.gradle or appengine-web.xml.",
+              + "application ID in your build.gradle or appengine-web.xml.",
           ex.getMessage());
     }
   }
 
   @Test
-  public void testWithPropertiesFromAppEngineWebXml_sysPropertyBothSet()
+  public void testUpdatePropertiesFromAppEngineWebXml_versionNotSet()
+      throws IOException, AppEngineException, SAXException {
+    createAppEngineWebXml(false);
+    abstractDeployMojo.project = PROJECT_BUILD;
+    abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
+    Assert.assertEquals(null, abstractDeployMojo.getVersion());
+  }
+
+  @Test
+  public void testUpdatePropertiesFromAppEngineWebXml_sysPropertyBothSet()
       throws AppEngineException, SAXException, IOException {
     System.setProperty("deploy.read.appengine.web.xml", "true");
     createAppEngineWebXml(true);
@@ -124,7 +124,7 @@ public class AbstractDeployMojoTest {
   }
 
   @Test
-  public void testWithPropertiesFromAppEngineWebXml_noSysPropertyOnlyXml()
+  public void testUpdatePropertiesFromAppEngineWebXml_noSysPropertyOnlyXml()
       throws AppEngineException, SAXException, IOException {
     createAppEngineWebXml(true);
     try {
@@ -132,9 +132,9 @@ public class AbstractDeployMojoTest {
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(
-          "appengine-plugin does not use gcloud global project state. If you would like to "
+          "appengine-plugin does not use gcloud global project/version state. If you would like to "
               + "use the state from appengine-web.xml, please set the system property "
-              + "deploy.read.appengine.web.xml",
+              + "deploy.read.appengine.web.xml=true.",
           ex.getMessage());
     }
   }
