@@ -142,15 +142,13 @@ public abstract class AbstractDeployMojo extends StageMojo implements DeployConf
         && (project == null && xmlProject != null || version == null && xmlVersion != null)) {
       // System property not set, but configuration is only in appengine-web.xml
       throw new RuntimeException(
-          "appengine-plugin does not use gcloud global project/version state. If you would like to "
-              + "use the state from appengine-web.xml, please set the system property "
-              + "deploy.read.appengine.web.xml=true.");
+          "Project/version is set in application-web.xml, but deploy.read.appengine.web.xml is "
+              + "false. If you would like to use the state from appengine-web.xml, please set the "
+              + "system property deploy.read.appengine.web.xml=true.");
     }
 
-    if (project == null) {
+    if (readAppEngineWebXml) {
       project = xmlProject;
-    }
-    if (version == null) {
       version = xmlVersion;
     }
   }

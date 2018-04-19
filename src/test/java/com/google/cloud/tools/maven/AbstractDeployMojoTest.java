@@ -132,9 +132,9 @@ public class AbstractDeployMojoTest {
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(
-          "appengine-plugin does not use gcloud global project/version state. If you would like to "
-              + "use the state from appengine-web.xml, please set the system property "
-              + "deploy.read.appengine.web.xml=true.",
+          "Project/version is set in application-web.xml, but deploy.read.appengine.web.xml is "
+              + "false. If you would like to use the state from appengine-web.xml, please set the "
+              + "system property deploy.read.appengine.web.xml=true.",
           ex.getMessage());
     }
   }
