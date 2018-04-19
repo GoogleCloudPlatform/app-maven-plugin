@@ -19,7 +19,6 @@ package com.google.cloud.tools.maven;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerVersion;
-import com.google.cloud.tools.maven.util.CollectionUtil;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -272,7 +271,7 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     SupportedDevServerVersion convertedVersion = convertDevserverVersionString();
-    if (CollectionUtil.isNullOrEmpty(services)) {
+    if (services == null || services.isEmpty()) {
       Build build = mavenProject.getBuild();
       services =
           Collections.singletonList(
