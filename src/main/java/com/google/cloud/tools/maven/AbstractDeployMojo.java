@@ -66,9 +66,7 @@ public abstract class AbstractDeployMojo extends StageMojo
   @Parameter(alias = "deploy.version", property = "app.deploy.version")
   protected String version;
 
-  /**
-   * The Google Cloud Platform project name to use for this invocation.
-   */
+  /** The Google Cloud Platform project name to use for this invocation. */
   @Parameter(alias = "deploy.project", property = "app.deploy.project")
   protected String project;
 
@@ -110,10 +108,5 @@ public abstract class AbstractDeployMojo extends StageMojo
   @Override
   public String getProject() {
     return project;
-  }
-
-  @Override
-  public File getAppEngineDirectory() {
-    return appEngineDirectory;
   }
 }

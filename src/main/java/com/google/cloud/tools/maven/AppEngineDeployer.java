@@ -22,6 +22,8 @@ import org.apache.maven.plugin.MojoFailureException;
 public interface AppEngineDeployer {
   void stage(StageMojo stageMojo) throws MojoExecutionException, MojoFailureException;
 
+  void configureAppEngineDirectory(StageMojo stageMojo);
+
   void deploy(AbstractDeployMojo deployMojo) throws MojoExecutionException, MojoFailureException;
 
   void deployAll(AbstractDeployMojo deployMojo) throws MojoExecutionException, MojoFailureException;

@@ -29,6 +29,7 @@
           <environment>
             <TEST_VAR>testVariableValue</TEST_VAR>
           </environment>
+          <project>travis-app-maven-plugin</project>
         </configuration>
       </plugin>
     </plugins>

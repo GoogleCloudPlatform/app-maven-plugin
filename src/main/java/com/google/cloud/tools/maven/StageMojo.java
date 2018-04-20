@@ -184,19 +184,17 @@ public class StageMojo extends CloudSdkMojo
   )
   protected File artifact;
 
-  AppEngineDeployer deployer;
-
-  StageMojo() {
-    if (isStandardStaging()) {
-      deployer = new AppEngineStandardDeployer();
-    } else {
-      deployer = new AppEngineFlexibleDeployer();
-    }
-  }
-
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    deployer.stage(this);
+    newDeployer().stage(this);
+  }
+
+  AppEngineDeployer newDeployer() {
+    if (isStandardStaging()) {
+      return new AppEngineStandardDeployer();
+    } else {
+      return new AppEngineFlexibleDeployer();
+    }
   }
 
   protected void clearStagingDirectory() throws MojoFailureException, MojoExecutionException {

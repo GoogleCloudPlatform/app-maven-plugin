@@ -29,6 +29,8 @@ public class DeployMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    AppEngineDeployer deployer = newDeployer();
+    deployer.stage(this);
     deployer.deploy(this);
   }
 }
