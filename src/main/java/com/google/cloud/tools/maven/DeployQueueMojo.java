@@ -16,9 +16,8 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
-import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -26,15 +25,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 /** Stage and deploy queue.yaml to Google App Engine standard or flexible environment. */
 @Mojo(name = "deployQueue")
 @Execute(phase = LifecyclePhase.PACKAGE)
-public class DeployQueueMojo extends AbstractSingleYamlDeployMojo {
+public class DeployQueueMojo extends AbstractDeployMojo {
 
-  protected void doDeploy(
-      AppEngineDeployment appEngineDeployment,
-      DeployProjectConfigurationConfiguration configuration) {
-    try {
-      appEngineDeployment.deployQueue(this);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
-    }
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    deployer.deployQueue(this);
   }
 }

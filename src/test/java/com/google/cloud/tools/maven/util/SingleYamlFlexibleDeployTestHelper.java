@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
-import com.google.cloud.tools.maven.AbstractSingleYamlDeployMojo;
+import com.google.cloud.tools.maven.AbstractDeployMojo;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class SingleYamlFlexibleDeployTestHelper<M extends AbstractSingleYamlDeployMojo>
+public class SingleYamlFlexibleDeployTestHelper<M extends AbstractDeployMojo>
     extends ExternalResource {
 
   @Mock private AppEngineFlexibleStaging flexibleStagingMock;

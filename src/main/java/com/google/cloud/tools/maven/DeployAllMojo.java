@@ -16,17 +16,11 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.common.annotations.VisibleForTesting;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.xml.sax.SAXException;
 
 /**
  * Stage and deploy the application and all configs to Google App Engine standard or flexible
@@ -38,60 +32,6 @@ public class DeployAllMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    if (!"war".equals(getPackaging()) && !"jar".equals(getPackaging())) {
-      getLog().info("deployAll is only executed for war and jar modules.");
-      return;
-    }
-
-    // execute stage
-    super.execute();
-
-    doDeployAll();
-  }
-
-  /** Performs the deployAll goal using the staged directory */
-  @VisibleForTesting
-  public void doDeployAll() throws MojoExecutionException {
-    if (!deployables.isEmpty()) {
-      getLog().warn("Ignoring configured deployables for deployAll.");
-      deployables.clear();
-    }
-
-    configureAppEngineDirectory();
-
-    // Look for app.yaml
-    File appYaml = stagingDirectory.toPath().resolve("app.yaml").toFile();
-    if (!isStandardStaging() && !appYaml.exists()) {
-      appYaml = appEngineDirectory.toPath().resolve("app.yaml").toFile();
-    }
-    if (!appYaml.exists()) {
-      throw new MojoExecutionException("Failed to deploy all: could not find app.yaml.");
-    }
-
-    getLog().info("deployAll: Preparing to deploy app.yaml");
-    deployables.add(appYaml);
-
-    // Look for config yamls
-    String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
-    Path configPath =
-        isStandardStaging()
-            ? stagingDirectory.toPath().resolve("WEB-INF").resolve("appengine-generated")
-            : appEngineDirectory.toPath();
-    for (String yamlName : configYamls) {
-      File yaml = configPath.resolve(yamlName).toFile();
-      if (yaml.exists()) {
-        getLog().info("deployAll: Preparing to deploy " + yamlName);
-        deployables.add(yaml);
-      }
-    }
-
-    try {
-      if (isStandardStaging()) {
-        updatePropertiesFromAppEngineWebXml();
-      }
-      getAppEngineFactory().deployment().deploy(this);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
+    deployer.deployAll(this);
   }
 }

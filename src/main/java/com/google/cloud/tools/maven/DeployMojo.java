@@ -16,14 +16,11 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import java.io.IOException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.xml.sax.SAXException;
 
 /** Stage and deploy an application to Google App Engine standard or flexible environment. */
 @Mojo(name = "deploy")
@@ -32,25 +29,6 @@ public class DeployMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    if (!"war".equals(getPackaging()) && !"jar".equals(getPackaging())) {
-      // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/85
-      getLog().info("Deploy is only executed for war and jar modules.");
-      return;
-    }
-    // execute stage
-    super.execute();
-
-    if (deployables.isEmpty()) {
-      deployables.add(stagingDirectory);
-    }
-
-    try {
-      if (isStandardStaging()) {
-        updatePropertiesFromAppEngineWebXml();
-      }
-      getAppEngineFactory().deployment().deploy(this);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
+    deployer.deploy(this);
   }
 }

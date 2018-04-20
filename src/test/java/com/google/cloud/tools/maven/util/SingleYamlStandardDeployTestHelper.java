@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
-import com.google.cloud.tools.maven.AbstractSingleYamlDeployMojo;
+import com.google.cloud.tools.maven.AbstractDeployMojo;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -23,7 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class SingleYamlStandardDeployTestHelper<M extends AbstractSingleYamlDeployMojo>
+public class SingleYamlStandardDeployTestHelper<M extends AbstractDeployMojo>
     extends ExternalResource {
 
   @Mock private AppEngineStandardStaging standardStagingMock;

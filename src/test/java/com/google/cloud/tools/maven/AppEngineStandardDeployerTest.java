@@ -33,7 +33,7 @@ import org.mockito.MockitoAnnotations;
 import org.xml.sax.SAXException;
 
 @RunWith(JUnitParamsRunner.class)
-public class AbstractDeployMojoTest {
+public class AppEngineStandardDeployerTest {
   private static final String PROJECT_BUILD = "project-build";
   private static final String PROJECT_XML = "project-xml";
   private static final String VERSION_BUILD = "version-build";
@@ -42,14 +42,16 @@ public class AbstractDeployMojoTest {
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
   private File appengineWebXml;
 
-  private AbstractDeployMojo abstractDeployMojo;
+  private AbstractDeployMojo deployMojo;
+  private AppEngineStandardDeployer appEngineStandardDeployer;
 
   @Before
   public void setup() throws IOException {
     MockitoAnnotations.initMocks(this);
     System.clearProperty("deploy.read.appengine.web.xml");
-    abstractDeployMojo = new AbstractDeployMojo() {};
-    abstractDeployMojo.sourceDirectory = tempFolder.newFolder("source");
+    deployMojo = new DeployMojo();
+    appEngineStandardDeployer = new AppEngineStandardDeployer();
+    deployMojo.sourceDirectory = tempFolder.newFolder("source");
     appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
   }
 
@@ -62,11 +64,11 @@ public class AbstractDeployMojoTest {
   public void testUpdatePropertiesFromAppEngineWebXml_buildConfig()
       throws AppEngineException, SAXException, IOException {
     createAppEngineWebXml(true);
-    abstractDeployMojo.version = VERSION_BUILD;
-    abstractDeployMojo.project = PROJECT_BUILD;
-    abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
-    Assert.assertEquals(VERSION_BUILD, abstractDeployMojo.getVersion());
-    Assert.assertEquals(PROJECT_BUILD, abstractDeployMojo.getProject());
+    deployMojo.version = VERSION_BUILD;
+    deployMojo.project = PROJECT_BUILD;
+    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+    Assert.assertEquals(VERSION_BUILD, deployMojo.getVersion());
+    Assert.assertEquals(PROJECT_BUILD, deployMojo.getProject());
   }
 
   @Test
@@ -74,18 +76,18 @@ public class AbstractDeployMojoTest {
       throws AppEngineException, SAXException, IOException {
     System.setProperty("deploy.read.appengine.web.xml", "true");
     createAppEngineWebXml(true);
-    abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
-    Assert.assertEquals(VERSION_XML, abstractDeployMojo.getVersion());
-    Assert.assertEquals(PROJECT_XML, abstractDeployMojo.getProject());
+    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+    Assert.assertEquals(VERSION_XML, deployMojo.getVersion());
+    Assert.assertEquals(PROJECT_XML, deployMojo.getProject());
   }
 
   @Test
   public void testUpdatePropertiesFromAppEngineWebXml_projectNotSet()
       throws IOException, AppEngineException, SAXException {
     createAppEngineWebXml(false);
-    abstractDeployMojo.version = VERSION_BUILD;
+    deployMojo.version = VERSION_BUILD;
     try {
-      abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
+      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(
@@ -99,9 +101,9 @@ public class AbstractDeployMojoTest {
   public void testUpdatePropertiesFromAppEngineWebXml_versionNotSet()
       throws IOException, AppEngineException, SAXException {
     createAppEngineWebXml(false);
-    abstractDeployMojo.project = PROJECT_BUILD;
-    abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
-    Assert.assertEquals(null, abstractDeployMojo.getVersion());
+    deployMojo.project = PROJECT_BUILD;
+    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+    Assert.assertEquals(null, deployMojo.getVersion());
   }
 
   @Test
@@ -109,10 +111,10 @@ public class AbstractDeployMojoTest {
       throws AppEngineException, SAXException, IOException {
     System.setProperty("deploy.read.appengine.web.xml", "true");
     createAppEngineWebXml(true);
-    abstractDeployMojo.version = VERSION_BUILD;
-    abstractDeployMojo.project = PROJECT_BUILD;
+    deployMojo.version = VERSION_BUILD;
+    deployMojo.project = PROJECT_BUILD;
     try {
-      abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
+      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(
@@ -128,7 +130,7 @@ public class AbstractDeployMojoTest {
       throws AppEngineException, SAXException, IOException {
     createAppEngineWebXml(true);
     try {
-      abstractDeployMojo.updatePropertiesFromAppEngineWebXml();
+      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(

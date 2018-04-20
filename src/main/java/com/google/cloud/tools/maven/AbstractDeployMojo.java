@@ -16,17 +16,14 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.appengine.AppEngineDescriptor;
-import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.xml.sax.SAXException;
 
-public abstract class AbstractDeployMojo extends StageMojo implements DeployConfiguration {
+public abstract class AbstractDeployMojo extends StageMojo
+    implements DeployConfiguration, DeployProjectConfigurationConfiguration {
   /**
    * The yaml files for the services or configurations you want to deploy. If not given, defaults to
    * app.yaml in the staging directory. If that is not found, attempts to automatically generate
@@ -70,8 +67,7 @@ public abstract class AbstractDeployMojo extends StageMojo implements DeployConf
   protected String version;
 
   /**
-   * The Google Cloud Platform project name to use for this invocation. If omitted then the current
-   * project is assumed.
+   * The Google Cloud Platform project name to use for this invocation.
    */
   @Parameter(alias = "deploy.project", property = "app.deploy.project")
   protected String project;
@@ -116,40 +112,8 @@ public abstract class AbstractDeployMojo extends StageMojo implements DeployConf
     return project;
   }
 
-  void updatePropertiesFromAppEngineWebXml() throws IOException, SAXException, AppEngineException {
-    AppEngineDescriptor appengineWebXmlDoc =
-        AppEngineDescriptor.parse(
-            new FileInputStream(
-                sourceDirectory.toPath().resolve("WEB-INF").resolve("appengine-web.xml").toFile()));
-    String xmlProject = appengineWebXmlDoc.getProjectId();
-    String xmlVersion = appengineWebXmlDoc.getProjectVersion();
-
-    // Verify that project is set somewhere
-    if (project == null && xmlProject == null) {
-      throw new RuntimeException(
-          "appengine-plugin does not use gcloud global project state. Please configure the "
-              + "application ID in your build.gradle or appengine-web.xml.");
-    }
-
-    boolean readAppEngineWebXml = Boolean.getBoolean("deploy.read.appengine.web.xml");
-    if (readAppEngineWebXml && (project != null || version != null)) {
-      // Should read from appengine-web.xml, but configured in pom.xml
-      throw new RuntimeException(
-          "Cannot override appengine.deploy config with appengine-web.xml. Either remove "
-              + "the project/version properties from your build.gradle, or clear the "
-              + "deploy.read.appengine.web.xml system property to read from build.gradle.");
-    } else if (!readAppEngineWebXml
-        && (project == null && xmlProject != null || version == null && xmlVersion != null)) {
-      // System property not set, but configuration is only in appengine-web.xml
-      throw new RuntimeException(
-          "Project/version is set in application-web.xml, but deploy.read.appengine.web.xml is "
-              + "false. If you would like to use the state from appengine-web.xml, please set the "
-              + "system property deploy.read.appengine.web.xml=true.");
-    }
-
-    if (readAppEngineWebXml) {
-      project = xmlProject;
-      version = xmlVersion;
-    }
+  @Override
+  public File getAppEngineDirectory() {
+    return appEngineDirectory;
   }
 }
