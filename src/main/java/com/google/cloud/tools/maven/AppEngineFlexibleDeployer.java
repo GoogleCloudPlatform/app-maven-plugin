@@ -32,6 +32,9 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
 
   @Override
   public void stage() throws MojoExecutionException, MojoFailureException {
+    stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
+    stageMojo.getLog().info("Detected App Engine flexible environment application.");
+
     if (!"war".equals(stageMojo.getPackaging()) && !"jar".equals(stageMojo.getPackaging())) {
       stageMojo.getLog().info("Stage/deploy is only executed for war and jar modules.");
       return;
@@ -41,9 +44,6 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
     if (stageMojo.appEngineDirectory == null) {
       configureAppEngineDirectory();
     }
-
-    stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
-    stageMojo.getLog().info("Detected App Engine flexible environment application.");
 
     try {
       stageMojo.getAppEngineFactory().flexibleStaging().stageFlexible(stageMojo);

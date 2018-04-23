@@ -44,6 +44,9 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
 
   @Override
   public void stage() throws MojoExecutionException, MojoFailureException {
+    stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
+    stageMojo.getLog().info("Detected App Engine standard environment application.");
+
     stageMojo.clearStagingDirectory();
     if (stageMojo.appEngineDirectory == null) {
       stageMojo.appEngineDirectory =
@@ -56,9 +59,6 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
               .resolve("appengine")
               .toFile();
     }
-
-    stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
-    stageMojo.getLog().info("Detected App Engine standard environment application.");
 
     // force runtime to 'java' for compat projects using Java version >1.7
     File appengineWebXml =
