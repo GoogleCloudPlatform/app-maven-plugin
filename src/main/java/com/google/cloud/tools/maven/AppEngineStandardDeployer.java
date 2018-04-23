@@ -29,6 +29,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.w3c.dom.Document;
@@ -47,7 +48,19 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
     stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
     stageMojo.getLog().info("Detected App Engine standard environment application.");
 
-    stageMojo.clearStagingDirectory();
+    // delete staging directory if it exists
+    if (stageMojo.stagingDirectory.exists()) {
+      stageMojo.getLog().info("Deleting the staging directory: " + stageMojo.stagingDirectory);
+      try {
+        FileUtils.deleteDirectory(stageMojo.stagingDirectory);
+      } catch (IOException ex) {
+        throw new MojoFailureException("Unable to delete staging directory.", ex);
+      }
+    }
+    if (!stageMojo.stagingDirectory.mkdir()) {
+      throw new MojoExecutionException("Unable to create staging directory");
+    }
+
     if (stageMojo.appEngineDirectory == null) {
       stageMojo.appEngineDirectory =
           stageMojo

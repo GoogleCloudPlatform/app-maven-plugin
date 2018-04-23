@@ -20,9 +20,6 @@ import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Execute;
@@ -187,25 +184,6 @@ public class StageMojo extends CloudSdkMojo
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     AppEngineDeployer.Factory.newDeployer(this).stage();
-  }
-
-  protected void clearStagingDirectory() throws MojoFailureException, MojoExecutionException {
-    // delete staging directory if it exists
-    if (stagingDirectory.exists()) {
-      getLog().info("Deleting the staging directory: " + stagingDirectory);
-      try {
-        FileUtils.deleteDirectory(stagingDirectory);
-      } catch (IOException ex) {
-        throw new MojoFailureException("Unable to delete staging directory.", ex);
-      }
-    }
-    if (!stagingDirectory.mkdir()) {
-      throw new MojoExecutionException("Unable to create staging directory");
-    }
-  }
-
-  protected boolean isStandardStaging() {
-    return Files.exists(sourceDirectory.toPath().resolve("WEB-INF").resolve("appengine-web.xml"));
   }
 
   @Override

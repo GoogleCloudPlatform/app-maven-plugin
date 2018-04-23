@@ -16,13 +16,17 @@
 
 package com.google.cloud.tools.maven;
 
+import java.nio.file.Files;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 public interface AppEngineDeployer {
   class Factory {
     static AppEngineDeployer newDeployer(StageMojo config) {
-      if (config.isStandardStaging()) {
+      boolean isStandardStaging =
+          Files.exists(
+              config.sourceDirectory.toPath().resolve("WEB-INF").resolve("appengine-web.xml"));
+      if (isStandardStaging) {
         return new AppEngineStandardDeployer(config);
       } else {
         return new AppEngineFlexibleDeployer(config);

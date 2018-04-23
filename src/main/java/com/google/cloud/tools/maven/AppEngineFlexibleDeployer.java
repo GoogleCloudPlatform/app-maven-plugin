@@ -18,7 +18,9 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -40,7 +42,19 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
       return;
     }
 
-    stageMojo.clearStagingDirectory();
+    // delete staging directory if it exists
+    if (stageMojo.stagingDirectory.exists()) {
+      stageMojo.getLog().info("Deleting the staging directory: " + stageMojo.stagingDirectory);
+      try {
+        FileUtils.deleteDirectory(stageMojo.stagingDirectory);
+      } catch (IOException ex) {
+        throw new MojoFailureException("Unable to delete staging directory.", ex);
+      }
+    }
+    if (!stageMojo.stagingDirectory.mkdir()) {
+      throw new MojoExecutionException("Unable to create staging directory");
+    }
+
     if (stageMojo.appEngineDirectory == null) {
       configureAppEngineDirectory();
     }
