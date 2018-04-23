@@ -97,7 +97,7 @@ public class DeployAllMojoTest {
 
     File invalidYaml = tempFolder.newFile("staging/WEB-INF/appengine-generated/invalid.yaml");
 
-    deployAllMojo.newDeployer().deployAll(deployAllMojo);
+    AppEngineDeployer.Factory.newDeployer(deployAllMojo).deployAll(deployAllMojo);
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertTrue(deployAllMojo.deployables.contains(cronYaml));
@@ -126,7 +126,7 @@ public class DeployAllMojoTest {
     File invalidYamlStaging = tempFolder.newFile("staging/invalid.yaml");
     File invalidYamlAppEngine = tempFolder.newFile("appengine/invalid.yaml");
 
-    deployAllMojo.newDeployer().deployAll(deployAllMojo);
+    AppEngineDeployer.Factory.newDeployer(deployAllMojo).deployAll(deployAllMojo);
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertTrue(deployAllMojo.deployables.contains(cronYaml));
@@ -154,7 +154,7 @@ public class DeployAllMojoTest {
     File appYaml = tempFolder.newFile("staging/app.yaml");
     File validInDifferentDirYaml = tempFolder.newFile("queue.yaml");
 
-    deployAllMojo.newDeployer().deployAll(deployAllMojo);
+    AppEngineDeployer.Factory.newDeployer(deployAllMojo).deployAll(deployAllMojo);
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertFalse(deployAllMojo.deployables.contains(validInDifferentDirYaml));
@@ -172,7 +172,7 @@ public class DeployAllMojoTest {
     File cronYaml = tempFolder.newFile("appengine/cron.yaml");
     File validInDifferentDirYaml = tempFolder.newFile("queue.yaml");
 
-    deployAllMojo.newDeployer().deployAll(deployAllMojo);
+    AppEngineDeployer.Factory.newDeployer(deployAllMojo).deployAll(deployAllMojo);
 
     assertTrue(deployAllMojo.deployables.contains(appYaml));
     assertTrue(deployAllMojo.deployables.contains(cronYaml));

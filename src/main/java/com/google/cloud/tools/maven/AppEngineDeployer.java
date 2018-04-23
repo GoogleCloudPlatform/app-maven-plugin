@@ -20,6 +20,16 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 public interface AppEngineDeployer {
+  class Factory {
+    static AppEngineDeployer newDeployer(StageMojo config) {
+      if (config.isStandardStaging()) {
+        return new AppEngineStandardDeployer();
+      } else {
+        return new AppEngineFlexibleDeployer();
+      }
+    }
+  }
+
   void stage(StageMojo stageMojo) throws MojoExecutionException, MojoFailureException;
 
   void configureAppEngineDirectory(StageMojo stageMojo);

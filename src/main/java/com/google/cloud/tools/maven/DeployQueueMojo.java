@@ -29,7 +29,7 @@ public class DeployQueueMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    AppEngineDeployer deployer = newDeployer();
+    AppEngineDeployer deployer = AppEngineDeployer.Factory.newDeployer(this);
     deployer.configureAppEngineDirectory(this);
     deployer.stage(this);
     deployer.deployQueue(this);
