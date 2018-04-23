@@ -66,7 +66,7 @@ public class AppEngineStandardDeployerTest {
     createAppEngineWebXml(true);
     deployMojo.version = VERSION_BUILD;
     deployMojo.project = PROJECT_BUILD;
-    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml();
     Assert.assertEquals(VERSION_BUILD, deployMojo.getVersion());
     Assert.assertEquals(PROJECT_BUILD, deployMojo.getProject());
   }
@@ -76,7 +76,7 @@ public class AppEngineStandardDeployerTest {
       throws AppEngineException, SAXException, IOException {
     System.setProperty("deploy.read.appengine.web.xml", "true");
     createAppEngineWebXml(true);
-    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml();
     Assert.assertEquals(VERSION_XML, deployMojo.getVersion());
     Assert.assertEquals(PROJECT_XML, deployMojo.getProject());
   }
@@ -87,7 +87,7 @@ public class AppEngineStandardDeployerTest {
     createAppEngineWebXml(false);
     deployMojo.version = VERSION_BUILD;
     try {
-      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml();
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(
@@ -102,7 +102,7 @@ public class AppEngineStandardDeployerTest {
       throws IOException, AppEngineException, SAXException {
     createAppEngineWebXml(false);
     deployMojo.project = PROJECT_BUILD;
-    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+    appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml();
     Assert.assertEquals(null, deployMojo.getVersion());
   }
 
@@ -114,7 +114,7 @@ public class AppEngineStandardDeployerTest {
     deployMojo.version = VERSION_BUILD;
     deployMojo.project = PROJECT_BUILD;
     try {
-      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml();
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(
@@ -130,7 +130,7 @@ public class AppEngineStandardDeployerTest {
       throws AppEngineException, SAXException, IOException {
     createAppEngineWebXml(true);
     try {
-      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml(deployMojo);
+      appEngineStandardDeployer.updatePropertiesFromAppEngineWebXml();
       Assert.fail();
     } catch (RuntimeException ex) {
       Assert.assertEquals(

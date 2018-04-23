@@ -111,7 +111,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
     }
 
     try {
-      updatePropertiesFromAppEngineWebXml(deployMojo);
+      updatePropertiesFromAppEngineWebXml();
       deployMojo.getAppEngineFactory().deployment().deploy(deployMojo);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new MojoFailureException(ex.getMessage(), ex);
@@ -147,7 +147,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
     }
 
     try {
-      updatePropertiesFromAppEngineWebXml(deployMojo);
+      updatePropertiesFromAppEngineWebXml();
       deployMojo.getAppEngineFactory().deployment().deploy(deployMojo);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new RuntimeException(ex);
@@ -158,7 +158,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   public void deployCron() {
     AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
-      updatePropertiesFromAppEngineWebXml(deployMojo);
+      updatePropertiesFromAppEngineWebXml();
       deployMojo.getAppEngineFactory().deployment().deployCron(deployMojo);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new RuntimeException(ex);
@@ -169,7 +169,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   public void deployDispatch() {
     AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
-      updatePropertiesFromAppEngineWebXml(deployMojo);
+      updatePropertiesFromAppEngineWebXml();
       deployMojo.getAppEngineFactory().deployment().deployDispatch(deployMojo);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new RuntimeException(ex);
@@ -180,7 +180,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   public void deployDos() {
     AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
-      updatePropertiesFromAppEngineWebXml(deployMojo);
+      updatePropertiesFromAppEngineWebXml();
       deployMojo.getAppEngineFactory().deployment().deployDos(deployMojo);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new RuntimeException(ex);
@@ -191,7 +191,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   public void deployIndex() {
     AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
-      updatePropertiesFromAppEngineWebXml(deployMojo);
+      updatePropertiesFromAppEngineWebXml();
       deployMojo.getAppEngineFactory().deployment().deployIndex(deployMojo);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new RuntimeException(ex);
@@ -202,7 +202,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   public void deployQueue() {
     AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
-      updatePropertiesFromAppEngineWebXml(deployMojo);
+      updatePropertiesFromAppEngineWebXml();
       deployMojo.getAppEngineFactory().deployment().deployQueue(deployMojo);
     } catch (AppEngineException | SAXException | IOException ex) {
       throw new RuntimeException(ex);
@@ -225,8 +225,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
 
   /** Validates project/version configuration and pulls from appengine-web.xml if necessary */
   @VisibleForTesting
-  void updatePropertiesFromAppEngineWebXml(AbstractDeployMojo deployMojo)
-      throws IOException, SAXException, AppEngineException {
+  void updatePropertiesFromAppEngineWebXml() throws IOException, SAXException, AppEngineException {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     AppEngineDescriptor appengineWebXmlDoc =
         AppEngineDescriptor.parse(
             new FileInputStream(
