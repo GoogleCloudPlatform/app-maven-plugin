@@ -50,7 +50,7 @@ public class AppEngineStandardDeployerTest {
     MockitoAnnotations.initMocks(this);
     System.clearProperty("deploy.read.appengine.web.xml");
     deployMojo = new DeployMojo();
-    appEngineStandardDeployer = new AppEngineStandardDeployer();
+    appEngineStandardDeployer = new AppEngineStandardDeployer(deployMojo);
     deployMojo.sourceDirectory = tempFolder.newFolder("source");
     appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
   }

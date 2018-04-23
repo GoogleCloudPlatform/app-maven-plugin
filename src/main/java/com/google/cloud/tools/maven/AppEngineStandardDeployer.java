@@ -36,8 +36,14 @@ import org.xml.sax.SAXException;
 
 public class AppEngineStandardDeployer implements AppEngineDeployer {
 
+  private StageMojo stageMojo;
+
+  AppEngineStandardDeployer(StageMojo stageMojo) {
+    this.stageMojo = stageMojo;
+  }
+
   @Override
-  public void stage(StageMojo stageMojo) throws MojoExecutionException, MojoFailureException {
+  public void stage() throws MojoExecutionException, MojoFailureException {
     stageMojo.clearStagingDirectory();
 
     stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
@@ -87,7 +93,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void configureAppEngineDirectory(StageMojo stageMojo) {
+  public void configureAppEngineDirectory() {
     stageMojo.appEngineDirectory =
         stageMojo
             .stagingDirectory
@@ -98,7 +104,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deploy(AbstractDeployMojo deployMojo) throws MojoFailureException {
+  public void deploy() throws MojoFailureException {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     if (deployMojo.deployables.isEmpty()) {
       deployMojo.deployables.add(deployMojo.stagingDirectory);
     }
@@ -112,7 +119,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployAll(AbstractDeployMojo deployMojo) throws MojoExecutionException {
+  public void deployAll() throws MojoExecutionException {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     if (!deployMojo.deployables.isEmpty()) {
       deployMojo.getLog().warn("Ignoring configured deployables for deployAll.");
       deployMojo.deployables.clear();
@@ -147,7 +155,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployCron(AbstractDeployMojo deployMojo) {
+  public void deployCron() {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
       updatePropertiesFromAppEngineWebXml(deployMojo);
       deployMojo.getAppEngineFactory().deployment().deployCron(deployMojo);
@@ -157,7 +166,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployDispatch(AbstractDeployMojo deployMojo) {
+  public void deployDispatch() {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
       updatePropertiesFromAppEngineWebXml(deployMojo);
       deployMojo.getAppEngineFactory().deployment().deployDispatch(deployMojo);
@@ -167,7 +177,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployDos(AbstractDeployMojo deployMojo) {
+  public void deployDos() {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
       updatePropertiesFromAppEngineWebXml(deployMojo);
       deployMojo.getAppEngineFactory().deployment().deployDos(deployMojo);
@@ -177,7 +188,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployIndex(AbstractDeployMojo deployMojo) {
+  public void deployIndex() {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
       updatePropertiesFromAppEngineWebXml(deployMojo);
       deployMojo.getAppEngineFactory().deployment().deployIndex(deployMojo);
@@ -187,7 +199,8 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployQueue(AbstractDeployMojo deployMojo) {
+  public void deployQueue() {
+    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
     try {
       updatePropertiesFromAppEngineWebXml(deployMojo);
       deployMojo.getAppEngineFactory().deployment().deployQueue(deployMojo);
@@ -203,10 +216,10 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
       XPath xpath = XPathFactory.newInstance().newXPath();
       String expression = "/appengine-web-app/vm/text()='true'";
       return (Boolean) xpath.evaluate(expression, document, XPathConstants.BOOLEAN);
-    } catch (XPathExpressionException e) {
-      throw new MojoExecutionException("XPath evaluation failed on appengine-web.xml", e);
-    } catch (SAXException | IOException | ParserConfigurationException e) {
-      throw new MojoExecutionException("Failed to parse appengine-web.xml", e);
+    } catch (XPathExpressionException ex) {
+      throw new MojoExecutionException("XPath evaluation failed on appengine-web.xml", ex);
+    } catch (SAXException | IOException | ParserConfigurationException ex) {
+      throw new MojoExecutionException("Failed to parse appengine-web.xml", ex);
     }
   }
 

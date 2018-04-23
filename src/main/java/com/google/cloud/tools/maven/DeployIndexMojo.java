@@ -30,8 +30,8 @@ public class DeployIndexMojo extends AbstractDeployMojo {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     AppEngineDeployer deployer = AppEngineDeployer.Factory.newDeployer(this);
-    deployer.configureAppEngineDirectory(this);
-    deployer.stage(this);
-    deployer.deployIndex(this);
+    deployer.configureAppEngineDirectory();
+    deployer.stage();
+    deployer.deployIndex();
   }
 }

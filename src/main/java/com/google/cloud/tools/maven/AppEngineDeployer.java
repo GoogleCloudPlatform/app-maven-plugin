@@ -23,32 +23,28 @@ public interface AppEngineDeployer {
   class Factory {
     static AppEngineDeployer newDeployer(StageMojo config) {
       if (config.isStandardStaging()) {
-        return new AppEngineStandardDeployer();
+        return new AppEngineStandardDeployer(config);
       } else {
-        return new AppEngineFlexibleDeployer();
+        return new AppEngineFlexibleDeployer(config);
       }
     }
   }
 
-  void stage(StageMojo stageMojo) throws MojoExecutionException, MojoFailureException;
+  void stage() throws MojoExecutionException, MojoFailureException;
 
-  void configureAppEngineDirectory(StageMojo stageMojo);
+  void configureAppEngineDirectory();
 
-  void deploy(AbstractDeployMojo deployMojo) throws MojoExecutionException, MojoFailureException;
+  void deploy() throws MojoExecutionException, MojoFailureException;
 
-  void deployAll(AbstractDeployMojo deployMojo) throws MojoExecutionException, MojoFailureException;
+  void deployAll() throws MojoExecutionException, MojoFailureException;
 
-  void deployCron(AbstractDeployMojo deployMojo)
-      throws MojoExecutionException, MojoFailureException;
+  void deployCron() throws MojoExecutionException, MojoFailureException;
 
-  void deployDispatch(AbstractDeployMojo deployMojo)
-      throws MojoExecutionException, MojoFailureException;
+  void deployDispatch() throws MojoExecutionException, MojoFailureException;
 
-  void deployDos(AbstractDeployMojo deployMojo) throws MojoExecutionException, MojoFailureException;
+  void deployDos() throws MojoExecutionException, MojoFailureException;
 
-  void deployIndex(AbstractDeployMojo deployMojo)
-      throws MojoExecutionException, MojoFailureException;
+  void deployIndex() throws MojoExecutionException, MojoFailureException;
 
-  void deployQueue(AbstractDeployMojo deployMojo)
-      throws MojoExecutionException, MojoFailureException;
+  void deployQueue() throws MojoExecutionException, MojoFailureException;
 }

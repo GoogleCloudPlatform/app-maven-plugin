@@ -186,7 +186,7 @@ public class StageMojo extends CloudSdkMojo
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    AppEngineDeployer.Factory.newDeployer(this).stage(this);
+    AppEngineDeployer.Factory.newDeployer(this).stage();
   }
 
   protected void clearStagingDirectory() throws MojoFailureException, MojoExecutionException {
@@ -195,8 +195,8 @@ public class StageMojo extends CloudSdkMojo
       getLog().info("Deleting the staging directory: " + stagingDirectory);
       try {
         FileUtils.deleteDirectory(stagingDirectory);
-      } catch (IOException e) {
-        throw new MojoFailureException("Unable to delete staging directory.", e);
+      } catch (IOException ex) {
+        throw new MojoFailureException("Unable to delete staging directory.", ex);
       }
     }
     if (!stagingDirectory.mkdir()) {
