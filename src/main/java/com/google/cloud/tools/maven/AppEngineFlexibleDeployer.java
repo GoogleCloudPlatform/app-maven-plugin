@@ -33,21 +33,10 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
     }
 
     stageMojo.clearStagingDirectory();
+    configureAppEngineDirectory(stageMojo);
 
     stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
     stageMojo.getLog().info("Detected App Engine flexible environment application.");
-
-    if (stageMojo.appEngineDirectory == null) {
-      stageMojo.appEngineDirectory =
-          stageMojo
-              .mavenProject
-              .getBasedir()
-              .toPath()
-              .resolve("src")
-              .resolve("main")
-              .resolve("appengine")
-              .toFile();
-    }
 
     try {
       stageMojo.getAppEngineFactory().flexibleStaging().stageFlexible(stageMojo);

@@ -210,7 +210,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
     }
   }
 
-  /** */
+  /** Validates project/version configuration and pulls from appengine-web.xml if necessary */
   @VisibleForTesting
   void updatePropertiesFromAppEngineWebXml(AbstractDeployMojo deployMojo)
       throws IOException, SAXException, AppEngineException {
@@ -226,24 +226,22 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
     String xmlProject = appengineWebXmlDoc.getProjectId();
     String xmlVersion = appengineWebXmlDoc.getProjectVersion();
 
-    String project = deployMojo.project;
-    String version = deployMojo.version;
-
     // Verify that project is set somewhere
-    if (project == null && xmlProject == null) {
+    if (deployMojo.project == null && xmlProject == null) {
       throw new RuntimeException(
           "appengine-plugin does not use gcloud global project state. Please configure the "
               + "application ID in your pom.xml or appengine-web.xml.");
     }
 
     boolean readAppEngineWebXml = Boolean.getBoolean("deploy.read.appengine.web.xml");
-    if (readAppEngineWebXml && (project != null || version != null)) {
+    if (readAppEngineWebXml && (deployMojo.project != null || deployMojo.version != null)) {
       // Should read from appengine-web.xml, but configured in pom.xml
       throw new RuntimeException(
           "Cannot override appengine.deploy config with appengine-web.xml. Either remove "
               + "the project/version properties from your pom.xml, or clear the "
               + "deploy.read.appengine.web.xml system property to read from pom.xml.");
-    } else if (!readAppEngineWebXml && (project == null || version == null && xmlVersion != null)) {
+    } else if (!readAppEngineWebXml
+        && (deployMojo.project == null || deployMojo.version == null && xmlVersion != null)) {
       // System property not set, but configuration is only in appengine-web.xml
       throw new RuntimeException(
           "Project/version is set in application-web.xml, but deploy.read.appengine.web.xml is "
