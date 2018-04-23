@@ -47,6 +47,7 @@ public class SingleYamlStandardDeployTestHelper<M extends AbstractDeployMojo>
   public void before() throws IOException {
     mojo.setStagingDirectory(temporaryFolder.newFolder("staging"));
     mojo.setSourceDirectory(temporaryFolder.newFolder("source"));
+    mojo.setProject("test-project");
     MockitoAnnotations.initMocks(this);
 
     // create appengine-web.xml to mark it as standard environment

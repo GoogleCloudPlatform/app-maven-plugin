@@ -26,7 +26,9 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
 
   @Override
   public void stage(StageMojo stageMojo) throws MojoExecutionException, MojoFailureException {
-    if (!isWarOrJar(stageMojo)) {
+    if (!"war".equals(stageMojo.getPackaging()) && !"jar".equals(stageMojo.getPackaging())) {
+      // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/85
+      stageMojo.getLog().info("Stage/deploy is only executed for war and jar modules.");
       return;
     }
 
@@ -52,6 +54,19 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
     } catch (AppEngineException ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  @Override
+  public void configureAppEngineDirectory(StageMojo stageMojo) {
+    stageMojo.appEngineDirectory =
+        stageMojo
+            .mavenProject
+            .getBasedir()
+            .toPath()
+            .resolve("src")
+            .resolve("main")
+            .resolve("appengine")
+            .toFile();
   }
 
   @Override
@@ -146,27 +161,5 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
     } catch (AppEngineException ex) {
       throw new RuntimeException(ex);
     }
-  }
-
-  @Override
-  public void configureAppEngineDirectory(StageMojo stageMojo) {
-    stageMojo.appEngineDirectory =
-        stageMojo
-            .mavenProject
-            .getBasedir()
-            .toPath()
-            .resolve("src")
-            .resolve("main")
-            .resolve("appengine")
-            .toFile();
-  }
-
-  private boolean isWarOrJar(StageMojo stageMojo) {
-    if (!"war".equals(stageMojo.getPackaging()) && !"jar".equals(stageMojo.getPackaging())) {
-      // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/85
-      stageMojo.getLog().info("Stage/deploy is only executed for war and jar modules.");
-      return false;
-    }
-    return true;
   }
 }

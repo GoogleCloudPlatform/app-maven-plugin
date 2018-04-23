@@ -87,6 +87,17 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
+  public void configureAppEngineDirectory(StageMojo stageMojo) {
+    stageMojo.appEngineDirectory =
+        stageMojo
+            .stagingDirectory
+            .toPath()
+            .resolve("WEB-INF")
+            .resolve("appengine-generated")
+            .toFile();
+  }
+
+  @Override
   public void deploy(AbstractDeployMojo deployMojo) throws MojoFailureException {
     if (deployMojo.deployables.isEmpty()) {
       deployMojo.deployables.add(deployMojo.stagingDirectory);
@@ -185,17 +196,6 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
     }
   }
 
-  @Override
-  public void configureAppEngineDirectory(StageMojo stageMojo) {
-    stageMojo.appEngineDirectory =
-        stageMojo
-            .stagingDirectory
-            .toPath()
-            .resolve("WEB-INF")
-            .resolve("appengine-generated")
-            .toFile();
-  }
-
   private boolean isVm(File appengineWebXml) throws MojoExecutionException {
     try {
       Document document =
@@ -242,7 +242,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
       throw new RuntimeException(
           "Cannot override appengine.deploy config with appengine-web.xml. Either remove "
               + "the project/version properties from your pom.xml, or clear the "
-              + "deploy.read.appengine.web.xml system property to read from build.gradle.");
+              + "deploy.read.appengine.web.xml system property to read from pom.xml.");
     } else if (!readAppEngineWebXml && (project == null || version == null && xmlVersion != null)) {
       // System property not set, but configuration is only in appengine-web.xml
       throw new RuntimeException(

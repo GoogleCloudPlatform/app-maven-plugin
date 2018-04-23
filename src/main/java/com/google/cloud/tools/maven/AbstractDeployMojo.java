@@ -18,6 +18,7 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.util.List;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -108,5 +109,10 @@ public abstract class AbstractDeployMojo extends StageMojo
   @Override
   public String getProject() {
     return project;
+  }
+
+  @VisibleForTesting
+  public void setProject(String project) {
+    this.project = project;
   }
 }

@@ -92,7 +92,7 @@ public class AppEngineStandardDeployerTest {
     } catch (RuntimeException ex) {
       Assert.assertEquals(
           "appengine-plugin does not use gcloud global project state. Please configure the "
-              + "application ID in your build.gradle or appengine-web.xml.",
+              + "application ID in your pom.xml or appengine-web.xml.",
           ex.getMessage());
     }
   }
@@ -119,8 +119,8 @@ public class AppEngineStandardDeployerTest {
     } catch (RuntimeException ex) {
       Assert.assertEquals(
           "Cannot override appengine.deploy config with appengine-web.xml. Either remove "
-              + "the project/version properties from your build.gradle, or clear the "
-              + "deploy.read.appengine.web.xml system property to read from build.gradle.",
+              + "the project/version properties from your pom.xml, or clear the "
+              + "deploy.read.appengine.web.xml system property to read from pom.xml.",
           ex.getMessage());
     }
   }
