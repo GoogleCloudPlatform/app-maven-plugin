@@ -183,7 +183,7 @@ public class StageMojo extends CloudSdkMojo
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    AppEngineDeployer.Factory.newDeployer(this).stage();
+    AppEngineStager.Factory.newStager(this).stage();
   }
 
   @Override

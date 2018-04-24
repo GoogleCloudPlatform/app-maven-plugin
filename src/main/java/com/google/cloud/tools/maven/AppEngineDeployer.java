@@ -22,7 +22,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 public interface AppEngineDeployer {
   class Factory {
-    static AppEngineDeployer newDeployer(StageMojo config) {
+    static AppEngineDeployer newDeployer(AbstractDeployMojo config) {
       boolean isStandardStaging =
           Files.exists(
               config.sourceDirectory.toPath().resolve("WEB-INF").resolve("appengine-web.xml"));
@@ -33,10 +33,6 @@ public interface AppEngineDeployer {
       }
     }
   }
-
-  void stage() throws MojoExecutionException, MojoFailureException;
-
-  void configureAppEngineDirectory();
 
   void deploy() throws MojoExecutionException, MojoFailureException;
 

@@ -29,9 +29,6 @@ public class DeployDosMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    AppEngineDeployer deployer = AppEngineDeployer.Factory.newDeployer(this);
-    deployer.configureAppEngineDirectory();
-    deployer.stage();
-    deployer.deployDos();
+    AppEngineDeployer.Factory.newDeployer(this).deployDos();
   }
 }

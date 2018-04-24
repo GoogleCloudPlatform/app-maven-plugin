@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google LLC. All Rights Reserved.
+ * Copyright 2018 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,25 @@
 
 package com.google.cloud.tools.maven;
 
+import java.nio.file.Files;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
 
-/** Stage and deploy index.yaml to Google App Engine standard or flexible environment. */
-@Mojo(name = "deployIndex")
-@Execute(phase = LifecyclePhase.PACKAGE)
-public class DeployIndexMojo extends AbstractDeployMojo {
-
-  @Override
-  public void execute() throws MojoExecutionException, MojoFailureException {
-    AppEngineDeployer.Factory.newDeployer(this).deployIndex();
+public interface AppEngineStager {
+  class Factory {
+    static AppEngineStager newStager(StageMojo config) {
+      boolean isStandardStaging =
+          Files.exists(
+              config.sourceDirectory.toPath().resolve("WEB-INF").resolve("appengine-web.xml"));
+      if (isStandardStaging) {
+        return new AppEngineStandardStager(config);
+      } else {
+        return new AppEngineFlexibleStager(config);
+      }
+    }
   }
+
+  void stage() throws MojoExecutionException, MojoFailureException;
+
+  void configureAppEngineDirectory();
 }

@@ -17,71 +17,30 @@
 package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 public class AppEngineFlexibleDeployer implements AppEngineDeployer {
 
-  private StageMojo stageMojo;
+  private AbstractDeployMojo deployMojo;
+  private AppEngineStager stager;
 
-  AppEngineFlexibleDeployer(StageMojo stageMojo) {
-    this.stageMojo = stageMojo;
+  AppEngineFlexibleDeployer(AbstractDeployMojo deployMojo) {
+    this(deployMojo, AppEngineStager.Factory.newStager(deployMojo));
+  }
+
+  @VisibleForTesting
+  AppEngineFlexibleDeployer(AbstractDeployMojo deployMojo, AppEngineStager stager) {
+    this.deployMojo = deployMojo;
+    this.stager = stager;
   }
 
   @Override
-  public void stage() throws MojoExecutionException, MojoFailureException {
-    stageMojo.getLog().info("Staging the application to: " + stageMojo.stagingDirectory);
-    stageMojo.getLog().info("Detected App Engine flexible environment application.");
-
-    if (!"war".equals(stageMojo.getPackaging()) && !"jar".equals(stageMojo.getPackaging())) {
-      stageMojo.getLog().info("Stage/deploy is only executed for war and jar modules.");
-      return;
-    }
-
-    // delete staging directory if it exists
-    if (stageMojo.stagingDirectory.exists()) {
-      stageMojo.getLog().info("Deleting the staging directory: " + stageMojo.stagingDirectory);
-      try {
-        FileUtils.deleteDirectory(stageMojo.stagingDirectory);
-      } catch (IOException ex) {
-        throw new MojoFailureException("Unable to delete staging directory.", ex);
-      }
-    }
-    if (!stageMojo.stagingDirectory.mkdir()) {
-      throw new MojoExecutionException("Unable to create staging directory");
-    }
-
-    if (stageMojo.appEngineDirectory == null) {
-      configureAppEngineDirectory();
-    }
-
-    try {
-      stageMojo.getAppEngineFactory().flexibleStaging().stageFlexible(stageMojo);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void configureAppEngineDirectory() {
-    stageMojo.appEngineDirectory =
-        stageMojo
-            .mavenProject
-            .getBasedir()
-            .toPath()
-            .resolve("src")
-            .resolve("main")
-            .resolve("appengine")
-            .toFile();
-  }
-
-  @Override
-  public void deploy() {
-    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
+  public void deploy() throws MojoFailureException, MojoExecutionException {
+    stager.stage();
     if (deployMojo.deployables.isEmpty()) {
       deployMojo.deployables.add(deployMojo.stagingDirectory);
     }
@@ -94,8 +53,8 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployAll() throws MojoExecutionException {
-    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
+  public void deployAll() throws MojoExecutionException, MojoFailureException {
+    stager.stage();
     if (!deployMojo.deployables.isEmpty()) {
       deployMojo.getLog().warn("Ignoring configured deployables for deployAll.");
       deployMojo.deployables.clear();
@@ -131,8 +90,9 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployCron() {
-    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
+  public void deployCron() throws MojoFailureException, MojoExecutionException {
+    stager.configureAppEngineDirectory();
+    stager.stage();
     try {
       deployMojo.getAppEngineFactory().deployment().deployCron(deployMojo);
     } catch (AppEngineException ex) {
@@ -141,8 +101,9 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployDispatch() {
-    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
+  public void deployDispatch() throws MojoFailureException, MojoExecutionException {
+    stager.configureAppEngineDirectory();
+    stager.stage();
     try {
       deployMojo.getAppEngineFactory().deployment().deployDispatch(deployMojo);
     } catch (AppEngineException ex) {
@@ -151,8 +112,9 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployDos() {
-    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
+  public void deployDos() throws MojoFailureException, MojoExecutionException {
+    stager.configureAppEngineDirectory();
+    stager.stage();
     try {
       deployMojo.getAppEngineFactory().deployment().deployDos(deployMojo);
     } catch (AppEngineException ex) {
@@ -161,8 +123,9 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployIndex() {
-    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
+  public void deployIndex() throws MojoFailureException, MojoExecutionException {
+    stager.configureAppEngineDirectory();
+    stager.stage();
     try {
       deployMojo.getAppEngineFactory().deployment().deployIndex(deployMojo);
     } catch (AppEngineException ex) {
@@ -171,8 +134,9 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deployQueue() {
-    AbstractDeployMojo deployMojo = (AbstractDeployMojo) stageMojo;
+  public void deployQueue() throws MojoFailureException, MojoExecutionException {
+    stager.configureAppEngineDirectory();
+    stager.stage();
     try {
       deployMojo.getAppEngineFactory().deployment().deployQueue(deployMojo);
     } catch (AppEngineException ex) {
