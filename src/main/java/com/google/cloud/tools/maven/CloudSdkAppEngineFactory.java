@@ -209,9 +209,6 @@ public class CloudSdkAppEngineFactory {
   }
 
   protected CloudSdk.Builder defaultCloudSdkBuilder() {
-
-    mojo.handleCloudSdkPathDeprecation();
-
     Path sdkPath = mojo.getCloudSdkHome();
     if (mojo.getCloudSdkHome() == null) {
       sdkPath =
