@@ -33,6 +33,7 @@ public abstract class AbstractSingleYamlDeployIntegrationTest extends AbstractMo
     Verifier verifier = new StandardVerifier("testDeployStandard");
 
     // execute with staging directory not present
+    verifier.executeGoal("package");
     verifier.executeGoal("appengine:" + getDeployGoal());
 
     // verify
@@ -48,6 +49,7 @@ public abstract class AbstractSingleYamlDeployIntegrationTest extends AbstractMo
     Verifier verifier = new FlexibleVerifier("testDeployFlexible");
 
     // execute with staging directory not present
+    verifier.executeGoal("package");
     verifier.executeGoal("appengine:" + getDeployGoal());
 
     // verify

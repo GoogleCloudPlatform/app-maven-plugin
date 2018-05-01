@@ -39,6 +39,7 @@ public class DeployAllMojoIntegrationTest extends AbstractMojoIntegrationTest {
     Verifier verifier = new StandardVerifier("testDeployStandard");
 
     // execute with staging directory not present
+    verifier.executeGoal("package");
     verifier.executeGoal("appengine:deployAll");
 
     // verify
@@ -64,6 +65,7 @@ public class DeployAllMojoIntegrationTest extends AbstractMojoIntegrationTest {
     Verifier verifier = new FlexibleVerifier("testDeployFlexible");
 
     // execute with staging directory not present
+    verifier.executeGoal("package");
     verifier.executeGoal("appengine:deployAll");
 
     // verify

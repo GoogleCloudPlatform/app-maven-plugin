@@ -26,14 +26,12 @@ import java.util.Map;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /** Run App Engine Development App Server synchronously. */
-@Mojo(name = "run")
-@Execute(phase = LifecyclePhase.PACKAGE)
+@Mojo(name = "run", defaultPhase = LifecyclePhase.PACKAGE)
 public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   /**

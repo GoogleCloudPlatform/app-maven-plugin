@@ -22,7 +22,6 @@ import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -31,8 +30,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * Generates a deploy-ready application directory for App Engine standard or flexible environment
  * deployment.
  */
-@Mojo(name = "stage")
-@Execute(phase = LifecyclePhase.PACKAGE)
+@Mojo(name = "stage", defaultPhase = LifecyclePhase.PACKAGE)
 public class StageMojo extends CloudSdkMojo
     implements StageStandardConfiguration, StageFlexibleConfiguration {
 

@@ -18,13 +18,11 @@ package com.google.cloud.tools.maven;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /** Stage and deploy cron.yaml to Google App Engine standard or flexible environment. */
-@Mojo(name = "deployCron")
-@Execute(phase = LifecyclePhase.PACKAGE)
+@Mojo(name = "deployCron", defaultPhase = LifecyclePhase.PACKAGE)
 public class DeployCronMojo extends AbstractDeployMojo {
 
   @Override

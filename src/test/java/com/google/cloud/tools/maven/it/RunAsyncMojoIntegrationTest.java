@@ -62,6 +62,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
     try {
       Verifier verifier = createVerifier(name, version);
       verifier.setSystemProperty("app.devserver.startSuccessTimeout", "60");
+      verifier.executeGoal("package");
       verifier.executeGoal("appengine:start");
 
       String urlContent = UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000);

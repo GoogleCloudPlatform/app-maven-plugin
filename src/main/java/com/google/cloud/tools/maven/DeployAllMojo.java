@@ -18,7 +18,6 @@ package com.google.cloud.tools.maven;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -26,8 +25,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * Stage and deploy the application and all configs to Google App Engine standard or flexible
  * environment.
  */
-@Mojo(name = "deployAll")
-@Execute(phase = LifecyclePhase.PACKAGE)
+@Mojo(name = "deployAll", defaultPhase = LifecyclePhase.PACKAGE)
 public class DeployAllMojo extends AbstractDeployMojo {
 
   @Override

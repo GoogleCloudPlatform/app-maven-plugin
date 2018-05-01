@@ -18,14 +18,12 @@ package com.google.cloud.tools.maven;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerVersion;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /** Starts running App Engine Development App Server asynchronously. */
-@Mojo(name = "start")
-@Execute(phase = LifecyclePhase.PACKAGE)
+@Mojo(name = "start", defaultPhase = LifecyclePhase.PACKAGE)
 public class RunAsyncMojo extends RunMojo {
 
   /** Number of seconds to wait for the server to start. Set to 0 to not wait. */

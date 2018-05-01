@@ -45,6 +45,7 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.setSystemProperty("app.devserver.port", Integer.toString(serverPort));
 
     // start dev app server
+    verifier.executeGoal("package");
     verifier.executeGoal("appengine:start");
 
     // verify dev app server is up
