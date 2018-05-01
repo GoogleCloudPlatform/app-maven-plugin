@@ -19,6 +19,7 @@ package com.google.cloud.tools.maven.it;
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import java.io.IOException;
+import java.util.Arrays;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
@@ -36,8 +37,7 @@ public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
     Verifier verifier = new StandardVerifier("testStageStandard");
 
     // execute with staging directory not present
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:stage");
+    verifier.executeGoals(Arrays.asList("package", "appengine:stage"));
 
     // verify
     verifier.verifyErrorFreeLog();
@@ -63,8 +63,7 @@ public class StageMojoIntegrationTest extends AbstractMojoIntegrationTest {
     Verifier verifier = new FlexibleVerifier("testStageFlexible");
 
     // execute stage
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:stage");
+    verifier.executeGoals(Arrays.asList("package", "appengine:stage"));
 
     // verify
     verifier.verifyErrorFreeLog();

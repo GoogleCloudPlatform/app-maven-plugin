@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
@@ -62,8 +63,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
     try {
       Verifier verifier = createVerifier(name, version);
       verifier.setSystemProperty("app.devserver.startSuccessTimeout", "60");
-      verifier.executeGoal("package");
-      verifier.executeGoal("appengine:start");
+      verifier.executeGoals(Arrays.asList("package", "appengine:start"));
 
       String urlContent = UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000);
       assertThat(urlContent, containsString("Hello from the App Engine Standard project."));

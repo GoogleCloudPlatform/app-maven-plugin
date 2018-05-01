@@ -20,6 +20,7 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import java.io.IOException;
+import java.util.Arrays;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Test;
@@ -33,8 +34,7 @@ public abstract class AbstractSingleYamlDeployIntegrationTest extends AbstractMo
     Verifier verifier = new StandardVerifier("testDeployStandard");
 
     // execute with staging directory not present
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:" + getDeployGoal());
+    verifier.executeGoals(Arrays.asList("package", "appengine:" + getDeployGoal()));
 
     // verify
     verifier.verifyErrorFreeLog();
@@ -49,8 +49,7 @@ public abstract class AbstractSingleYamlDeployIntegrationTest extends AbstractMo
     Verifier verifier = new FlexibleVerifier("testDeployFlexible");
 
     // execute with staging directory not present
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:" + getDeployGoal());
+    verifier.executeGoals(Arrays.asList("package", "appengine:" + getDeployGoal()));
 
     // verify
     verifier.verifyErrorFreeLog();

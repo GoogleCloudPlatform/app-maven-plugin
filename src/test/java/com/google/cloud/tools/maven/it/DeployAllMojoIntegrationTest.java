@@ -24,6 +24,7 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import java.io.IOException;
+import java.util.Arrays;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Test;
@@ -39,8 +40,7 @@ public class DeployAllMojoIntegrationTest extends AbstractMojoIntegrationTest {
     Verifier verifier = new StandardVerifier("testDeployStandard");
 
     // execute with staging directory not present
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:deployAll");
+    verifier.executeGoals(Arrays.asList("package", "appengine:deployAll"));
 
     // verify
     verifier.verifyErrorFreeLog();
@@ -65,8 +65,7 @@ public class DeployAllMojoIntegrationTest extends AbstractMojoIntegrationTest {
     Verifier verifier = new FlexibleVerifier("testDeployFlexible");
 
     // execute with staging directory not present
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:deployAll");
+    verifier.executeGoals(Arrays.asList("package", "appengine:deployAll"));
 
     // verify
     verifier.verifyErrorFreeLog();

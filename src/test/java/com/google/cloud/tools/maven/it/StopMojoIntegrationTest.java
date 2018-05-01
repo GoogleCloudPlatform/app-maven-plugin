@@ -23,6 +23,7 @@ import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import com.google.cloud.tools.maven.util.SocketUtil;
 import java.io.IOException;
+import java.util.Arrays;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
@@ -45,8 +46,7 @@ public class StopMojoIntegrationTest extends AbstractMojoIntegrationTest {
     verifier.setSystemProperty("app.devserver.port", Integer.toString(serverPort));
 
     // start dev app server
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:start");
+    verifier.executeGoals(Arrays.asList("package", "appengine:start"));
 
     // verify dev app server is up
     verifier.verifyErrorFreeLog();

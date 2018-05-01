@@ -93,8 +93,7 @@ public class RunMojoIntegrationTest extends AbstractMojoIntegrationTest {
         verifier.addCliOption("-P" + profile);
       }
     }
-    verifier.executeGoal("package");
-    verifier.executeGoal("appengine:run");
+    verifier.executeGoals(Arrays.asList("package", "appengine:run"));
 
     thread.join();
 
