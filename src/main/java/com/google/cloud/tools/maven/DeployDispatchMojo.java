@@ -22,7 +22,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /** Stage and deploy dispatch.yaml to Google App Engine standard or flexible environment. */
-@Mojo(name = "deployDispatch", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(name = "deployDispatch", defaultPhase = LifecyclePhase.DEPLOY)
 public class DeployDispatchMojo extends AbstractDeployMojo {
 
   @Override

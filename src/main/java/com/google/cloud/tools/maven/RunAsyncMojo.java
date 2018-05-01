@@ -23,7 +23,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /** Starts running App Engine Development App Server asynchronously. */
-@Mojo(name = "start", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(name = "start", defaultPhase = LifecyclePhase.DEPLOY)
 public class RunAsyncMojo extends RunMojo {
 
   /** Number of seconds to wait for the server to start. Set to 0 to not wait. */

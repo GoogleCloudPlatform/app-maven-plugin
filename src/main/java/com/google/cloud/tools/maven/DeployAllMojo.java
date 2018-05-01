@@ -25,7 +25,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * Stage and deploy the application and all configs to Google App Engine standard or flexible
  * environment.
  */
-@Mojo(name = "deployAll", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(name = "deployAll", defaultPhase = LifecyclePhase.DEPLOY)
 public class DeployAllMojo extends AbstractDeployMojo {
 
   @Override

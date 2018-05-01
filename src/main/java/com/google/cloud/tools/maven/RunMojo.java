@@ -31,7 +31,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /** Run App Engine Development App Server synchronously. */
-@Mojo(name = "run", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(name = "run", defaultPhase = LifecyclePhase.DEPLOY)
 public class RunMojo extends CloudSdkMojo implements RunConfiguration {
 
   /**

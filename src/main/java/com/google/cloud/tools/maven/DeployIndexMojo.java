@@ -22,7 +22,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /** Stage and deploy index.yaml to Google App Engine standard or flexible environment. */
-@Mojo(name = "deployIndex", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(name = "deployIndex", defaultPhase = LifecyclePhase.DEPLOY)
 public class DeployIndexMojo extends AbstractDeployMojo {
 
   @Override
