@@ -19,6 +19,8 @@ in either pom.xml using the `<project>` tag or in appengine-web.xml using the `<
 appengine-web.xml. To read values from appengine-web.xml, set the system property `deploy.read.appengine.web.xml=true`. ([#285](../../issues/285))
 * Appengine goals no longer fork. Instead of running `mvn appengine:<goal>`, you must either explicitly run 
 `mvn package appengine:<goal>` or bind the goal to a lifecycle phase in your pom.xml. ([#301](../../issues/301))
+* Removed `deployables` parameter. To deploy specific configuration files, use the appropriate deploy goals
+(i.e. appengine:deployCron, appengine:deployIndex, etc.) ([#300](../../issues/300)).
 
 ### Fixed
 

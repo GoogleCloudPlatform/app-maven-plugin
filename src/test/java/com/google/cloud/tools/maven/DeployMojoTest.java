@@ -29,7 +29,6 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Properties;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -116,27 +115,6 @@ public class DeployMojoTest {
     // verify
     assertEquals(1, deployMojo.deployables.size());
     assertEquals(deployMojo.stagingDirectory, deployMojo.deployables.get(0));
-    verify(flexibleStagingMock).stageFlexible(deployMojo);
-    verify(deploymentMock).deploy(deployMojo);
-  }
-
-  @Test
-  @Parameters({"jar", "war"})
-  public void testDeploySpecifiedAppYaml(String packaging) throws Exception {
-    File appYaml = new File("myApp.yaml");
-    deployMojo.deployables = Arrays.asList(appYaml);
-
-    // wire up
-    when(project.getPackaging()).thenReturn(packaging);
-    when(factoryMock.flexibleStaging()).thenReturn(flexibleStagingMock);
-    when(factoryMock.deployment()).thenReturn(deploymentMock);
-
-    // invoke
-    deployMojo.execute();
-
-    // verify
-    assertEquals(1, deployMojo.deployables.size());
-    assertEquals(appYaml, deployMojo.deployables.get(0));
     verify(flexibleStagingMock).stageFlexible(deployMojo);
     verify(deploymentMock).deploy(deployMojo);
   }
