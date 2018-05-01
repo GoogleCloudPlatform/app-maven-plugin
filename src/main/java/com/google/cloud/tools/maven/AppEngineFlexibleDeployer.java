@@ -41,9 +41,8 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   @Override
   public void deploy() throws MojoFailureException, MojoExecutionException {
     stager.stage();
-    if (deployMojo.deployables.isEmpty()) {
-      deployMojo.deployables.add(deployMojo.stagingDirectory);
-    }
+    deployMojo.deployables.clear();
+    deployMojo.deployables.add(deployMojo.stagingDirectory);
 
     try {
       deployMojo.getAppEngineFactory().deployment().deploy(deployMojo);
@@ -55,10 +54,7 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   @Override
   public void deployAll() throws MojoExecutionException, MojoFailureException {
     stager.stage();
-    if (!deployMojo.deployables.isEmpty()) {
-      deployMojo.getLog().warn("Ignoring configured deployables for deployAll.");
-      deployMojo.deployables.clear();
-    }
+    deployMojo.deployables.clear();
 
     // Look for app.yaml
     File appYaml = deployMojo.stagingDirectory.toPath().resolve("app.yaml").toFile();

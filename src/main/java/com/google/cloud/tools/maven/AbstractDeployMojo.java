@@ -20,18 +20,18 @@ import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.maven.plugins.annotations.Parameter;
 
 public abstract class AbstractDeployMojo extends StageMojo
     implements DeployConfiguration, DeployProjectConfigurationConfiguration {
   /**
-   * The yaml files for the services or configurations you want to deploy. If not given, defaults to
+   * The yaml files for the services or configurations to be deployed. If not given, defaults to
    * app.yaml in the staging directory. If that is not found, attempts to automatically generate
    * necessary configuration files (such as app.yaml) in the staging directory.
    */
-  @Parameter(alias = "deploy.deployables", property = "app.deploy.deployables")
-  protected List<File> deployables;
+  protected List<File> deployables = new ArrayList<>();
 
   /**
    * The Google Cloud Storage bucket used to stage files associated with the deployment. If this
