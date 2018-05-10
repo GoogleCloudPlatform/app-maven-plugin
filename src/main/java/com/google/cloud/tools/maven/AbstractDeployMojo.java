@@ -115,4 +115,9 @@ public abstract class AbstractDeployMojo extends StageMojo
   public void setProject(String project) {
     this.project = project;
   }
+
+  @VisibleForTesting
+  public void setVersion(String version) {
+    this.version = version;
+  }
 }

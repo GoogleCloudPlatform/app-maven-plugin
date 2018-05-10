@@ -43,20 +43,6 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deploy() throws MojoFailureException, MojoExecutionException {
-    stager.stage();
-    deployMojo.deployables.clear();
-    deployMojo.deployables.add(deployMojo.stagingDirectory);
-
-    try {
-      updatePropertiesFromAppEngineWebXml();
-      deployMojo.getAppEngineFactory().deployment().deploy(deployMojo);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new MojoFailureException(ex.getMessage(), ex);
-    }
-  }
-
-  @Override
   public void deployAll() throws MojoExecutionException, MojoFailureException {
     stager.stage();
     deployMojo.deployables.clear();
@@ -82,114 +68,75 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
     }
 
     try {
-      updatePropertiesFromAppEngineWebXml();
+      updateGcloudProperties();
       deployMojo.getAppEngineFactory().deployment().deploy(deployMojo);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployCron() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      updatePropertiesFromAppEngineWebXml();
-      deployMojo.getAppEngineFactory().deployment().deployCron(deployMojo);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployDispatch() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      updatePropertiesFromAppEngineWebXml();
-      deployMojo.getAppEngineFactory().deployment().deployDispatch(deployMojo);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployDos() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      updatePropertiesFromAppEngineWebXml();
-      deployMojo.getAppEngineFactory().deployment().deployDos(deployMojo);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployIndex() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      updatePropertiesFromAppEngineWebXml();
-      deployMojo.getAppEngineFactory().deployment().deployIndex(deployMojo);
-    } catch (AppEngineException | SAXException | IOException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployQueue() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      updatePropertiesFromAppEngineWebXml();
-      deployMojo.getAppEngineFactory().deployment().deployQueue(deployMojo);
-    } catch (AppEngineException | SAXException | IOException ex) {
+    } catch (AppEngineException ex) {
       throw new RuntimeException(ex);
     }
   }
 
   /** Validates project/version configuration and pulls from appengine-web.xml if necessary */
   @VisibleForTesting
-  void updatePropertiesFromAppEngineWebXml() throws IOException, SAXException, AppEngineException {
-    AppEngineDescriptor appengineWebXmlDoc =
-        AppEngineDescriptor.parse(
-            new FileInputStream(
-                deployMojo
-                    .getSourceDirectory()
-                    .toPath()
-                    .resolve("WEB-INF")
-                    .resolve("appengine-web.xml")
-                    .toFile()));
-    String xmlProject = appengineWebXmlDoc.getProjectId();
-    String xmlVersion = appengineWebXmlDoc.getProjectVersion();
+  @Override
+  public void updateGcloudProperties() throws MojoExecutionException {
+    File appengineWebXml =
+        deployMojo
+            .getSourceDirectory()
+            .toPath()
+            .resolve("WEB-INF")
+            .resolve("appengine-web.xml")
+            .toFile();
 
-    // Verify that project is set somewhere
-    if (deployMojo.project == null && xmlProject == null) {
-      throw new RuntimeException(
-          "appengine-plugin does not use gcloud global project state. Please configure the "
-              + "application ID in your pom.xml or appengine-web.xml.");
+    if (deployMojo.project == null || deployMojo.project.trim().isEmpty()) {
+      throw new MojoExecutionException(
+          "Deployment project must be defined or configured to read from system state\n"
+              + "1. Set <project>my-project-name</project>\n"
+              + "2. Set <project>"
+              + APPENGINE_CONFIG
+              + "</project> to use <application> from appengine-web.xml\n"
+              + "3. Set <project>"
+              + GCLOUD_CONFIG
+              + "</project> to use project from gcloud config.");
+    } else if (deployMojo.project.equals(APPENGINE_CONFIG)) {
+      try {
+        AppEngineDescriptor appEngineDescriptor =
+            AppEngineDescriptor.parse(new FileInputStream(appengineWebXml));
+        String appengineWebXmlProject = appEngineDescriptor.getProjectId();
+        if (appengineWebXmlProject == null || appengineWebXmlProject.trim().isEmpty()) {
+          throw new MojoExecutionException("<application> was not found in appengine-web.xml");
+        }
+        deployMojo.project = appengineWebXmlProject;
+      } catch (AppEngineException | IOException | SAXException e) {
+        throw new MojoExecutionException("Failed to read project from appengine-web.xml");
+      }
+    } else if (deployMojo.project.equals(GCLOUD_CONFIG)) {
+      deployMojo.project = null;
     }
 
-    boolean readAppEngineWebXml = Boolean.getBoolean("deploy.read.appengine.web.xml");
-    if (readAppEngineWebXml && (deployMojo.project != null || deployMojo.version != null)) {
-      // Should read from appengine-web.xml, but configured in pom.xml
-      throw new RuntimeException(
-          "Cannot override appengine.deploy config with appengine-web.xml. Either remove "
-              + "the project/version properties from your pom.xml, or clear the "
-              + "deploy.read.appengine.web.xml system property to read from pom.xml.");
-    } else if (!readAppEngineWebXml
-        && (deployMojo.project == null || deployMojo.version == null && xmlVersion != null)) {
-      // System property not set, but configuration is only in appengine-web.xml
-      throw new RuntimeException(
-          "Project/version is set in application-web.xml, but deploy.read.appengine.web.xml is "
-              + "false. If you would like to use the state from appengine-web.xml, please set the "
-              + "system property deploy.read.appengine.web.xml=true.");
-    }
-
-    if (readAppEngineWebXml) {
-      deployMojo.project = xmlProject;
-      deployMojo.version = xmlVersion;
+    if (deployMojo.version == null || deployMojo.version.trim().isEmpty()) {
+      throw new MojoExecutionException(
+          "Deployment version must be defined or configured to read from system state\n"
+              + "1. Set <version>my-version</version>\n"
+              + "2. Set <version>"
+              + APPENGINE_CONFIG
+              + "</version> to use <version> from appengine-web.xml\n"
+              + "3. Set <version>"
+              + GCLOUD_CONFIG
+              + "</version> to use version from gcloud config.");
+    } else if (deployMojo.version.equals(APPENGINE_CONFIG)) {
+      try {
+        AppEngineDescriptor appEngineDescriptor =
+            AppEngineDescriptor.parse(new FileInputStream(appengineWebXml));
+        String appengineWebXmlVersion = appEngineDescriptor.getProjectVersion();
+        if (appengineWebXmlVersion == null || appengineWebXmlVersion.trim().isEmpty()) {
+          throw new MojoExecutionException("<version> was not found in appengine-web.xml");
+        }
+        deployMojo.version = appengineWebXmlVersion;
+      } catch (AppEngineException | IOException | SAXException e) {
+        throw new MojoExecutionException("Failed to read version from appengine-web.xml");
+      }
+    } else if (deployMojo.version.equals(GCLOUD_CONFIG)) {
+      deployMojo.version = null;
     }
   }
 }

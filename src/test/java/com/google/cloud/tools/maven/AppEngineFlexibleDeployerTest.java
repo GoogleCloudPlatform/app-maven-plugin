@@ -16,9 +16,6 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-import java.io.File;
 import java.io.IOException;
 import junitparams.JUnitParamsRunner;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -31,11 +28,9 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 
 @RunWith(JUnitParamsRunner.class)
-public class AppEngineStandardDeployerTest {
+public class AppEngineFlexibleDeployerTest {
   private static final String PROJECT_BUILD = "project-build";
-  private static final String PROJECT_XML = "project-xml";
   private static final String VERSION_BUILD = "version-build";
-  private static final String VERSION_XML = "version-xml";
 
   private static final String GCLOUD_CONFIG = "GCLOUD_CONFIG";
   private static final String APPENGINE_CONFIG = "APPENGINE_CONFIG";
@@ -44,41 +39,37 @@ public class AppEngineStandardDeployerTest {
       "Deployment project must be defined or configured to read from system state\n"
           + "1. Set <project>my-project-name</project>\n"
           + "2. Set <project>"
-          + APPENGINE_CONFIG
-          + "</project> to use <application> from appengine-web.xml\n"
-          + "3. Set <project>"
           + GCLOUD_CONFIG
-          + "</project> to use project from gcloud config.";
+          + "</project> to use project from gcloud config.\n"
+          + "3. Using <project>"
+          + APPENGINE_CONFIG
+          + "</project> is not allowed for flexible environment projects";
 
   private static final String CONFIG_VERSION_ERROR =
       "Deployment version must be defined or configured to read from system state\n"
           + "1. Set <version>my-version</version>\n"
           + "2. Set <version>"
-          + APPENGINE_CONFIG
-          + "</version> to use <version> from appengine-web.xml\n"
-          + "3. Set <version>"
           + GCLOUD_CONFIG
-          + "</version> to use version from gcloud config.";
+          + "</version> to use version from gcloud config.\n"
+          + "3. Using <version>"
+          + APPENGINE_CONFIG
+          + "</version> is not allowed for flexible environment projects";
 
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
-  private File appengineWebXml;
 
   private AbstractDeployMojo deployMojo;
-  private AppEngineStandardDeployer appEngineStandardDeployer;
+  private AppEngineFlexibleDeployer appEngineStandardDeployer;
 
   @Before
   public void setup() throws IOException {
     MockitoAnnotations.initMocks(this);
     deployMojo = new DeployMojo();
     deployMojo.sourceDirectory = tempFolder.newFolder("source");
-    appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
-    appEngineStandardDeployer = new AppEngineStandardDeployer(deployMojo);
+    appEngineStandardDeployer = new AppEngineFlexibleDeployer(deployMojo);
   }
 
   @Test
-  public void testUpdateGcloudProperties_fromBuildConfig()
-      throws IOException, MojoExecutionException {
-    createAppEngineWebXml(true, true);
+  public void testUpdateGcloudProperties_fromBuildConfig() throws MojoExecutionException {
     deployMojo.version = VERSION_BUILD;
     deployMojo.project = PROJECT_BUILD;
     appEngineStandardDeployer.updateGcloudProperties();
@@ -87,19 +78,7 @@ public class AppEngineStandardDeployerTest {
   }
 
   @Test
-  public void testUpdateGcloudProperties_fromAppengineWebXml()
-      throws IOException, MojoExecutionException {
-    createAppEngineWebXml(true, true);
-    deployMojo.version = APPENGINE_CONFIG;
-    deployMojo.project = APPENGINE_CONFIG;
-    appEngineStandardDeployer.updateGcloudProperties();
-    Assert.assertEquals(VERSION_XML, deployMojo.getVersion());
-    Assert.assertEquals(PROJECT_XML, deployMojo.getProject());
-  }
-
-  @Test
-  public void testUpdateGcloudProperties_fromGcloud() throws IOException, MojoExecutionException {
-    createAppEngineWebXml(true, true);
+  public void testUpdateGcloudProperties_fromGcloud() throws MojoExecutionException {
     deployMojo.version = GCLOUD_CONFIG;
     deployMojo.project = GCLOUD_CONFIG;
     appEngineStandardDeployer.updateGcloudProperties();
@@ -108,34 +87,31 @@ public class AppEngineStandardDeployerTest {
   }
 
   @Test
-  public void testUpdateGcloudProperties_fromAppengineWebXmlNoApplication() throws IOException {
-    createAppEngineWebXml(false, true);
-    deployMojo.version = APPENGINE_CONFIG;
+  public void testUpdateGcloudProperties_projectFromAppengineWebXml() {
+    deployMojo.version = VERSION_BUILD;
     deployMojo.project = APPENGINE_CONFIG;
     try {
       appEngineStandardDeployer.updateGcloudProperties();
       Assert.fail();
     } catch (MojoExecutionException ex) {
-      Assert.assertEquals("<application> was not found in appengine-web.xml", ex.getMessage());
+      Assert.assertEquals(CONFIG_PROJECT_ERROR, ex.getMessage());
     }
   }
 
   @Test
-  public void testUpdateGcloudProperties_fromAppengineWebXmlNoVersion() throws IOException {
-    createAppEngineWebXml(true, false);
+  public void testUpdateGcloudProperties_versionFromAppengineWebXml() {
     deployMojo.version = APPENGINE_CONFIG;
-    deployMojo.project = APPENGINE_CONFIG;
+    deployMojo.project = PROJECT_BUILD;
     try {
       appEngineStandardDeployer.updateGcloudProperties();
       Assert.fail();
     } catch (MojoExecutionException ex) {
-      Assert.assertEquals("<version> was not found in appengine-web.xml", ex.getMessage());
+      Assert.assertEquals(CONFIG_VERSION_ERROR, ex.getMessage());
     }
   }
 
   @Test
-  public void testUpdateGcloudProperties_noProjectSet() throws IOException {
-    createAppEngineWebXml(true, true);
+  public void testUpdateGcloudProperties_noProjectSet() {
     deployMojo.version = VERSION_BUILD;
     deployMojo.project = null;
     try {
@@ -147,8 +123,7 @@ public class AppEngineStandardDeployerTest {
   }
 
   @Test
-  public void testUpdateGcloudProperties_noVersionSet() throws IOException {
-    createAppEngineWebXml(true, true);
+  public void testUpdateGcloudProperties_noVersionSet() {
     deployMojo.version = null;
     deployMojo.project = PROJECT_BUILD;
     try {
@@ -157,17 +132,5 @@ public class AppEngineStandardDeployerTest {
     } catch (MojoExecutionException ex) {
       Assert.assertEquals(CONFIG_VERSION_ERROR, ex.getMessage());
     }
-  }
-
-  private void createAppEngineWebXml(boolean withProject, boolean withVersion) throws IOException {
-    appengineWebXml.createNewFile();
-    Files.write(
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-            + "<appengine-web-app xmlns=\"http://appengine.google.com/ns/1.0\">"
-            + (withProject ? "<application>" + PROJECT_XML + "</application>" : "")
-            + (withVersion ? "<version>" + VERSION_XML + "</version>" : "")
-            + "</appengine-web-app>",
-        appengineWebXml,
-        Charsets.UTF_8);
   }
 }

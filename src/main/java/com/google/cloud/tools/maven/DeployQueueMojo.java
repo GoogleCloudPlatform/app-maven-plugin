@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -27,6 +28,14 @@ public class DeployQueueMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    AppEngineDeployer.Factory.newDeployer(this).deployQueue();
+    AppEngineStager stager = AppEngineStager.Factory.newStager(this);
+    stager.configureAppEngineDirectory();
+    stager.stage();
+    try {
+      AppEngineDeployer.Factory.newDeployer(this).updateGcloudProperties();
+      getAppEngineFactory().deployment().deployQueue(this);
+    } catch (AppEngineException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 }

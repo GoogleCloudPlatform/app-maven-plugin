@@ -39,19 +39,6 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @Override
-  public void deploy() throws MojoFailureException, MojoExecutionException {
-    stager.stage();
-    deployMojo.deployables.clear();
-    deployMojo.deployables.add(deployMojo.stagingDirectory);
-
-    try {
-      deployMojo.getAppEngineFactory().deployment().deploy(deployMojo);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
   public void deployAll() throws MojoExecutionException, MojoFailureException {
     stager.stage();
     deployMojo.deployables.clear();
@@ -79,64 +66,47 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
     }
 
     try {
+      updateGcloudProperties();
       deployMojo.getAppEngineFactory().deployment().deploy(deployMojo);
     } catch (AppEngineException ex) {
       throw new RuntimeException(ex);
     }
   }
 
+  /** Validates project/version configuration and pulls from appengine-web.xml if necessary */
+  @VisibleForTesting
   @Override
-  public void deployCron() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      deployMojo.getAppEngineFactory().deployment().deployCron(deployMojo);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
+  public void updateGcloudProperties() throws MojoExecutionException {
+    if (deployMojo.project == null
+        || deployMojo.project.trim().isEmpty()
+        || deployMojo.project.equals(APPENGINE_CONFIG)) {
+      throw new MojoExecutionException(
+          "Deployment project must be defined or configured to read from system state\n"
+              + "1. Set <project>my-project-name</project>\n"
+              + "2. Set <project>"
+              + GCLOUD_CONFIG
+              + "</project> to use project from gcloud config.\n"
+              + "3. Using <project>"
+              + APPENGINE_CONFIG
+              + "</project> is not allowed for flexible environment projects");
+    } else if (deployMojo.project.equals(GCLOUD_CONFIG)) {
+      deployMojo.project = null;
     }
-  }
 
-  @Override
-  public void deployDispatch() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      deployMojo.getAppEngineFactory().deployment().deployDispatch(deployMojo);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployDos() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      deployMojo.getAppEngineFactory().deployment().deployDos(deployMojo);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployIndex() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      deployMojo.getAppEngineFactory().deployment().deployIndex(deployMojo);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  @Override
-  public void deployQueue() throws MojoFailureException, MojoExecutionException {
-    stager.configureAppEngineDirectory();
-    stager.stage();
-    try {
-      deployMojo.getAppEngineFactory().deployment().deployQueue(deployMojo);
-    } catch (AppEngineException ex) {
-      throw new RuntimeException(ex);
+    if (deployMojo.version == null
+        || deployMojo.version.trim().isEmpty()
+        || deployMojo.version.equals(APPENGINE_CONFIG)) {
+      throw new MojoExecutionException(
+          "Deployment version must be defined or configured to read from system state\n"
+              + "1. Set <version>my-version</version>\n"
+              + "2. Set <version>"
+              + GCLOUD_CONFIG
+              + "</version> to use version from gcloud config.\n"
+              + "3. Using <version>"
+              + APPENGINE_CONFIG
+              + "</version> is not allowed for flexible environment projects");
+    } else if (deployMojo.version.equals(GCLOUD_CONFIG)) {
+      deployMojo.version = null;
     }
   }
 }

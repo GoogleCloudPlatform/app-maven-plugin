@@ -21,6 +21,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 public interface AppEngineDeployer {
+
+  String GCLOUD_CONFIG = "GCLOUD_CONFIG";
+  String APPENGINE_CONFIG = "APPENGINE_CONFIG";
+
   class Factory {
     static AppEngineDeployer newDeployer(AbstractDeployMojo config) {
       boolean isStandardStaging =
@@ -34,17 +38,7 @@ public interface AppEngineDeployer {
     }
   }
 
-  void deploy() throws MojoExecutionException, MojoFailureException;
+  void updateGcloudProperties() throws MojoExecutionException;
 
   void deployAll() throws MojoExecutionException, MojoFailureException;
-
-  void deployCron() throws MojoExecutionException, MojoFailureException;
-
-  void deployDispatch() throws MojoExecutionException, MojoFailureException;
-
-  void deployDos() throws MojoExecutionException, MojoFailureException;
-
-  void deployIndex() throws MojoExecutionException, MojoFailureException;
-
-  void deployQueue() throws MojoExecutionException, MojoFailureException;
 }
