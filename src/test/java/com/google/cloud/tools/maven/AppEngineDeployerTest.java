@@ -44,7 +44,7 @@ public class AppEngineDeployerTest {
     Mockito.when(deployMojo.getSourceDirectory()).thenReturn(tempFolder.getRoot());
     Mockito.when(deployMojo.getMavenProject()).thenReturn(mavenProject);
     Mockito.when(mavenProject.getBasedir()).thenReturn(tempFolder.getRoot());
-    Mockito.when(deployMojo.getProject()).thenReturn("someproject");
+    Mockito.when(deployMojo.getProjectId()).thenReturn("someproject");
     Mockito.when(deployMojo.getVersion()).thenReturn("someversion");
     Mockito.when(deployMojo.getStagingDirectory()).thenReturn(tempFolder.getRoot());
   }

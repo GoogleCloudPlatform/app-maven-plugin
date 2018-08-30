@@ -68,7 +68,7 @@ public class DeployAllMojoTest {
     deployAllMojo.setStagingDirectory(tempFolder.newFolder("staging"));
     deployAllMojo.sourceDirectory = tempFolder.newFolder("source");
     deployAllMojo.setAppEngineDirectory(tempFolder.newFolder("appengine"));
-    deployAllMojo.setProject("project");
+    deployAllMojo.setProjectId("project");
     deployAllMojo.setVersion("version");
 
     when(project.getProperties()).thenReturn(new Properties());
@@ -87,7 +87,8 @@ public class DeployAllMojoTest {
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
     appengineWebXml.createNewFile();
-    Files.write("<appengine-web-app></appengine-web-app>", appengineWebXml, Charsets.UTF_8);
+    Files.asCharSink(appengineWebXml, Charsets.UTF_8)
+        .write("<appengine-web-app></appengine-web-app>");
 
     // Make YAMLS
     tempFolder.newFolder("staging", "WEB-INF", "appengine-generated");

@@ -42,7 +42,7 @@ public class SingleYamlFlexibleDeployTestHelper<M extends AbstractDeployMojo>
   public void before() throws IOException {
     mojo.setStagingDirectory(temporaryFolder.newFolder("staging"));
     mojo.setSourceDirectory(temporaryFolder.newFolder("source"));
-    mojo.setProject("some-project");
+    mojo.setProjectId("some-project");
     mojo.setVersion("some-version");
     MockitoAnnotations.initMocks(this);
 

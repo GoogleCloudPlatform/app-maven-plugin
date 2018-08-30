@@ -16,16 +16,12 @@
 
 package com.google.cloud.tools.maven;
 
-import com.google.cloud.tools.appengine.AppEngineDescriptor;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Path;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.xml.sax.SAXException;
 
 public class AppEngineStandardDeployer implements AppEngineDeployer {
 
@@ -151,56 +147,37 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
             .resolve("appengine-web.xml")
             .toFile();
 
-    String project = deployMojo.getProject();
+    String project = deployMojo.getProjectId();
     if (project == null || project.trim().isEmpty()) {
       throw new IllegalArgumentException(
-          "Deployment project must be defined or configured to read from system state\n"
-              + "1. Set <project>my-project-name</project>\n"
-              + "2. Set <project>"
+          "Deployment projectId must be defined or configured to read from system state\n"
+              + "1. Set <deploy.projectId>my-project-id</deploy.projectId>\n"
+              + "2. Set <deploy.projectId>"
               + APPENGINE_CONFIG
-              + "</project> to use <application> from appengine-web.xml\n"
-              + "3. Set <project>"
+              + "</deploy.projectId> to use <application> from appengine-web.xml\n"
+              + "3. Set <deploy.projectId>"
               + GCLOUD_CONFIG
-              + "</project> to use project from gcloud config.");
+              + "</deploy.projectId> to use project from gcloud config.");
     } else if (project.equals(APPENGINE_CONFIG)) {
-      try {
-        AppEngineDescriptor appEngineDescriptor =
-            AppEngineDescriptor.parse(new FileInputStream(appengineWebXml));
-        String appengineWebXmlProject = appEngineDescriptor.getProjectId();
-        if (appengineWebXmlProject == null || appengineWebXmlProject.trim().isEmpty()) {
-          throw new IllegalStateException("<application> was not found in appengine-web.xml");
-        }
-        deployMojo.setProject(appengineWebXmlProject);
-      } catch (AppEngineException | IOException | SAXException e) {
-        throw new RuntimeException("Failed to read project from appengine-web.xml");
-      }
+      deployMojo.setProjectId(ConfigReader.from(appengineWebXml).getProject());
     } else if (project.equals(GCLOUD_CONFIG)) {
-      deployMojo.setProject(null);
+      deployMojo.setProjectId(
+          ConfigReader.from(deployMojo.getAppEngineFactory().getGcloud()).getProject());
     }
 
     String version = deployMojo.getVersion();
     if (version == null || version.trim().isEmpty()) {
       throw new IllegalArgumentException(
           "Deployment version must be defined or configured to read from system state\n"
-              + "1. Set <version>my-version</version>\n"
-              + "2. Set <version>"
+              + "1. Set <deploy.version>my-version</deploy.version>\n"
+              + "2. Set <deploy.version>"
               + APPENGINE_CONFIG
-              + "</version> to use <version> from appengine-web.xml\n"
-              + "3. Set <version>"
+              + "</deploy.version> to use <version> from appengine-web.xml\n"
+              + "3. Set <deploy.version>"
               + GCLOUD_CONFIG
-              + "</version> to use version from gcloud config.");
+              + "</deploy.version> to use version from gcloud config.");
     } else if (version.equals(APPENGINE_CONFIG)) {
-      try {
-        AppEngineDescriptor appEngineDescriptor =
-            AppEngineDescriptor.parse(new FileInputStream(appengineWebXml));
-        String appengineWebXmlVersion = appEngineDescriptor.getProjectVersion();
-        if (appengineWebXmlVersion == null || appengineWebXmlVersion.trim().isEmpty()) {
-          throw new IllegalStateException("<version> was not found in appengine-web.xml");
-        }
-        deployMojo.setVersion(appengineWebXmlVersion);
-      } catch (AppEngineException | IOException | SAXException e) {
-        throw new RuntimeException("Failed to read version from appengine-web.xml");
-      }
+      deployMojo.setVersion(ConfigReader.from(appengineWebXml).getVersion());
     } else if (version.equals(GCLOUD_CONFIG)) {
       deployMojo.setVersion(null);
     }

@@ -136,32 +136,32 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
 
   @VisibleForTesting
   private void setDeploymentProjectAndVersion() {
-    String project = deployMojo.getProject();
+    String project = deployMojo.getProjectId();
     if (project == null || project.trim().isEmpty() || project.equals(APPENGINE_CONFIG)) {
       throw new IllegalArgumentException(
-          "Deployment project must be defined or configured to read from system state\n"
-              + "1. Set <project>my-project-name</project>\n"
-              + "2. Set <project>"
+          "Deployment projectId must be defined or configured to read from system state\n"
+              + "1. Set <deploy.projectId>my-project-id</deploy.projectId>\n"
+              + "2. Set <deploy.projectId>"
               + GCLOUD_CONFIG
-              + "</project> to use project from gcloud config.\n"
-              + "3. Using <project>"
+              + "</deploy.projectId> to use project from gcloud config.\n"
+              + "3. Using <deploy.projectId>"
               + APPENGINE_CONFIG
-              + "</project> is not allowed for flexible environment projects");
+              + "</deploy.projectId> is not allowed for flexible environment projects");
     } else if (project.equals(GCLOUD_CONFIG)) {
-      deployMojo.setProject(null);
+      deployMojo.setProjectId(null);
     }
 
     String version = deployMojo.getVersion();
     if (version == null || version.trim().isEmpty() || version.equals(APPENGINE_CONFIG)) {
       throw new IllegalArgumentException(
           "Deployment version must be defined or configured to read from system state\n"
-              + "1. Set <version>my-version</version>\n"
-              + "2. Set <version>"
+              + "1. Set <deploy.version>my-version</deploy.version>\n"
+              + "2. Set <deploy.version>"
               + GCLOUD_CONFIG
-              + "</version> to use version from gcloud config.\n"
-              + "3. Using <version>"
+              + "</deploy.version> to use version from gcloud config.\n"
+              + "3. Using <deploy.version>"
               + APPENGINE_CONFIG
-              + "</version> is not allowed for flexible environment projects");
+              + "</deploy.version> is not allowed for flexible environment projects");
     } else if (version.equals(GCLOUD_CONFIG)) {
       deployMojo.setVersion(null);
     }

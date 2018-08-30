@@ -39,24 +39,24 @@ public class AppEngineFlexibleDeployerTest {
   private static final String APPENGINE_CONFIG = "APPENGINE_CONFIG";
 
   private static final String CONFIG_PROJECT_ERROR =
-      "Deployment project must be defined or configured to read from system state\n"
-          + "1. Set <project>my-project-name</project>\n"
-          + "2. Set <project>"
+      "Deployment projectId must be defined or configured to read from system state\n"
+          + "1. Set <deploy.projectId>my-project-id</deploy.projectId>\n"
+          + "2. Set <deploy.projectId>"
           + GCLOUD_CONFIG
-          + "</project> to use project from gcloud config.\n"
-          + "3. Using <project>"
+          + "</deploy.projectId> to use project from gcloud config.\n"
+          + "3. Using <deploy.projectId>"
           + APPENGINE_CONFIG
-          + "</project> is not allowed for flexible environment projects";
+          + "</deploy.projectId> is not allowed for flexible environment projects";
 
   private static final String CONFIG_VERSION_ERROR =
       "Deployment version must be defined or configured to read from system state\n"
-          + "1. Set <version>my-version</version>\n"
-          + "2. Set <version>"
+          + "1. Set <deploy.version>my-version</deploy.version>\n"
+          + "2. Set <deploy.version>"
           + GCLOUD_CONFIG
-          + "</version> to use version from gcloud config.\n"
-          + "3. Using <version>"
+          + "</deploy.version> to use version from gcloud config.\n"
+          + "3. Using <deploy.version>"
           + APPENGINE_CONFIG
-          + "</version> is not allowed for flexible environment projects";
+          + "</deploy.version> is not allowed for flexible environment projects";
 
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
@@ -67,7 +67,7 @@ public class AppEngineFlexibleDeployerTest {
   public void setup() throws IOException {
     MockitoAnnotations.initMocks(this);
     deployMojo.sourceDirectory = tempFolder.newFolder("source");
-    deployMojo.setProject("some-project");
+    deployMojo.setProjectId("some-project");
     deployMojo.setVersion("some-version");
     Mockito.when(mavenProject.getBasedir()).thenReturn(tempFolder.getRoot());
   }
@@ -75,25 +75,25 @@ public class AppEngineFlexibleDeployerTest {
   @Test
   public void testSetDeploymentProjectAndVersion_fromBuildConfig() {
     deployMojo.setVersion(VERSION_BUILD);
-    deployMojo.setProject(PROJECT_BUILD);
+    deployMojo.setProjectId(PROJECT_BUILD);
     new AppEngineFlexibleDeployer(deployMojo);
     Assert.assertEquals(VERSION_BUILD, deployMojo.getVersion());
-    Assert.assertEquals(PROJECT_BUILD, deployMojo.getProject());
+    Assert.assertEquals(PROJECT_BUILD, deployMojo.getProjectId());
   }
 
   @Test
   public void testSetDeploymentProjectAndVersion_fromGcloud() {
     deployMojo.setVersion(GCLOUD_CONFIG);
-    deployMojo.setProject(GCLOUD_CONFIG);
+    deployMojo.setProjectId(GCLOUD_CONFIG);
     new AppEngineFlexibleDeployer(deployMojo);
     Assert.assertEquals(null, deployMojo.getVersion());
-    Assert.assertEquals(null, deployMojo.getProject());
+    Assert.assertEquals(null, deployMojo.getProjectId());
   }
 
   @Test
   public void testSetDeploymentProjectAndVersion_projectFromAppengineWebXml() {
     deployMojo.setVersion(VERSION_BUILD);
-    deployMojo.setProject(APPENGINE_CONFIG);
+    deployMojo.setProjectId(APPENGINE_CONFIG);
     try {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
@@ -105,7 +105,7 @@ public class AppEngineFlexibleDeployerTest {
   @Test
   public void testSetDeploymentProjectAndVersion_versionFromAppengineWebXml() {
     deployMojo.setVersion(APPENGINE_CONFIG);
-    deployMojo.setProject(PROJECT_BUILD);
+    deployMojo.setProjectId(PROJECT_BUILD);
     try {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
@@ -117,7 +117,7 @@ public class AppEngineFlexibleDeployerTest {
   @Test
   public void testSetDeploymentProjectAndVersion_noProjectSet() {
     deployMojo.setVersion(VERSION_BUILD);
-    deployMojo.setProject(null);
+    deployMojo.setProjectId(null);
     try {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
@@ -129,7 +129,7 @@ public class AppEngineFlexibleDeployerTest {
   @Test
   public void testSetDeploymentProjectAndVersion_noVersionSet() {
     deployMojo.setVersion(null);
-    deployMojo.setProject(PROJECT_BUILD);
+    deployMojo.setProjectId(PROJECT_BUILD);
     try {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();

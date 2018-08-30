@@ -49,7 +49,7 @@ public class SingleYamlStandardDeployTestHelper<M extends AbstractDeployMojo>
   public void before() throws IOException {
     mojo.setStagingDirectory(temporaryFolder.newFolder("staging"));
     mojo.setSourceDirectory(temporaryFolder.newFolder("source"));
-    mojo.setProject("test-project");
+    mojo.setProjectId("test-project");
     mojo.setVersion("some-version");
     MockitoAnnotations.initMocks(this);
 
@@ -58,7 +58,8 @@ public class SingleYamlStandardDeployTestHelper<M extends AbstractDeployMojo>
     Assert.assertTrue(webInfDirectory.mkdir());
     File appengineWebXml = webInfDirectory.toPath().resolve("appengine-web.xml").toFile();
     Assert.assertTrue(appengineWebXml.createNewFile());
-    Files.write("<appengine-web-app></appengine-web-app>", appengineWebXml, Charsets.UTF_8);
+    Files.asCharSink(appengineWebXml, Charsets.UTF_8)
+        .write("<appengine-web-app></appengine-web-app>");
     when(artifact.exists()).thenReturn(true);
     when(factoryMock.standardStaging()).thenReturn(standardStagingMock);
     when(factoryMock.deployment()).thenReturn(deploymentMock);

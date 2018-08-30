@@ -41,12 +41,12 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   private File serviceAccountKeyFile;
 
   @Parameter(defaultValue = "${plugin}", readonly = true)
-  private PluginDescriptor pluginDescriptor;
+  protected PluginDescriptor pluginDescriptor;
 
   @Parameter(defaultValue = "${project}", readonly = true)
   private MavenProject mavenProject;
 
-  private CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory(this);
+  protected CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 
   public String getArtifactId() {
     return pluginDescriptor.getArtifactId();

@@ -71,7 +71,7 @@ public class DeployMojoTest {
     deployMojo.setDeployables(new ArrayList<File>());
     deployMojo.setStagingDirectory(tempFolder.newFolder("staging"));
     deployMojo.sourceDirectory = tempFolder.newFolder("source");
-    deployMojo.setProject("project");
+    deployMojo.setProjectId("project");
     deployMojo.setVersion("version");
     when(artifact.exists()).thenReturn(true);
     when(project.getProperties()).thenReturn(new Properties());

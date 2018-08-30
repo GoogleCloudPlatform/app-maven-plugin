@@ -16,6 +16,9 @@
 
 package com.google.cloud.tools.maven;
 
+import static com.google.cloud.tools.maven.ConfigReader.APPENGINE_CONFIG;
+import static com.google.cloud.tools.maven.ConfigReader.GCLOUD_CONFIG;
+
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.maven.CloudSdkAppEngineFactory.SupportedDevServerVersion;
@@ -263,16 +266,28 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   )
   protected List<String> additionalArguments;
 
+  /** The Google Cloud Platform project name to use for this invocation of the devserver. */
+  @Parameter(alias = "devserver.projectId", property = "app.devserver.projectId")
+  protected String projectId;
+
   // RunAsyncMojo should override #runServer(version) so that other configuration changing code
   // shared between these classes is executed
   @Override
   public void execute() throws MojoExecutionException {
     SupportedDevServerVersion convertedVersion = convertDevserverVersionString();
+    Build build = getMavenProject().getBuild();
+    File appDir = new File(build.getDirectory()).toPath().resolve(build.getFinalName()).toFile();
     if (services == null || services.isEmpty()) {
-      Build build = getMavenProject().getBuild();
-      services =
-          Collections.singletonList(
-              new File(build.getDirectory()).toPath().resolve(build.getFinalName()).toFile());
+      services = Collections.singletonList(appDir);
+    }
+    if (projectId != null) {
+      if (projectId.equals(GCLOUD_CONFIG)) {
+        projectId = ConfigReader.from(getAppEngineFactory().getGcloud()).getProject();
+      } else if (projectId.equals(APPENGINE_CONFIG)) {
+        File appengineWebXml =
+            appDir.toPath().resolve("WEB-INF").resolve("appengine-web.xml").toFile();
+        projectId = ConfigReader.from(appengineWebXml).getProject();
+      }
     }
     verifyAppEngineStandardApp();
     runServer(convertedVersion);
@@ -452,5 +467,10 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
   @Override
   public List<String> getAdditionalArguments() {
     return additionalArguments;
+  }
+
+  @Override
+  public String getProjectId() {
+    return projectId;
   }
 }

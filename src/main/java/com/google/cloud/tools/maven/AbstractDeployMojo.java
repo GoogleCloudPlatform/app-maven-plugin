@@ -64,8 +64,8 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo
   private String version;
 
   /** The Google Cloud Platform project name to use for this invocation. */
-  @Parameter(alias = "deploy.project", property = "app.deploy.project")
-  private String project;
+  @Parameter(alias = "deploy.projectId", property = "app.deploy.projectId")
+  private String projectId;
 
   @Override
   public List<File> getDeployables() {
@@ -103,12 +103,12 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo
   }
 
   @Override
-  public String getProject() {
-    return project;
+  public String getProjectId() {
+    return projectId;
   }
 
-  public void setProject(String project) {
-    this.project = project;
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
   }
 
   public void setVersion(String version) {
