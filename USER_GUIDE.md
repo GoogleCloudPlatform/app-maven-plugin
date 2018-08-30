@@ -328,7 +328,10 @@ Multimodule support can be done by adding all the runnable modules to a single m
 
 ### I want to use Dev Appserver 2 (alpha), how do I switch to it?
 
-To switch back to the Dev App Server v2-alpha (that was default in version < 1.3.0) use the `devserverVersion` parameter
+Caution: The v2-alpha version of the development web server is not fully
+supported, and you may find errors when using this version.
+
+To switch to Dev App Server v2-alpha use the `devserverVersion` parameter.
 
 ```XML
 <configuration>
