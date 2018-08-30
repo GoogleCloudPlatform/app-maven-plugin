@@ -109,6 +109,8 @@ Valid for versions "1" and "2-alpha":
 | `services`            | List of services to run |
 | `startSuccessTimeout` | Amount of time in seconds to wait for the Dev App Server to start in the background. |
 | `additionalArguments` | Any additional arguments to be passed to the Dev App Server |
+| `automaticRestart`    | Automatically restart the server when explode-war directory has changed |
+| `projectId`           | Set a Google Cloud Project Id on the running development server |
 
 Only valid for version "2-alpha":
 
@@ -119,7 +121,6 @@ Only valid for version "2-alpha":
 | `allowSkippedFiles`      |
 | `apiPort`                |
 | `authDomain`             |
-| `automaticRestart`       |
 | `clearDatastore`         |
 | `customEntrypoint`       |
 | `datastorePath`          |
@@ -161,7 +162,7 @@ The `deploy` configuration has the following parameters:
 | Parameter             | Description |
 | --------------------- | ----------- |
 | `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
-| `project`             | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG` or `APPENGINE_CONFIG`.\* |
+| `projectId`             | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG` or `APPENGINE_CONFIG`.\* |
 | `promote`             | Promote the deployed version to receive all traffic. |
 | `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
 | `stopPreviousVersion` | Stop the previously running version when deploying a new version that receives all traffic. |
@@ -244,7 +245,7 @@ The `deploy` configuration has the following parameters:
 | `appEngineDirectory`  | Location of configuration files (cron.yaml, dos.yaml, etc) for configuration specific deployments. |
 | `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
 | `imageUrl`            | Deploy with a Docker URL from the Google container registry. |
-| `project`             | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG`.\* |
+| `projectId`             | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG`.\* |
 | `promote`             | Promote the deployed version to receive all traffic. |
 | `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
 | `stopPreviousVersion` | Stop the previously running version of this service after deploying a new one that receives all traffic. |
@@ -289,19 +290,16 @@ You can debug the Dev App Server v1 using the jvmFlags:
 </configuration>
 ```
 
-### How do I enable hot reload of my application?
+### How do I enable automatic reload of my application?
 
-To enable hot reload of classes, you must tell the Dev App Server v1 to scan for changes :
+To enable automatic reload of an application, you must tell the Dev App Server to scan for changes :
 ```XML
 <configuration>
-  <jvmFlags>
-    <jvmFlag>
-        -Dappengine.fullscan.seconds=5
-    </jvmFlag>
-  </jvmFlags>
+  <automaticRestart>true</automaticRestart>
 </configuration>
 ```
 While your app is running, just run `mvn war:exploded` to reflect your changes into the running application.
+
 
 ### How do I put datastore somewhere else (so it's not deleted across rebuilds)?
 
