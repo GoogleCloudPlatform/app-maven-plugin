@@ -282,11 +282,11 @@ public class RunMojo extends CloudSdkMojo implements RunConfiguration {
     }
     if (projectId != null) {
       if (projectId.equals(GCLOUD_CONFIG)) {
-        projectId = ConfigReader.from(getAppEngineFactory().getGcloud()).getProject();
+        projectId = ConfigReader.getProject(getAppEngineFactory().getGcloud());
       } else if (projectId.equals(APPENGINE_CONFIG)) {
         File appengineWebXml =
             appDir.toPath().resolve("WEB-INF").resolve("appengine-web.xml").toFile();
-        projectId = ConfigReader.from(appengineWebXml).getProject();
+        projectId = ConfigReader.getProject(appengineWebXml);
       }
     }
     verifyAppEngineStandardApp();

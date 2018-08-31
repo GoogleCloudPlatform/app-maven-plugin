@@ -159,10 +159,10 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
               + GCLOUD_CONFIG
               + "</deploy.projectId> to use project from gcloud config.");
     } else if (project.equals(APPENGINE_CONFIG)) {
-      deployMojo.setProjectId(ConfigReader.from(appengineWebXml).getProject());
+      deployMojo.setProjectId(ConfigReader.getProject(appengineWebXml));
     } else if (project.equals(GCLOUD_CONFIG)) {
       deployMojo.setProjectId(
-          ConfigReader.from(deployMojo.getAppEngineFactory().getGcloud()).getProject());
+          ConfigReader.getProject(deployMojo.getAppEngineFactory().getGcloud()));
     }
 
     String version = deployMojo.getVersion();
@@ -177,7 +177,7 @@ public class AppEngineStandardDeployer implements AppEngineDeployer {
               + GCLOUD_CONFIG
               + "</deploy.version> to use version from gcloud config.");
     } else if (version.equals(APPENGINE_CONFIG)) {
-      deployMojo.setVersion(ConfigReader.from(appengineWebXml).getVersion());
+      deployMojo.setVersion(ConfigReader.getVersion(appengineWebXml));
     } else if (version.equals(GCLOUD_CONFIG)) {
       deployMojo.setVersion(null);
     }
