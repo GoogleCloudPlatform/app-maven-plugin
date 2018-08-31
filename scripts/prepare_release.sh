@@ -20,7 +20,7 @@ Die() {
 }
 
 DieUsage() {
-    Die "Usage: ./prepare_release.sh <release version> [<post-release version>]"
+    Die "Usage: ./prepare_release.sh <release version> [<post-release-version>]"
 }
 
 # Usage: CheckVersion <version>
@@ -67,7 +67,10 @@ git tag v${VERSION}
 
 # Updates the pom.xml with the next snapshot version.
 # For example, when releasing 1.5.7, the next snapshot version would be 1.5.8-SNAPSHOT.
-NEXT_SNAPSHOT=${NEXT_VERSION}-SNAPSHOT
+NEXT_SNAPSHOT=${NEXT_VERSION}
+if [[ "${NEXT_SNAPSHOT}" != *-SNAPSHOT ]]; then
+  NEXT_SNAPSHOT=${NEXT_SNAPSHOT}-SNAPSHOT
+fi
 mvn versions:set versions:commit -DnewVersion=${NEXT_SNAPSHOT}
 
 # Commits this next snapshot version.
