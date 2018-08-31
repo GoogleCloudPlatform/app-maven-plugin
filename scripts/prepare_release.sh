@@ -20,12 +20,12 @@ Die() {
 }
 
 DieUsage() {
-    Die "Usage: ./prepare_release.sh <release version>"
+    Die "Usage: ./prepare_release.sh <release version> [<post-release version>]"
 }
 
 # Usage: CheckVersion <version>
 CheckVersion() {
-    [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || Die "Version not in ###.###.### format."
+    [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+)?$ ]] || Die "Version: $1 not in ###.###.###[-XXX] format."
 }
 
 # Usage: IncrementVersion <version>
@@ -36,15 +36,20 @@ IncrementVersion() {
     echo $version | sed "s/\([0-9][0-9]*\.[0-9][0-9]*\)\.[0-9][0-9]*/\1.$nextMinorVersion/"
 }
 
-[ $# -ne 2 ] || DieUsage
+[ $# -ne 2 ] || [ $# -ne 3 ] || DieUsage
 
 EchoGreen '===== RELEASE SETUP SCRIPT ====='
 
 VERSION=$1
 CheckVersion ${VERSION}
 
-NEXT_VERSION=$(IncrementVersion $VERSION)
-CheckVersion ${NEXT_VERSION}
+if [ $2 ]; then
+    NEXT_VERSION=$2
+    CheckVersion ${NEXT_VERSION}
+else
+    NEXT_VERSION=$(IncrementVersion $VERSION)
+    CheckVersion ${NEXT_VERSION}
+fi
 
 if [[ $(git status -uno --porcelain) ]]; then
     Die 'There are uncommitted changes.'
