@@ -63,7 +63,12 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo
   @Parameter(alias = "deploy.version", property = "app.deploy.version")
   private String version;
 
-  /** The Google Cloud Platform project name to use for this invocation. */
+  /** The Google Cloud Platform project Id to use for this invocation */
+  @Deprecated
+  @Parameter(alias = "deploy.project", property = "app.deploy.project")
+  private String project;
+
+  /** The Google Cloud Platform project Id to use for this invocation. */
   @Parameter(alias = "deploy.projectId", property = "app.deploy.projectId")
   private String projectId;
 
@@ -104,6 +109,11 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo
 
   @Override
   public String getProjectId() {
+    if (project != null) {
+      throw new IllegalArgumentException(
+          "Configuring <project> is deprecated, use <projectId> to set your "
+              + "Google Cloud ProjectId");
+    }
     return projectId;
   }
 
