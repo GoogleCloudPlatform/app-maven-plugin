@@ -38,26 +38,6 @@ public class AppEngineFlexibleDeployerTest {
   private static final String GCLOUD_CONFIG = "GCLOUD_CONFIG";
   private static final String APPENGINE_CONFIG = "APPENGINE_CONFIG";
 
-  private static final String CONFIG_PROJECT_ERROR =
-      "Deployment projectId must be defined or configured to read from system state\n"
-          + "1. Set <deploy.projectId>my-project-id</deploy.projectId>\n"
-          + "2. Set <deploy.projectId>"
-          + GCLOUD_CONFIG
-          + "</deploy.projectId> to use project from gcloud config.\n"
-          + "3. Using <deploy.projectId>"
-          + APPENGINE_CONFIG
-          + "</deploy.projectId> is not allowed for flexible environment projects";
-
-  private static final String CONFIG_VERSION_ERROR =
-      "Deployment version must be defined or configured to read from system state\n"
-          + "1. Set <deploy.version>my-version</deploy.version>\n"
-          + "2. Set <deploy.version>"
-          + GCLOUD_CONFIG
-          + "</deploy.version> to use version from gcloud config.\n"
-          + "3. Using <deploy.version>"
-          + APPENGINE_CONFIG
-          + "</deploy.version> is not allowed for flexible environment projects";
-
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Mock private MavenProject mavenProject;
@@ -98,7 +78,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(CONFIG_PROJECT_ERROR, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.projectError, ex.getMessage());
     }
   }
 
@@ -110,7 +90,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(CONFIG_VERSION_ERROR, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.versionError, ex.getMessage());
     }
   }
 
@@ -122,7 +102,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(CONFIG_PROJECT_ERROR, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.projectError, ex.getMessage());
     }
   }
 
@@ -134,7 +114,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(CONFIG_VERSION_ERROR, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.versionError, ex.getMessage());
     }
   }
 }

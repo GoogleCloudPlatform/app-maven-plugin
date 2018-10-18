@@ -39,7 +39,7 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo
   /**
    * Deploy with a specific Docker image. Docker url must be from one of the valid gcr hostnames.
    *
-   * <p><i>Supported only for flexible environment.</i>
+   * <p><i>Supported only for app.yaml based deployments.</i>
    */
   @Parameter(alias = "deploy.imageUrl", property = "app.deploy.imageUrl")
   private String imageUrl;

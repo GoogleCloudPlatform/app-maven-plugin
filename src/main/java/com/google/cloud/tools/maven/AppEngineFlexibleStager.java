@@ -37,7 +37,7 @@ public class AppEngineFlexibleStager implements AppEngineStager {
     Preconditions.checkState(configured, "Must call overrideAppEngineDirectory first");
 
     stageMojo.getLog().info("Staging the application to: " + stageMojo.getStagingDirectory());
-    stageMojo.getLog().info("Detected App Engine flexible environment application.");
+    stageMojo.getLog().info("Detected App Engine app.yaml based application.");
 
     if (!"war".equals(stageMojo.getPackaging()) && !"jar".equals(stageMojo.getPackaging())) {
       stageMojo.getLog().info("Stage/deploy is only executed for war and jar modules.");

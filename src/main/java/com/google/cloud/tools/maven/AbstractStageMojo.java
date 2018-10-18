@@ -159,7 +159,7 @@ public abstract class AbstractStageMojo extends CloudSdkMojo
   /**
    * The location of the JAR or WAR archive to deploy.
    *
-   * <p>Applies to App Engine flexible environment only.
+   * <p>Applies to App Engine app.yaml based applications.
    */
   @Parameter(
     defaultValue = "${project.build.directory}/${project.build.finalName}.${project.packaging}",
@@ -222,7 +222,7 @@ public abstract class AbstractStageMojo extends CloudSdkMojo
   /**
    * The directory that contains app.yaml and other supported App Engine configuration files.
    *
-   * <p>Applies to App Engine flexible environment only. Defaults to <code>
+   * <p>Applies to App Engine app.yaml based applications only. Defaults to <code>
    * ${basedir}/src/main/appengine</code>
    */
   @Override
