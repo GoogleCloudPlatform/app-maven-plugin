@@ -84,7 +84,8 @@ public class StageMojoTest {
     // create appengine-web.xml to mark it as standard environment
     File appengineWebXml = new File(tempFolder.newFolder("source", "WEB-INF"), "appengine-web.xml");
     appengineWebXml.createNewFile();
-    Files.write("<appengine-web-app></appengine-web-app>", appengineWebXml, Charsets.UTF_8);
+    Files.asCharSink(appengineWebXml, Charsets.UTF_8)
+        .write("<appengine-web-app></appengine-web-app>");
 
     // invoke
     stageMojo.execute();
@@ -107,7 +108,7 @@ public class StageMojoTest {
 
     // verify
     verify(flexibleStagingMock).stageFlexible(stageMojo);
-    verify(logMock).info(contains("flexible"));
+    verify(logMock).info(contains("App Engine app.yaml"));
   }
 
   @Test
