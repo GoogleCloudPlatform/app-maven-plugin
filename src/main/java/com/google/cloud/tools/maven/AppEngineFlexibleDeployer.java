@@ -136,25 +136,27 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
 
   @VisibleForTesting
   static final String projectError =
-      "Deployment projectId must be defined or configured to read from system state\n"
-          + "1. Set <deploy.projectId>my-project-id</deploy.projectId>\n"
-          + "2. Set <deploy.projectId>"
+      "Deployment projectId must be configured on the appengine-maven-plugin using "
+          + "<deploy.projectId> or by setting the system property 'app.deploy.projectId'\n"
+          + "1. Set projectId = my-project-id\n"
+          + "2. Set projectId = "
           + GCLOUD_CONFIG
-          + "</deploy.projectId> to use project from gcloud config.\n"
-          + "3. Using <deploy.projectId>"
+          + " to use project from your gcloud configuration\n"
+          + "3. Using projectId = "
           + APPENGINE_CONFIG
-          + "</deploy.projectId> is not allowed for app.yaml based projects";
+          + " is not allowed for app.yaml based projects";
 
   @VisibleForTesting
   static final String versionError =
-      "Deployment version must be defined or configured to read from system state\n"
-          + "1. Set <deploy.version>my-version</deploy.version>\n"
-          + "2. Set <deploy.version>"
+      "Deployment version must be configured on the appengine-maven-plugin using"
+          + " <deploy.version> or by setting the system property 'app.deploy.version'\n"
+          + "1. Set version = my-version\n"
+          + "2. Set version = "
           + GCLOUD_CONFIG
-          + "</deploy.version> to use version from gcloud config.\n"
-          + "3. Using <deploy.version>"
+          + " to have gcloud generate a version for you\n"
+          + "3. Using version = "
           + APPENGINE_CONFIG
-          + "</deploy.version> is not allowed for app.yaml based projects";
+          + " is not allowed for app.yaml based projects";
 
   private void setDeploymentProjectAndVersion() {
     String project = deployMojo.getProjectId();

@@ -49,26 +49,6 @@ public class AppEngineStandardDeployerTest {
   private static final String VERSION_BUILD = "version-build";
   private static final String VERSION_XML = "version-xml";
 
-  private static final String CONFIG_PROJECT_ERROR =
-      "Deployment projectId must be defined or configured to read from system state\n"
-          + "1. Set <deploy.projectId>my-project-id</deploy.projectId>\n"
-          + "2. Set <deploy.projectId>"
-          + APPENGINE_CONFIG
-          + "</deploy.projectId> to use <application> from appengine-web.xml\n"
-          + "3. Set <deploy.projectId>"
-          + GCLOUD_CONFIG
-          + "</deploy.projectId> to use project from gcloud config.";
-
-  private static final String CONFIG_VERSION_ERROR =
-      "Deployment version must be defined or configured to read from system state\n"
-          + "1. Set <deploy.version>my-version</deploy.version>\n"
-          + "2. Set <deploy.version>"
-          + APPENGINE_CONFIG
-          + "</deploy.version> to use <version> from appengine-web.xml\n"
-          + "3. Set <deploy.version>"
-          + GCLOUD_CONFIG
-          + "</deploy.version> to use version from gcloud config.";
-
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
   private File appengineWebXml;
 
@@ -168,7 +148,7 @@ public class AppEngineStandardDeployerTest {
       appEngineStandardDeployer.setDeploymentProjectAndVersion();
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(CONFIG_PROJECT_ERROR, ex.getMessage());
+      Assert.assertEquals(AppEngineStandardDeployer.projectError, ex.getMessage());
     }
   }
 
@@ -181,7 +161,7 @@ public class AppEngineStandardDeployerTest {
       appEngineStandardDeployer.setDeploymentProjectAndVersion();
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(CONFIG_VERSION_ERROR, ex.getMessage());
+      Assert.assertEquals(AppEngineStandardDeployer.versionError, ex.getMessage());
     }
   }
 
