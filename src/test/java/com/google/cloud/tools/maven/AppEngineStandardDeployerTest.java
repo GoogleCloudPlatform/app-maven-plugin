@@ -148,7 +148,7 @@ public class AppEngineStandardDeployerTest {
       appEngineStandardDeployer.setDeploymentProjectAndVersion();
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineStandardDeployer.projectError, ex.getMessage());
+      Assert.assertEquals(AppEngineStandardDeployer.PROJECT_ERROR, ex.getMessage());
     }
   }
 
@@ -161,7 +161,7 @@ public class AppEngineStandardDeployerTest {
       appEngineStandardDeployer.setDeploymentProjectAndVersion();
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineStandardDeployer.versionError, ex.getMessage());
+      Assert.assertEquals(AppEngineStandardDeployer.VERSION_ERROR, ex.getMessage());
     }
   }
 

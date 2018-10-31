@@ -135,7 +135,7 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   }
 
   @VisibleForTesting
-  static final String projectError =
+  static final String PROJECT_ERROR =
       "Deployment projectId must be configured on the appengine-maven-plugin using "
           + "<deploy.projectId> or by setting the system property 'app.deploy.projectId'\n"
           + "1. Set projectId = my-project-id\n"
@@ -147,7 +147,7 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
           + " is not allowed for app.yaml based projects";
 
   @VisibleForTesting
-  static final String versionError =
+  static final String VERSION_ERROR =
       "Deployment version must be configured on the appengine-maven-plugin using"
           + " <deploy.version> or by setting the system property 'app.deploy.version'\n"
           + "1. Set version = my-version\n"
@@ -161,14 +161,14 @@ public class AppEngineFlexibleDeployer implements AppEngineDeployer {
   private void setDeploymentProjectAndVersion() {
     String project = deployMojo.getProjectId();
     if (project == null || project.trim().isEmpty() || project.equals(APPENGINE_CONFIG)) {
-      throw new IllegalArgumentException(projectError);
+      throw new IllegalArgumentException(PROJECT_ERROR);
     } else if (project.equals(GCLOUD_CONFIG)) {
       deployMojo.setProjectId(null);
     }
 
     String version = deployMojo.getVersion();
     if (version == null || version.trim().isEmpty() || version.equals(APPENGINE_CONFIG)) {
-      throw new IllegalArgumentException(versionError);
+      throw new IllegalArgumentException(VERSION_ERROR);
     } else if (version.equals(GCLOUD_CONFIG)) {
       deployMojo.setVersion(null);
     }

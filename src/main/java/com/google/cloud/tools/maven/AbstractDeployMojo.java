@@ -113,13 +113,12 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo
       if (projectId != null) {
         throw new IllegalArgumentException(
             "Configuring <project> and <projectId> is not allowed, please use only <projectId>");
-      } else {
-        getLog()
-            .warn(
-                "Configuring <project> is deprecated, use <projectId> "
-                    + "to set your Google Cloud ProjectId");
-        return project;
       }
+      getLog()
+          .warn(
+              "Configuring <project> is deprecated,"
+                  + " use <projectId> to set your Google Cloud ProjectId");
+      return project;
     }
     return projectId;
   }

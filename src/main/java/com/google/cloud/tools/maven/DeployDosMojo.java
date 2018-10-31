@@ -20,7 +20,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
-/** Stage and deploy dos.yaml to Google App Engine standard or flexible environment. */
+/** Stage and deploy dos.yaml to Google App Engine. */
 @Mojo(name = "deployDos", defaultPhase = LifecyclePhase.DEPLOY)
 public class DeployDosMojo extends AbstractDeployMojo {
 

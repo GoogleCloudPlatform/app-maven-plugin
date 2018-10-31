@@ -78,7 +78,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineFlexibleDeployer.projectError, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.PROJECT_ERROR, ex.getMessage());
     }
   }
 
@@ -90,7 +90,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineFlexibleDeployer.versionError, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.VERSION_ERROR, ex.getMessage());
     }
   }
 
@@ -102,7 +102,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineFlexibleDeployer.projectError, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.PROJECT_ERROR, ex.getMessage());
     }
   }
 
@@ -114,7 +114,7 @@ public class AppEngineFlexibleDeployerTest {
       new AppEngineFlexibleDeployer(deployMojo);
       Assert.fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineFlexibleDeployer.versionError, ex.getMessage());
+      Assert.assertEquals(AppEngineFlexibleDeployer.VERSION_ERROR, ex.getMessage());
     }
   }
 }
