@@ -28,7 +28,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractDeployMojoTest {
 
-  private AbstractDeployMojo testMojo =
+  private final AbstractDeployMojo testMojo =
       new AbstractDeployMojo() {
         @Override
         public void execute() {
@@ -37,16 +37,14 @@ public class AbstractDeployMojoTest {
       };
 
   @Mock private Log mockLog;
-  private final Field projectField;
+  private Field projectField;
 
-  public AbstractDeployMojoTest() throws NoSuchFieldException {
-    projectField = AbstractDeployMojo.class.getDeclaredField("project");
-    projectField.setAccessible(true);
-  }
 
   @Before
-  public void setUp() {
+  public void setUp() throws NoSuchFieldException {
     testMojo.setLog(mockLog);
+    projectField = AbstractDeployMojo.class.getDeclaredField("project");
+    projectField.setAccessible(true);
   }
 
   @Test
