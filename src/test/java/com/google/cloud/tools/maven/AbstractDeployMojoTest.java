@@ -39,7 +39,6 @@ public class AbstractDeployMojoTest {
   @Mock private Log mockLog;
   private Field projectField;
 
-
   @Before
   public void setUp() throws NoSuchFieldException {
     testMojo.setLog(mockLog);
