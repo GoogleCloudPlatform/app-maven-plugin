@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.maven.util;
+package com.google.cloud.tools.maven.deploy;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 
-/** Helper methods to handle sockets. */
-public class SocketUtil {
+/** Stage and deploy the application and all configs to Google App Engine. */
+@Mojo(name = "deployAll", defaultPhase = LifecyclePhase.DEPLOY)
+public class DeployAllMojo extends AbstractDeployMojo {
 
-  /**
-   * Returns a port that's available.
-   *
-   * <p><i>Note: the port may become unavailabe by the time the caller tries to use it.</i>
-   */
-  public static int findPort() throws IOException {
-    try (ServerSocket serverSocket = new ServerSocket(0)) {
-      serverSocket.setReuseAddress(true);
-      return serverSocket.getLocalPort();
-    }
+  @Override
+  public void execute() throws MojoExecutionException {
+    deployerFactory.newDeployer(this).deployAll();
   }
 }

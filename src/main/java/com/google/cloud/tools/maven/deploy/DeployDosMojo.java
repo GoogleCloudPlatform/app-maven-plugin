@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google LLC. All Rights Reserved.
+ * Copyright 2017 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.maven.util;
+package com.google.cloud.tools.maven.deploy;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 
-/** Helper methods to handle sockets. */
-public class SocketUtil {
+/** Stage and deploy dos.yaml to Google App Engine. */
+@Mojo(name = "deployDos", defaultPhase = LifecyclePhase.DEPLOY)
+public class DeployDosMojo extends AbstractDeployMojo {
 
-  /**
-   * Returns a port that's available.
-   *
-   * <p><i>Note: the port may become unavailabe by the time the caller tries to use it.</i>
-   */
-  public static int findPort() throws IOException {
-    try (ServerSocket serverSocket = new ServerSocket(0)) {
-      serverSocket.setReuseAddress(true);
-      return serverSocket.getLocalPort();
-    }
+  @Override
+  public void execute() throws MojoExecutionException {
+    deployerFactory.newDeployer(this).deployDos();
   }
 }

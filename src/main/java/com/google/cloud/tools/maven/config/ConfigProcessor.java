@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.maven.util;
+package com.google.cloud.tools.maven.config;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import com.google.cloud.tools.maven.deploy.AbstractDeployMojo;
+import java.nio.file.Path;
 
-/** Helper methods to handle sockets. */
-public class SocketUtil {
+public interface ConfigProcessor {
+  String APPENGINE_CONFIG = "APPENGINE_CONFIG";
+  String GCLOUD_CONFIG = "GCLOUD_CONFIG";
 
-  /**
-   * Returns a port that's available.
-   *
-   * <p><i>Note: the port may become unavailabe by the time the caller tries to use it.</i>
-   */
-  public static int findPort() throws IOException {
-    try (ServerSocket serverSocket = new ServerSocket(0)) {
-      serverSocket.setReuseAddress(true);
-      return serverSocket.getLocalPort();
-    }
-  }
+  String processProjectId(String projectId);
+
+  String processVersion(String version);
+
+  Path processAppEngineDirectory(AbstractDeployMojo deployMojo);
 }
