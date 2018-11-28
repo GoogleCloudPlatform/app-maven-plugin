@@ -23,8 +23,12 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
+import com.google.cloud.tools.maven.config.AppEngineWebXmlConfigProcessor;
+import com.google.cloud.tools.maven.config.AppYamlConfigProcessor;
 import com.google.cloud.tools.maven.config.ConfigProcessor;
 import com.google.cloud.tools.maven.deploy.Deployer.ConfigBuilder;
+import com.google.cloud.tools.maven.stage.AppEngineWebXmlStager;
+import com.google.cloud.tools.maven.stage.AppYamlStager;
 import com.google.cloud.tools.maven.stage.Stager;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -82,29 +86,27 @@ public class DeployerTest {
     Mockito.when(configProcessor.processAppEngineDirectory(deployMojo))
         .thenReturn(yamlConfigDirectory);
     Mockito.when(deployMojo.getLog()).thenReturn(mockLog);
-    // Mockito.when(deployMojo.getMavenProject()).thenReturn(mavenProject);
-    // Mockito.when(mavenProject.getBasedir()).thenReturn(tempFolder.getRoot());
-    // Mockito.when(deployMojo.getProjectId()).thenReturn("someproject");
-    // Mockito.when(deployMojo.getVersion()).thenReturn("someversion");
-    // Mockito.when(deployMojo.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
   }
 
-  // @Test
-  // public void testNewDeployer_standard() throws MojoExecutionException {
-  //   Mockito.when(deployMojo.isAppEngineWebXmlBased()).thenReturn(true);
-  //   Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
-  //
-  //   Deployer deployer = Deployer.newDeployer(deployMojo);
-  //   Assert.assertTrue(deployer.getClass().equals(App.class));
-  // }
-  //
-  // @Test
-  // public void testNewDeployer_flexible() throws MojoExecutionException {
-  //   Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot());
-  //
-  //   Deployer deployer = Deployer.Factory.newDeployer(deployMojo);
-  //   Assert.assertTrue(deployer.getClass().equals(AppEngineAppYamlDeployer.class));
-  // }
+  @Test
+  public void testNewDeployer_appengineWebXml() throws MojoExecutionException {
+    Mockito.when(deployMojo.isAppEngineWebXmlBased()).thenReturn(true);
+    Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
+    Mockito.when(deployMojo.getSourceDirectory()).thenReturn(tempFolder.getRoot().toPath());
+
+    Deployer deployer = new Deployer.Factory().newDeployer(deployMojo);
+    Assert.assertEquals(AppEngineWebXmlConfigProcessor.class, deployer.configProcessor.getClass());
+    Assert.assertEquals(AppEngineWebXmlStager.class, deployer.stager.getClass());
+  }
+
+  @Test
+  public void testNewDeployer_appYaml() throws MojoExecutionException {
+    Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
+
+    Deployer deployer = new Deployer.Factory().newDeployer(deployMojo);
+    Assert.assertEquals(AppYamlConfigProcessor.class, deployer.configProcessor.getClass());
+    Assert.assertEquals(AppYamlStager.class, deployer.stager.getClass());
+  }
 
   @Test
   public void testNewDeployer_noArtifact() {

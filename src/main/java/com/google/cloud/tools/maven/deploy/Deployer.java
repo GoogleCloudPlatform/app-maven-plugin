@@ -65,8 +65,8 @@ public class Deployer {
     }
   }
 
-  private final Stager stager;
-  private final ConfigProcessor configProcessor;
+  @VisibleForTesting protected final Stager stager;
+  @VisibleForTesting protected final ConfigProcessor configProcessor;
   private final AbstractDeployMojo deployMojo;
   private final ConfigBuilder configBuilder;
 
