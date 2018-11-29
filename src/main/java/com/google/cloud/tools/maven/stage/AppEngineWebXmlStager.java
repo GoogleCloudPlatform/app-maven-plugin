@@ -114,9 +114,7 @@ public class AppEngineWebXmlStager implements Stager {
 
     String processRuntime() throws MojoExecutionException {
       // force runtime to 'java' for compat projects using Java version >1.7
-      Path appengineWebXml =
-          stageMojo.getSourceDirectory().resolve("WEB-INF").resolve("appengine-web.xml");
-      // *100 to handle 1.11 and beyond
+      Path appengineWebXml = stageMojo.getAppEngineWebXml();
       if (Float.parseFloat(stageMojo.getCompileTargetVersion()) > 1.7f && isVm(appengineWebXml)) {
         return "java";
       }

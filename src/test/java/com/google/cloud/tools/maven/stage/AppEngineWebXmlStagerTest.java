@@ -111,15 +111,14 @@ public class AppEngineWebXmlStagerTest {
   }
   // configure an exploded-war dir for these tests
   private Path setupSourceDirectory(String extraContent) throws IOException {
-    Path sourceDirectory = tempFolder.newFolder("staging").toPath();
-    Path webInf = Files.createDirectory(sourceDirectory.resolve("WEB-INF"));
-    Path appengineWebXml = Files.createFile(webInf.resolve("appengine-web.xml"));
+    Path appengineWebXml =
+        Files.createFile(tempFolder.getRoot().toPath().resolve("appengine-web.xml"));
     Files.write(
         appengineWebXml,
         ("<appengine-web-app>" + extraContent + "</appengine-web-app>")
             .getBytes(StandardCharsets.UTF_8));
-    when(stageMojo.getSourceDirectory()).thenReturn(sourceDirectory);
-    return sourceDirectory;
+    when(stageMojo.getAppEngineWebXml()).thenReturn(appengineWebXml);
+    return appengineWebXml;
   }
 
   @Test

@@ -167,7 +167,11 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
   private File artifact;
 
   public boolean isAppEngineWebXmlBased() {
-    return Files.exists(sourceDirectory.toPath().resolve("WEB-INF").resolve("appengine-web.xml"));
+    return Files.exists(getAppEngineWebXml());
+  }
+
+  public Path getAppEngineWebXml() {
+    return getSourceDirectory().resolve("WEB-INF").resolve("appengine-web.xml");
   }
 
   public Path getStagingDirectory() {

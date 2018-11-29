@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven.deploy;
 
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
@@ -95,6 +96,7 @@ public class DeployerTest {
     Mockito.when(deployMojo.getSourceDirectory()).thenReturn(tempFolder.getRoot().toPath());
 
     Deployer deployer = new Deployer.Factory().newDeployer(deployMojo);
+    Mockito.verify(deployMojo).getAppEngineWebXml();
     Assert.assertEquals(AppEngineWebXmlConfigProcessor.class, deployer.configProcessor.getClass());
     Assert.assertEquals(AppEngineWebXmlStager.class, deployer.stager.getClass());
   }
@@ -104,6 +106,7 @@ public class DeployerTest {
     Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
 
     Deployer deployer = new Deployer.Factory().newDeployer(deployMojo);
+    Mockito.verify(deployMojo, times(0)).getAppEngineWebXml();
     Assert.assertEquals(AppYamlConfigProcessor.class, deployer.configProcessor.getClass());
     Assert.assertEquals(AppYamlStager.class, deployer.stager.getClass());
   }

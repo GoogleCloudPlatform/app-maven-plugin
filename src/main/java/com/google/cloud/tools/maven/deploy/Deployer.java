@@ -50,9 +50,7 @@ public class Deployer {
         Stager stager = AppEngineWebXmlStager.newStager(deployMojo);
         ConfigProcessor configProcessor =
             new AppEngineWebXmlConfigProcessor(
-                deployMojo.getSourceDirectory().resolve("WEB-INF").resolve("appengine-web.xml"),
-                gcloud,
-                new ConfigReader());
+                deployMojo.getAppEngineWebXml(), gcloud, new ConfigReader());
         ConfigBuilder configBuilder = new ConfigBuilder(deployMojo, configProcessor);
         return new Deployer(deployMojo, stager, configProcessor, configBuilder);
       } else {
