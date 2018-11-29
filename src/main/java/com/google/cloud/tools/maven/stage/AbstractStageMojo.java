@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven.stage;
 
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkMojo;
+import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -165,6 +166,10 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
     property = "app.stage.artifact"
   )
   private File artifact;
+
+  public boolean isAppEngineCompatiblePackaging() {
+    return ImmutableList.of("jar", "war").contains(getMavenProject().getPackaging());
+  }
 
   public boolean isAppEngineWebXmlBased() {
     return Files.exists(getAppEngineWebXml());

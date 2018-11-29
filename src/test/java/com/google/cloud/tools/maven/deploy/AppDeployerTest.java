@@ -27,7 +27,7 @@ import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.config.AppEngineWebXmlConfigProcessor;
 import com.google.cloud.tools.maven.config.AppYamlConfigProcessor;
 import com.google.cloud.tools.maven.config.ConfigProcessor;
-import com.google.cloud.tools.maven.deploy.Deployer.ConfigBuilder;
+import com.google.cloud.tools.maven.deploy.AppDeployer.ConfigBuilder;
 import com.google.cloud.tools.maven.stage.AppEngineWebXmlStager;
 import com.google.cloud.tools.maven.stage.AppYamlStager;
 import com.google.cloud.tools.maven.stage.Stager;
@@ -52,7 +52,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 @RunWith(JUnitParamsRunner.class)
-public class DeployerTest {
+public class AppDeployerTest {
 
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
@@ -69,7 +69,7 @@ public class DeployerTest {
   @Mock private DeployProjectConfigurationConfiguration deployProjectConfigurationConfiguration;
   @Mock private Log mockLog;
 
-  @InjectMocks private Deployer testDeployer;
+  @InjectMocks private AppDeployer testDeployer;
 
   @Before
   public void setup() throws IOException {
@@ -91,11 +91,12 @@ public class DeployerTest {
 
   @Test
   public void testNewDeployer_appengineWebXml() throws MojoExecutionException {
+    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
     Mockito.when(deployMojo.isAppEngineWebXmlBased()).thenReturn(true);
     Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
     Mockito.when(deployMojo.getSourceDirectory()).thenReturn(tempFolder.getRoot().toPath());
 
-    Deployer deployer = new Deployer.Factory().newDeployer(deployMojo);
+    AppDeployer deployer = (AppDeployer) new Deployer.Factory().newDeployer(deployMojo);
     Mockito.verify(deployMojo).getAppEngineWebXml();
     Assert.assertEquals(AppEngineWebXmlConfigProcessor.class, deployer.configProcessor.getClass());
     Assert.assertEquals(AppEngineWebXmlStager.class, deployer.stager.getClass());
@@ -103,9 +104,10 @@ public class DeployerTest {
 
   @Test
   public void testNewDeployer_appYaml() throws MojoExecutionException {
+    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
     Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
 
-    Deployer deployer = new Deployer.Factory().newDeployer(deployMojo);
+    AppDeployer deployer = (AppDeployer) new Deployer.Factory().newDeployer(deployMojo);
     Mockito.verify(deployMojo, times(0)).getAppEngineWebXml();
     Assert.assertEquals(AppYamlConfigProcessor.class, deployer.configProcessor.getClass());
     Assert.assertEquals(AppYamlStager.class, deployer.stager.getClass());
@@ -113,6 +115,7 @@ public class DeployerTest {
 
   @Test
   public void testNewDeployer_noArtifact() {
+    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
     try {
       new Deployer.Factory().newDeployer(deployMojo);
       fail();
@@ -122,6 +125,13 @@ public class DeployerTest {
               + "\nRun 'mvn package appengine:deploy'",
           ex.getMessage());
     }
+  }
+
+  @Test
+  public void testNewDeployer_noOpDeployer() throws MojoExecutionException {
+    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(false);
+    Assert.assertEquals(
+        NoOpDeployer.class, new Deployer.Factory().newDeployer(deployMojo).getClass());
   }
 
   @Test

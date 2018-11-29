@@ -37,7 +37,7 @@ public class AppEngineWebXmlStager implements Stager {
   private final AbstractStageMojo stageMojo;
   private final ConfigBuilder configBuilder;
 
-  public static AppEngineWebXmlStager newStager(AbstractStageMojo stageMojo) {
+  public static AppEngineWebXmlStager newAppEngineWebXmlStager(AbstractStageMojo stageMojo) {
     return new AppEngineWebXmlStager(stageMojo, new ConfigBuilder(stageMojo));
   }
 

@@ -24,17 +24,21 @@ public interface Stager {
   /**
    * Create a new appengine-web.xml or app.yaml based stager depending on whether an
    * appengine-web.xml could be found in the project or not.
+   *
+   * <p>Will return a no-op stager for non jar/war projects
    */
-  static Stager newStager(AbstractStageMojo stageConfiguration) throws MojoExecutionException {
-    if (stageConfiguration.getArtifact() == null
-        || !Files.exists(stageConfiguration.getArtifact())) {
+  static Stager newStager(AbstractStageMojo stageMojo) throws MojoExecutionException {
+    if (!stageMojo.isAppEngineCompatiblePackaging()) {
+      return new NoOpStager();
+    }
+    if (stageMojo.getArtifact() == null || !Files.exists(stageMojo.getArtifact())) {
       throw new MojoExecutionException(
           "\nCould not determine appengine environment, did you package your application?"
               + "\nRun 'mvn package appengine:stage'");
     }
-    return stageConfiguration.isAppEngineWebXmlBased()
-        ? AppEngineWebXmlStager.newStager(stageConfiguration)
-        : AppYamlStager.newStager(stageConfiguration);
+    return stageMojo.isAppEngineWebXmlBased()
+        ? AppEngineWebXmlStager.newAppEngineWebXmlStager(stageMojo)
+        : AppYamlStager.newAppYamlStager(stageMojo);
   }
 
   void stage() throws MojoExecutionException;

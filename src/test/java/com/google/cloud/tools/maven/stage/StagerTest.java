@@ -34,35 +34,46 @@ public class StagerTest {
 
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
-  @Mock private AbstractStageMojo abstractStageMojo;
+  @Mock private AbstractStageMojo stageMojo;
 
   @Before
   public void setup() throws IOException {
     Path sourceDirectory = tempFolder.newFolder("source").toPath();
-    Mockito.when(abstractStageMojo.getSourceDirectory()).thenReturn(sourceDirectory);
+    Mockito.when(stageMojo.getSourceDirectory()).thenReturn(sourceDirectory);
   }
 
   @Test
-  public void testNewStager_standard() throws MojoExecutionException {
-    Mockito.when(abstractStageMojo.isAppEngineWebXmlBased()).thenReturn(true);
-    Mockito.when(abstractStageMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
-
-    Stager stager = Stager.newStager(abstractStageMojo);
-    Assert.assertEquals(stager.getClass(), AppEngineWebXmlStager.class);
+  public void testNewStager_noOpStager() throws MojoExecutionException {
+    Mockito.when(stageMojo.isAppEngineCompatiblePackaging()).thenReturn(false);
+    Stager stager = Stager.newStager(stageMojo);
+    Assert.assertEquals(NoOpStager.class, stager.getClass());
   }
 
   @Test
-  public void testNewStager_flexible() throws MojoExecutionException {
-    Mockito.when(abstractStageMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
+  public void testNewStager_xml() throws MojoExecutionException {
+    Mockito.when(stageMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
+    Mockito.when(stageMojo.isAppEngineWebXmlBased()).thenReturn(true);
+    Mockito.when(stageMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
 
-    Stager stager = Stager.newStager(abstractStageMojo);
-    Assert.assertEquals(stager.getClass(), AppYamlStager.class);
+    Stager stager = Stager.newStager(stageMojo);
+    Assert.assertEquals(AppEngineWebXmlStager.class, stager.getClass());
+  }
+
+  @Test
+  public void testNewStager_yaml() throws MojoExecutionException {
+    Mockito.when(stageMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
+    Mockito.when(stageMojo.isAppEngineWebXmlBased()).thenReturn(false);
+    Mockito.when(stageMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
+
+    Stager stager = Stager.newStager(stageMojo);
+    Assert.assertEquals(AppYamlStager.class, stager.getClass());
   }
 
   @Test
   public void testNewStager_noArtifact() {
+    Mockito.when(stageMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
     try {
-      Stager.newStager(abstractStageMojo);
+      Stager.newStager(stageMojo);
       Assert.fail();
     } catch (MojoExecutionException ex) {
       Assert.assertEquals(

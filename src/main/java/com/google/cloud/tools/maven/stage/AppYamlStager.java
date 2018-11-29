@@ -29,7 +29,7 @@ public class AppYamlStager implements Stager {
   private final AbstractStageMojo stageMojo;
   private final ConfigBuilder configBuilder;
 
-  public static AppYamlStager newStager(AbstractStageMojo stageMojo) {
+  public static AppYamlStager newAppYamlStager(AbstractStageMojo stageMojo) {
     return new AppYamlStager(stageMojo, new ConfigBuilder(stageMojo));
   }
 
@@ -45,12 +45,6 @@ public class AppYamlStager implements Stager {
 
     stageMojo.getLog().info("Staging the application to: " + stagingDirectory);
     stageMojo.getLog().info("Detected App Engine app.yaml based application.");
-
-    if (!"war".equals(stageMojo.getMavenProject().getPackaging())
-        && !"jar".equals(stageMojo.getMavenProject().getPackaging())) {
-      stageMojo.getLog().info("Stage/deploy is only executed for war and jar modules.");
-      return;
-    }
 
     // delete staging directory if it exists
     if (Files.exists(stagingDirectory)) {

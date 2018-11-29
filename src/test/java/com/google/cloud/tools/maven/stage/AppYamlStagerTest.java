@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.maven.stage;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.deploy.AppEngineArchiveStaging;
@@ -25,14 +23,10 @@ import com.google.cloud.tools.appengine.api.deploy.StageArchiveConfiguration;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.stage.AppYamlStager.ConfigBuilder;
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,34 +57,5 @@ public class AppYamlStagerTest {
     when(appengineFactory.appYamlStaging()).thenReturn(archiveStaging);
     when(configBuilder.buildConfiguration()).thenReturn(stageArchiveConfiguration);
     when(stageArchiveConfiguration.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
-  }
-
-  @Test
-  @Parameters({"jar", "war"})
-  public void testStage(String packaging) throws Exception {
-
-    // wire up
-    when(mavenProject.getPackaging()).thenReturn(packaging);
-
-    // invoke
-    testStager.stage();
-
-    // verify
-    verify(appengineFactory).appYamlStaging();
-    verify(archiveStaging).stageArchive(stageArchiveConfiguration);
-    verify(logMock).info("Detected App Engine app.yaml based application.");
-  }
-
-  @Test
-  @Parameters({"pom", "ear", "rar", "par", "ejb", "maven-plugin", "eclipse-plugin"})
-  public void testRun_packagingIsNotJarOrWar(String packaging)
-      throws MojoFailureException, MojoExecutionException {
-
-    // wire up
-    when(stageMojo.getMavenProject().getPackaging()).thenReturn(packaging);
-
-    testStager.stage();
-    verify(logMock).info("Stage/deploy is only executed for war and jar modules.");
-    verifyNoMoreInteractions(appengineFactory);
   }
 }
