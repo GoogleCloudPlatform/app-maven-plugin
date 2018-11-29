@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google LLC. All Rights Reserved.
+ * Copyright 2016 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 /** Stage and deploy the application and all configs to Google App Engine. */
 @Mojo(name = "deploy", defaultPhase = LifecyclePhase.DEPLOY)
 public class DeployMojo extends AbstractDeployMojo {
+
+  private Deployer.Factory deployerFactory = new Deployer.Factory();
 
   @Override
   public void execute() throws MojoExecutionException {

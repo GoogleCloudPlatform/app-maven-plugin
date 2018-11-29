@@ -23,9 +23,27 @@ public interface ConfigProcessor {
   String APPENGINE_CONFIG = "APPENGINE_CONFIG";
   String GCLOUD_CONFIG = "GCLOUD_CONFIG";
 
+  /**
+   * Process a projectId string.
+   *
+   * @param projectId use configured projectId
+   * @return final processed projectId
+   */
   String processProjectId(String projectId);
 
+  /**
+   * Process a version string.
+   *
+   * @param version use configured version
+   * @return final processed version
+   */
   String processVersion(String version);
 
+  /**
+   * Process the app engine directory.
+   *
+   * @param deployMojo the deployMojo under considerations (contains the config)
+   * @return the location of yaml config files (not including app.yaml)
+   */
   Path processAppEngineDirectory(AbstractDeployMojo deployMojo);
 }

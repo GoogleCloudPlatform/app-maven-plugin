@@ -32,7 +32,7 @@ public class RunAsyncMojo extends AbstractRunMojo {
     alias = "devserver.startSuccessTimeout",
     property = "app.devserver.startSuccessTimeout"
   )
-  private int startSuccessTimeout;
+  protected int startSuccessTimeout;
 
   private Runner.Factory factory = new Factory();
 

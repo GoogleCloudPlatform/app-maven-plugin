@@ -109,7 +109,8 @@ public class AppEngineWebXmlStagerTest {
     Path processedDockerfile = new ConfigBuilder(stageMojo).processDockerfile();
     Assert.assertEquals(testRoot.resolve(expectedName), processedDockerfile);
   }
-  // configure an exploded-war dir for these tests
+
+  /** Configure an appengine-web.xml for these test. */
   private Path setupSourceDirectory(String extraContent) throws IOException {
     Path appengineWebXml =
         Files.createFile(tempFolder.getRoot().toPath().resolve("appengine-web.xml"));

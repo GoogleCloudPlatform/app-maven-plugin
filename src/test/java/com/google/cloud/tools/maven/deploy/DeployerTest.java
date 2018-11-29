@@ -158,7 +158,7 @@ public class DeployerTest {
     testDeployer.deployAll();
     Mockito.verify(stager).stage();
     Mockito.verify(configBuilder).buildDeployConfiguration(Mockito.eq(files));
-    // Mockito.verify(appEngineDeployment.deploy(deployConfiguration));
+    Mockito.verify(appEngineDeployment).deploy(deployConfiguration);
   }
 
   @Test

@@ -204,7 +204,6 @@ public class Deployer {
     }
 
     DeployConfiguration buildDeployConfiguration(List<Path> deployables) {
-
       return DeployConfiguration.builder(deployables)
           .bucket(deployMojo.getBucket())
           .imageUrl(deployMojo.getImageUrl())
@@ -217,7 +216,6 @@ public class Deployer {
     }
 
     DeployProjectConfigurationConfiguration buildDeployProjectConfigurationConfiguration() {
-
       return DeployProjectConfigurationConfiguration.builder(
               configProcessor.processAppEngineDirectory(deployMojo))
           .projectId(configProcessor.processProjectId(deployMojo.getProjectId()))

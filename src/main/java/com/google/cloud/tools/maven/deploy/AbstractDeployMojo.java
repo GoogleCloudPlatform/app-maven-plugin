@@ -27,7 +27,7 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo {
    * argument is not specified, the application's default code bucket is used.
    */
   @Parameter(alias = "deploy.bucket", property = "app.deploy.bucket")
-  protected String bucket;
+  private String bucket;
 
   /**
    * Deploy with a specific Docker image. Docker url must be from one of the valid gcr hostnames.
@@ -35,26 +35,26 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo {
    * <p><i>Supported only for app.yaml based deployments.</i>
    */
   @Parameter(alias = "deploy.imageUrl", property = "app.deploy.imageUrl")
-  protected String imageUrl;
+  private String imageUrl;
 
   /** Promote the deployed version to receive all traffic. True by default. */
   @Parameter(alias = "deploy.promote", property = "app.deploy.promote")
-  protected Boolean promote;
+  private Boolean promote;
 
   /** The App Engine server to connect to. You will not typically need to change this value. */
   @Parameter(alias = "deploy.server", property = "app.deploy.server")
-  protected String server;
+  private String server;
 
   /** Stop the previously running version when deploying a new version that receives all traffic. */
   @Parameter(alias = "deploy.stopPreviousVersion", property = "app.deploy.stopPreviousVersion")
-  protected Boolean stopPreviousVersion;
+  private Boolean stopPreviousVersion;
 
   /**
    * The version of the app that will be created or replaced by this deployment. If you do not
    * specify a version, one will be generated for you.
    */
   @Parameter(alias = "deploy.version", property = "app.deploy.version")
-  protected String version;
+  private String version;
 
   /** The Google Cloud Platform project Id to use for this invocation */
   @Deprecated
@@ -64,8 +64,6 @@ public abstract class AbstractDeployMojo extends AbstractStageMojo {
   /** The Google Cloud Platform project Id to use for this invocation. */
   @Parameter(alias = "deploy.projectId", property = "app.deploy.projectId")
   protected String projectId;
-
-  protected Deployer.Factory deployerFactory = new Deployer.Factory();
 
   /**
    * Return projectId from either projectId or project. Show deprecation message if configured as

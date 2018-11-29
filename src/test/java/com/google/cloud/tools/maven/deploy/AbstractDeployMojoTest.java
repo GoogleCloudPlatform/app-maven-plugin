@@ -55,7 +55,7 @@ public class AbstractDeployMojoTest {
   }
 
   @Test
-  public void testGetProjectId_onlyProjectId() {
+  public void testGetProjectId_bothProjectAndProjectId() {
     testMojo.project = "someProject";
     testMojo.projectId = "someProjectId";
 
@@ -70,7 +70,7 @@ public class AbstractDeployMojoTest {
   }
 
   @Test
-  public void testGetProjectId_bothProjectAndProjectId() {
+  public void testGetProjectId_onlyProjectId() {
     testMojo.projectId = "someProjectId";
     Assert.assertEquals("someProjectId", testMojo.getProjectId());
     Mockito.verifyNoMoreInteractions(mockLog);

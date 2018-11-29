@@ -24,6 +24,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo(name = "deployIndex", defaultPhase = LifecyclePhase.DEPLOY)
 public class DeployIndexMojo extends AbstractDeployMojo {
 
+  private Deployer.Factory deployerFactory = new Deployer.Factory();
+
   @Override
   public void execute() throws MojoExecutionException {
     deployerFactory.newDeployer(this).deployIndex();

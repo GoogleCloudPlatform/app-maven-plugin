@@ -25,18 +25,17 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RunAsyncMojoTest {
+public class RunMojoTest {
 
   @Mock private Runner.Factory factory;
   @Mock private Runner runner;
 
-  @InjectMocks private RunAsyncMojo testMojo;
+  @InjectMocks private RunMojo testMojo;
 
   @Test
   public void testExecute_smokeTest() throws MojoExecutionException {
     Mockito.when(factory.newRunner(testMojo)).thenReturn(runner);
-    testMojo.startSuccessTimeout = 34;
     testMojo.execute();
-    Mockito.verify(runner).runAsync(34);
+    Mockito.verify(runner).run();
   }
 }

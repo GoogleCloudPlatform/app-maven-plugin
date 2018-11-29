@@ -47,7 +47,7 @@ public class AppEngineWebXmlConfigProcessor implements ConfigProcessor {
           + GCLOUD_CONFIG
           + " to have gcloud generate a version for you";
 
-  /** Process a user configured version. */
+  @Override
   public String processVersion(String version) {
     if (version == null || version.trim().isEmpty()) {
       throw new IllegalArgumentException(VERSION_ERROR);
@@ -73,7 +73,6 @@ public class AppEngineWebXmlConfigProcessor implements ConfigProcessor {
           + " to use project from your gcloud configuration";
 
   @Override
-  /** Process a user configured project. */
   public String processProjectId(String projectId) {
     if (projectId == null || projectId.trim().isEmpty()) {
       throw new IllegalArgumentException(PROJECT_ERROR);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google LLC. All Rights Reserved.
+ * Copyright 2018 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,6 @@ public class RunnerTest {
 
     testRunner.run();
 
-    // verify
     verify(devServer).run(configBuilder.buildRunConfiguration(ImmutableList.of(appDir), null));
   }
 
@@ -125,7 +124,6 @@ public class RunnerTest {
 
     testRunner.runAsync(START_SUCCESS_TIMEOUT);
 
-    // verify
     verify(devServer).run(configBuilder.buildRunConfiguration(ImmutableList.of(appDir), null));
     verify(logMock).info(contains("25 seconds"));
     verify(logMock).info(contains("started"));

@@ -65,7 +65,7 @@ public class AppYamlConfigProcessor implements ConfigProcessor {
           + APPENGINE_CONFIG
           + " is not allowed for app.yaml based projects";
 
-  /** Process the version. */
+  @Override
   public String processVersion(String version) {
     if (version == null || version.trim().isEmpty() || version.equals(APPENGINE_CONFIG)) {
       throw new IllegalArgumentException(VERSION_ERROR);
