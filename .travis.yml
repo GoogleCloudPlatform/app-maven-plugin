@@ -2,56 +2,34 @@ sudo: false
 language: java
 jdk:
   - oraclejdk8
-
+cache:
+  directories:
+   - $HOME/.m2
+   - $HOME/google-cloud-sdk
+env:
+  global:
+    - CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=true
 install:
-  # download Cloud SDK
-  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-171.0.0-linux-x86_64.tar.gz
-  - tar -xzvf google-cloud-sdk-171.0.0-linux-x86_64.tar.gz
-  - export PATH=$PWD/google-cloud-sdk/bin:$PATH
-  - export CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
-  # update all Cloud SDK components
+  # https://github.com/travis-ci/travis-ci/issues/8408
+  - unset _JAVA_OPTIONS
+
+  # check if cloud SDK was installed (/bin exists)
+  # travis auto creates cache directories, so remove it before install
+  - if [ ! -d $HOME/google-cloud-sdk/bin ]; then
+      rm -rf $HOME/google-cloud-sdk;
+      curl https://sdk.cloud.google.com | bash;
+    fi
+  # make our installed cloud sdk take precedence
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  # update gcloud
   - gcloud components update --quiet
   # add App Engine component to Cloud SDK
   - gcloud components install app-engine-java --quiet
-  # add beta component to Cloud SDK for Cloud Debugger
-  - gcloud components install beta --quiet
-  # only run remote tests on master branch
-  - |
-    if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
-      export DO_DEPLOY=true
-    else
-      export DO_DEPLOY=false
-    fi
-  - echo DO_DEPLOY = $DO_DEPLOY
-  - |
-    if $DO_DEPLOY; then
-      # decrypt the tavis-app-maven-plugin Cloud SDK project service account key
-      openssl aes-256-cbc -K $encrypted_4c3a51657fee_key -iv $encrypted_4c3a51657fee_iv -in config/travis-app-maven-plugin-e1bb638f290e.json.enc -out config/travis-app-maven-plugin-e1bb638f290e.json -d
-      # set Cloud SDK CLI authentication
-      gcloud auth activate-service-account --key-file config/travis-app-maven-plugin-e1bb638f290e.json
-      # set default project
-      gcloud config set project travis-app-maven-plugin
-    fi
 
 script:
-  - |
-    if $DO_DEPLOY; then
-      mvn clean deploy --settings .travis/settings.xml -B -U
-    else
-      mvn clean install -B -U
-    fi
+  - mvn clean verify -B -U
 
 after_success:
-  # hide sensitive data from codecov-io
-  - rm -f config/travis-app-maven-plugin-e1bb638f290e.json
-  - unset SONATYPE_USERNAME
-  - unset SONATYPE_PASSWORD
-  - unset encrypted_4c3a51657fee_key
-  - unset encrypted_4c3a51657fee_iv
   # run codecov-io
   - bash <(curl -s https://codecov.io/bash)
-
-env:
-  global:
-    - secure: "jI+pQpYZ7y9UbHaGLBkK1XiQX/WGjkcyxi1g4KowS/Kbz+6YohiXjyVf8JPT8+KMnpuRvsgTf2zlnTh2khJqd0fM67xvgn/6J1cn9DUhSpMbK5kXD9Io09I2noqGCQZPxtI/k3pxyn/hutgNkDT1o25zqtkTb0fSmrgpr8VwsGhO5renYZ5V1rS0eIQ2zMqdXm0xHglUYKH7sEoeYddmwqk8r8SITKaJ/xYIsfyS8PMK07xHmUO61odnzCMaC9KuQAVH3xDJDezZ4qGMTVIpebZAhLq4aDU9nSyAWlQ9TcXZdkti8BUvG9CjhgauRvlIRqxA28Kf8I2I51spyY1mpX0hp2fLRctFk0yji4tQT6A4uKnUQJRSaTNVKqeBIKXHlzEGlmHnmUJpiRBAtgS+7vktCrV9xUF+Nd0Kz3WyLOlvQSWUe5mbcn03cYr9XObIpWWvjuHnB+TM0xirYSgQv1K5EHS+cMSSqWaAbNzO5sGZtf5vsYRbCmdGduZiIkEJPpBXYewgblgzK3U5qQmJJQNlOHzAaVedAzLSHSohjH4kJMWYfsoVrENDCxdYZL+tuoF+5uz72BTXpSYDrRJ0/9fITvd9aRQC8pcB9poW8Sgr2RCuJvUZTH1bbMT+bKQi1ad8J0SJ7210TS/b6Sz2RkVh8ooX16R/b/qX8bIlSaw="
-    - secure: "AHS/BnKyyPBLcIKehP80FIKaWpWiHUfMVbr91PFK7aZvV+bz3o35IXatqZlGN/6qmuabNKnRyXzH7ONPDEogSZ0euynt4uvqVu/2UY5ZkAOmmhFb4H5L9Ho6JYDSV1x6RSn5aI7jfxoaZYxwlnzUANkEprdggqcI+Hfn22ZtK4sTp2oxqME5cqQ/w1zcemD6N8LAzmthfvTzbhSwQNKujRXUxV9d1yNr5MAgMZ3QMIEdMFtylZ2uOJ9CIxd2LLj3SWkWCfDY9bWvGRVZEJwennjYHKcnTYsHhVnE0XCdMsyQi+zN2hCpPq52p8sBIr81/GenajwjW7g0yQWMF3XBA28SI+GDcumGpe9GScmFGKHl3G/RgWUBmF3JKO8+Ws6f0iBruIda2Ichf4PitlZUMjtEmltUqBzeoKyaRGW7TCSHh47GZABb3ERV2FLyLSC9S+3rpUGo6V6dJIH/3JZBfb0yuAAwHyxxShj6GYUGXP1wU9/c2v1e5gya7e5mACcFWOlWuInAZxMV4lrISWemW3JvHkJHrbZ0/6nCgJbl7YJoIGHD2PcexomHA2B2YuBVGqseMPCbs9yxQwnkj0L+j+uIRNxq3oxCH6AzUCsaBaDaIU2fVh/Mas5Eic3O5WAGMvZh4XD7rQL7eqnBavsLeF5CDCmlo1d8U1unMZzUowA="
