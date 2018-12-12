@@ -22,6 +22,8 @@
         <version>${appengine-maven-plugin.version}</version>
         <configuration>
           <version>1</version>
+          <project>travis-app-maven-plugin</project>
+          <version>GCLOUD_VERSION</version>
           <jvmFlags>
             <!-- required for kokoro gcp_ubuntu b/37217450 -->
             <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
