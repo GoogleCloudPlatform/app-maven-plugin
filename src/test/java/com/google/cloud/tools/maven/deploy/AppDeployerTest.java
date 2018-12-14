@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import junitparams.JUnitParamsRunner;
@@ -238,5 +239,35 @@ public class AppDeployerTest {
     Mockito.verify(stager).stage();
     Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration();
     Mockito.verify(appEngineDeployment).deployQueue(deployProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testBuildDeployConfiguration() {
+    AbstractDeployMojo deployMojo = Mockito.mock(AbstractDeployMojo.class);
+    Mockito.when(deployMojo.getBucket()).thenReturn("testBucket");
+    Mockito.when(deployMojo.getImageUrl()).thenReturn("testImageUrl");
+    Mockito.when(deployMojo.getProjectId()).thenReturn("testProjectId");
+    Mockito.when(deployMojo.getPromote()).thenReturn(false);
+    Mockito.when(deployMojo.getStopPreviousVersion()).thenReturn(false);
+    Mockito.when(deployMojo.getServer()).thenReturn("testServer");
+    Mockito.when(deployMojo.getVersion()).thenReturn("testVersion");
+
+    ConfigProcessor configProcessor = Mockito.mock(ConfigProcessor.class);
+    Mockito.when(configProcessor.processProjectId("testProjectId"))
+        .thenReturn("processedTestProjectId");
+    Mockito.when(configProcessor.processVersion("testVersion")).thenReturn("processedTestVersion");
+
+    List<Path> deployables = ImmutableList.of(Paths.get("some/path"), Paths.get("some/other/path"));
+    DeployConfiguration deployConfig =
+        new ConfigBuilder(deployMojo, configProcessor).buildDeployConfiguration(deployables);
+
+    Assert.assertEquals(deployables, deployConfig.getDeployables());
+    Assert.assertEquals("testBucket", deployConfig.getBucket());
+    Assert.assertEquals("testImageUrl", deployConfig.getImageUrl());
+    Assert.assertEquals("processedTestProjectId", deployConfig.getProjectId());
+    Assert.assertEquals(Boolean.FALSE, deployConfig.getPromote());
+    Assert.assertEquals(Boolean.FALSE, deployConfig.getStopPreviousVersion());
+    Assert.assertEquals("testServer", deployConfig.getServer());
+    Assert.assertEquals("processedTestVersion", deployConfig.getVersion());
   }
 }

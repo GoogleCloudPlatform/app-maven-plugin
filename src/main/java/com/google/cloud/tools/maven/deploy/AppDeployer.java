@@ -178,7 +178,7 @@ public class AppDeployer implements Deployer {
           .promote(deployMojo.getPromote())
           .server(deployMojo.getServer())
           .stopPreviousVersion(deployMojo.getStopPreviousVersion())
-          .version(configProcessor.processVersion(deployMojo.getProjectId()))
+          .version(configProcessor.processVersion(deployMojo.getVersion()))
           .build();
     }
 
