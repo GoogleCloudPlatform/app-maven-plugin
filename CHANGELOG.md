@@ -8,23 +8,24 @@ All notable changes to this project will be documented in this file.
 * Cloud SDK installation is verified when `cloudSdkHome` and `cloudSdkVersion` are configured. ([#248](../../issues/248))
 * New `<serviceAccountKeyFile>` configuration parameter, and `appengine:cloudSdkLogin` goal. ([#268](../../issues/268))
 * New `appengine:deployAll` goal to deploy application with all valid yaml configs simultaneously. ([#273](../../issues/273), [#277](../../issues/277))
-* Can set `project` and `version` to `GCLOUD_CONFIG` to delegate to gcloud or `APPENGINE_CONFIG` to delegate to appengine-web.xml. ([#305](../../issues/305))
+* Can set `projectId` and `version` to `GCLOUD_CONFIG` to delegate to gcloud or `APPENGINE_CONFIG` to delegate to appengine-web.xml. ([#305](../../issues/305))
+* Using `project` will trigger deprecation warning ([#337](../../pull/337))
 
 ### Changed
 * `appengine:stop` no longer fails if the stop request to server fails, but it will log an error. ([#309](https://github.com/GoogleCloudPlatform/app-maven-plugin/pull/309))
-* Upgrade App Engine Plugins Core dependency to 0.5.2.
 * `cloudSdkPath` has been replaced with `cloudSdkHome`. ([#257](../../issues/257))
 * Remove deprecated `appYamls` parameter. ([#162](../../issues/162))
 * Appengine goals no longer fork. Instead of running `mvn appengine:<goal>`, you must either explicitly run
 `mvn package appengine:<goal>` or bind the goal to a lifecycle phase in your pom.xml. ([#301](../../issues/301))
 * Removed `deployables` parameter. To deploy specific configuration files, use the appropriate deploy goals
 (i.e. appengine:deployCron, appengine:deployIndex, etc.) ([#300](../../issues/300)).
+* Upgrade App Engine Plugins Core dependency to 0.7.1.
 
 ### Fixed
 
 ## 1.3.2
 ### Added
-* New `<additionalArguments>` parameter to pass additional arguments to Dev App Server ([#219](../../pulls/219)),
+* New `<additionalArguments>` parameter to pass additional arguments to Dev App Server ([#219](../../pull/219)),
 relevant pull request in App Engine Plugins Core:
 [appengine-plugins-core/433](https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/433)
 
