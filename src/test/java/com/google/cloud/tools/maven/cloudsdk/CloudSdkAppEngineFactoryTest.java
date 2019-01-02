@@ -105,7 +105,7 @@ public class CloudSdkAppEngineFactoryTest {
   @Test
   public void testCreateDevServerForVersion() {
     CloudSdkAppEngineFactory spyFactory = Mockito.spy(factory);
-    doReturn(cloudSdk).when(spyFactory).buildCloudSdkWithCloudWithAppEngineComponents();
+    doReturn(cloudSdk).when(spyFactory).buildCloudSdkWithAppEngineComponents();
 
     Assert.assertTrue(
         spyFactory.createDevServerForVersion(SupportedDevServerVersion.V1, processHandler)

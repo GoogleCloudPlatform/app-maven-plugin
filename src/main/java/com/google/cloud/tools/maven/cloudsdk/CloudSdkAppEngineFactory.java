@@ -138,7 +138,7 @@ public class CloudSdkAppEngineFactory {
   }
 
   @VisibleForTesting
-  CloudSdk buildCloudSdkWithCloudWithAppEngineComponents() {
+  CloudSdk buildCloudSdkWithAppEngineComponents() {
     return buildCloudSdk(
         mojo,
         new CloudSdkChecker(),
@@ -189,11 +189,11 @@ public class CloudSdkAppEngineFactory {
   }
 
   private AppCfg getAppCfg() {
-    return AppCfg.builder(buildCloudSdkWithCloudWithAppEngineComponents()).build();
+    return AppCfg.builder(buildCloudSdkWithAppEngineComponents()).build();
   }
 
   private LocalRun getLocalRun() {
-    return LocalRun.builder(buildCloudSdkWithCloudWithAppEngineComponents()).build();
+    return LocalRun.builder(buildCloudSdkWithAppEngineComponents()).build();
   }
 
   private ProcessHandler newDefaultProcessHandler() {
