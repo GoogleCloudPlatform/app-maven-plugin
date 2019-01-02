@@ -30,8 +30,7 @@ public class CloudSdkChecker {
    * @param cloudSdk CloudSdk with a configured sdk home directory
    */
   public void checkCloudSdk(CloudSdk cloudSdk, String version)
-      throws CloudSdkVersionFileException, AppEngineJavaComponentsNotInstalledException,
-          CloudSdkNotFoundException, CloudSdkOutOfDateException {
+      throws CloudSdkVersionFileException, CloudSdkNotFoundException, CloudSdkOutOfDateException {
     if (!version.equals(cloudSdk.getVersion().toString())) {
       throw new RuntimeException(
           "Specified Cloud SDK version ("
@@ -42,6 +41,10 @@ public class CloudSdkChecker {
     }
 
     cloudSdk.validateCloudSdk();
+  }
+
+  public void checkForAppEngine(CloudSdk cloudSdk)
+      throws AppEngineJavaComponentsNotInstalledException {
     cloudSdk.validateAppEngineJavaComponents();
   }
 }

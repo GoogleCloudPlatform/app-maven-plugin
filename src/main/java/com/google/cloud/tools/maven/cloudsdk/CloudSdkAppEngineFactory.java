@@ -35,6 +35,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.LegacyProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -128,15 +129,28 @@ public class CloudSdkAppEngineFactory {
     return getGcloud().newGenRepoInfo(newDefaultProcessHandler());
   }
 
-  private CloudSdk buildCloudSdk() {
+  private CloudSdk buildCloudSdkMinimal() {
     return buildCloudSdk(
         mojo,
         new CloudSdkChecker(),
-        new CloudSdkDownloader(CloudSdkDownloader.newManagedSdkFactory()));
+        new CloudSdkDownloader(CloudSdkDownloader.newManagedSdkFactory()),
+        false);
+  }
+
+  @VisibleForTesting
+  CloudSdk buildCloudSdkWithCloudWithAppEngineComponents() {
+    return buildCloudSdk(
+        mojo,
+        new CloudSdkChecker(),
+        new CloudSdkDownloader(CloudSdkDownloader.newManagedSdkFactory()),
+        true);
   }
 
   static CloudSdk buildCloudSdk(
-      CloudSdkMojo mojo, CloudSdkChecker cloudSdkChecker, CloudSdkDownloader cloudSdkDownloader) {
+      CloudSdkMojo mojo,
+      CloudSdkChecker cloudSdkChecker,
+      CloudSdkDownloader cloudSdkDownloader,
+      boolean requiresAppEngineComponents) {
 
     try {
       if (mojo.getCloudSdkHome() != null) {
@@ -146,12 +160,16 @@ public class CloudSdkAppEngineFactory {
         if (mojo.getCloudSdkVersion() != null) {
           cloudSdkChecker.checkCloudSdk(cloudSdk, mojo.getCloudSdkVersion());
         }
+        if (requiresAppEngineComponents) {
+          cloudSdkChecker.checkForAppEngine(cloudSdk);
+        }
         return cloudSdk;
       } else {
         // we need to use a managed cloud sdk
         return new CloudSdk.Builder()
             .sdkPath(
-                cloudSdkDownloader.downloadIfNecessary(mojo.getCloudSdkVersion(), mojo.getLog()))
+                cloudSdkDownloader.downloadIfNecessary(
+                    mojo.getCloudSdkVersion(), mojo.getLog(), requiresAppEngineComponents))
             .build();
       }
     } catch (CloudSdkNotFoundException
@@ -164,18 +182,18 @@ public class CloudSdkAppEngineFactory {
 
   /** Return a Gcloud instance using global configuration. */
   public Gcloud getGcloud() {
-    return Gcloud.builder(buildCloudSdk())
+    return Gcloud.builder(buildCloudSdkMinimal())
         .setMetricsEnvironment(mojo.getArtifactId(), mojo.getArtifactVersion())
         .setCredentialFile(mojo.getServiceAccountKeyFile())
         .build();
   }
 
   private AppCfg getAppCfg() {
-    return AppCfg.builder(buildCloudSdk()).build();
+    return AppCfg.builder(buildCloudSdkWithCloudWithAppEngineComponents()).build();
   }
 
   private LocalRun getLocalRun() {
-    return LocalRun.builder(buildCloudSdk()).build();
+    return LocalRun.builder(buildCloudSdkWithCloudWithAppEngineComponents()).build();
   }
 
   private ProcessHandler newDefaultProcessHandler() {

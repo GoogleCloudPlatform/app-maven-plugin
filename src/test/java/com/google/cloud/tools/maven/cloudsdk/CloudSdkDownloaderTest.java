@@ -67,18 +67,28 @@ public class CloudSdkDownloaderTest {
   public void testDownloadCloudSdk_install()
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(false);
-    downloader.downloadIfNecessary(version, log);
+    downloader.downloadIfNecessary(version, log, true);
     verify(managedCloudSdk).newInstaller();
   }
 
   @Test
-  public void testDownloadCloudSdk_installComponent()
+  public void testDownloadCloudSdk_installAppEngine()
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
     when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(false);
-    downloader.downloadIfNecessary(version, log);
+    downloader.downloadIfNecessary(version, log, true);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk).newComponentInstaller();
+  }
+
+  @Test
+  public void testDownloadCloudSdk_ignoreAppEngineComponent()
+      throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
+    when(managedCloudSdk.isInstalled()).thenReturn(true);
+    when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(false);
+    downloader.downloadIfNecessary(version, log, false);
+    verify(managedCloudSdk, never()).newInstaller();
+    verify(managedCloudSdk, never()).newComponentInstaller();
   }
 
   @Test
@@ -87,7 +97,7 @@ public class CloudSdkDownloaderTest {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
     when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(true);
     when(managedCloudSdk.isUpToDate()).thenReturn(false);
-    downloader.downloadIfNecessary(version, log);
+    downloader.downloadIfNecessary(version, log, true);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk, never()).newComponentInstaller();
     verify(managedCloudSdk).newUpdater();

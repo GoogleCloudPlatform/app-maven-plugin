@@ -25,7 +25,6 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
-import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,8 +41,7 @@ public class CloudSdkCheckerTest {
 
   @Test
   public void testCheckCloudSdk_versionMismatch()
-      throws CloudSdkVersionFileException, CloudSdkOutOfDateException, CloudSdkNotFoundException,
-          AppEngineJavaComponentsNotInstalledException {
+      throws CloudSdkVersionFileException, CloudSdkOutOfDateException, CloudSdkNotFoundException {
     when(sdk.getVersion()).thenReturn(new CloudSdkVersion("190.0.0"));
     try {
       cloudSdkChecker.checkCloudSdk(sdk, "191.0.0");
@@ -57,15 +55,20 @@ public class CloudSdkCheckerTest {
 
   @Test
   public void testCheckCloudSdk_callPluginsCoreChecks()
-      throws CloudSdkVersionFileException, InvalidJavaSdkException, CloudSdkNotFoundException,
-          CloudSdkOutOfDateException, AppEngineJavaComponentsNotInstalledException {
+      throws CloudSdkVersionFileException, CloudSdkNotFoundException, CloudSdkOutOfDateException {
     when(sdk.getVersion()).thenReturn(new CloudSdkVersion("192.0.0"));
 
     cloudSdkChecker.checkCloudSdk(sdk, "192.0.0");
 
     verify(sdk).getVersion();
     verify(sdk).validateCloudSdk();
-    verify(sdk).validateAppEngineJavaComponents();
     verifyNoMoreInteractions(sdk);
+  }
+
+  @Test
+  public void testCheckForAppEngine_smokeTest()
+      throws AppEngineJavaComponentsNotInstalledException {
+    cloudSdkChecker.checkForAppEngine(sdk);
+    verify(sdk).validateAppEngineJavaComponents();
   }
 }
