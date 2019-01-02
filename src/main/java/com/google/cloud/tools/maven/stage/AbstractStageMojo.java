@@ -237,6 +237,7 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
     return appEngineDirectory == null ? null : appEngineDirectory.toPath();
   }
 
+  /** Returns a nullable list of Path to user configured extra files directories. */
   public List<Path> getExtraFilesDirectories() {
     return extraFilesDirectories == null
         ? null
