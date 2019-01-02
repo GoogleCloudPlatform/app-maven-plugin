@@ -16,8 +16,8 @@
 
 package com.google.cloud.tools.maven.genrepoinfo;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFileConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.GenRepoInfoFileConfiguration;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkMojo;
 import java.io.File;
 import java.util.logging.Logger;

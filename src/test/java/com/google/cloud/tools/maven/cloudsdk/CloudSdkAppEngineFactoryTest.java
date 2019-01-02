@@ -21,14 +21,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.cloudsdk.AppEngineJavaComponentsNotInstalledException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
+import com.google.cloud.tools.appengine.operations.CloudSdk;
+import com.google.cloud.tools.appengine.operations.DevServerV1;
+import com.google.cloud.tools.appengine.operations.DevServerV2;
+import com.google.cloud.tools.appengine.operations.cloudsdk.AppEngineJavaComponentsNotInstalledException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkVersionFileException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import java.io.File;
 import java.io.IOException;
@@ -109,10 +109,10 @@ public class CloudSdkAppEngineFactoryTest {
 
     Assert.assertTrue(
         spyFactory.createDevServerForVersion(SupportedDevServerVersion.V1, processHandler)
-            instanceof CloudSdkAppEngineDevServer1);
+            instanceof DevServerV1);
     Assert.assertTrue(
         spyFactory.createDevServerForVersion(SupportedDevServerVersion.V2ALPHA, processHandler)
-            instanceof CloudSdkAppEngineDevServer2);
+            instanceof DevServerV2);
   }
 
   @Test

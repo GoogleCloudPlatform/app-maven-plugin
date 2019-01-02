@@ -16,8 +16,8 @@
 
 package com.google.cloud.tools.maven.stage;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.StageArchiveConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.AppYamlProjectStageConfiguration;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +40,7 @@ public class AppYamlStager implements Stager {
 
   @Override
   public void stage() throws MojoExecutionException {
-    StageArchiveConfiguration config = configBuilder.buildConfiguration();
+    AppYamlProjectStageConfiguration config = configBuilder.buildConfiguration();
     Path stagingDirectory = config.getStagingDirectory();
 
     stageMojo.getLog().info("Staging the application to: " + stagingDirectory);
@@ -74,12 +74,12 @@ public class AppYamlStager implements Stager {
       this.stageMojo = stageMojo;
     }
 
-    StageArchiveConfiguration buildConfiguration() {
-      return StageArchiveConfiguration.builder(
+    AppYamlProjectStageConfiguration buildConfiguration() {
+      return AppYamlProjectStageConfiguration.builder(
               processAppYamlBasedAppEngineDirectory(),
               stageMojo.getArtifact(),
               stageMojo.getStagingDirectory())
-          .extraFilesDirectory(stageMojo.getExtraFilesDirectory())
+          .extraFilesDirectories(stageMojo.getExtraFilesDirectories())
           .dockerDirectory(stageMojo.getDockerDirectory())
           .build();
     }

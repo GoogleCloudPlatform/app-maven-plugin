@@ -19,10 +19,10 @@ package com.google.cloud.tools.maven.deploy;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
-import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.DeployConfiguration;
+import com.google.cloud.tools.appengine.configuration.DeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.operations.Deployment;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.config.AppEngineWebXmlConfigProcessor;
 import com.google.cloud.tools.maven.config.AppYamlConfigProcessor;
@@ -65,7 +65,7 @@ public class AppDeployerTest {
   private Path stagingDirectory;
   private Path yamlConfigDirectory;
   @Mock private CloudSdkAppEngineFactory appEngineFactory;
-  @Mock private AppEngineDeployment appEngineDeployment;
+  @Mock private Deployment appEngineDeployment;
   @Mock private DeployConfiguration deployConfiguration;
   @Mock private DeployProjectConfigurationConfiguration deployProjectConfigurationConfiguration;
   @Mock private Log mockLog;

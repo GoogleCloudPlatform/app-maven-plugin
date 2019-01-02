@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.maven.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.AppEngineException;
 import org.apache.maven.plugins.annotations.Mojo;
 
 /** Login and set the Cloud SDK common configuration user. */

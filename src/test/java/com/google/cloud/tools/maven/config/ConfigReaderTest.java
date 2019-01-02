@@ -3,8 +3,8 @@ package com.google.cloud.tools.maven.config;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
-import com.google.cloud.tools.appengine.cloudsdk.Gcloud;
-import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkConfig;
+import com.google.cloud.tools.appengine.operations.Gcloud;
+import com.google.cloud.tools.appengine.operations.cloudsdk.serialization.CloudSdkConfig;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

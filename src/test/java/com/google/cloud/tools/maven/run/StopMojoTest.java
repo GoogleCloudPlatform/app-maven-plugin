@@ -21,9 +21,9 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.StopConfiguration;
+import com.google.cloud.tools.appengine.operations.DevServer;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import junitparams.JUnitParamsRunner;
@@ -48,7 +48,7 @@ public class StopMojoTest {
 
   @Mock private CloudSdkAppEngineFactory factoryMock;
 
-  @Mock private AppEngineDevServer devServerMock;
+  @Mock private DevServer devServerMock;
 
   @InjectMocks private StopMojo stopMojo;
 

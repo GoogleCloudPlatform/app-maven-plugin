@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.maven.config;
 
-import com.google.cloud.tools.appengine.cloudsdk.Gcloud;
+import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.maven.deploy.AbstractDeployMojo;
 import com.google.common.annotations.VisibleForTesting;
 import java.nio.file.Path;
