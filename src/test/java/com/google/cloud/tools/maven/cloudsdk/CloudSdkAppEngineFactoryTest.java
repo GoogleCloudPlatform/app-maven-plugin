@@ -37,9 +37,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -54,8 +52,6 @@ public class CloudSdkAppEngineFactoryTest {
   private final String CLOUD_SDK_VERSION = "192.0.0";
   private final String ARTIFACT_ID = "appengine-maven-plugin";
   private final String ARTIFACT_VERSION = "0.1.0";
-
-  @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Mock private CloudSdkMojo mojoMock;
   @Mock private MavenProject projectMock;
