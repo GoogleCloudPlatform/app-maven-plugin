@@ -16,18 +16,15 @@
 
 package com.google.cloud.tools.maven.stage;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StagerTest {
@@ -35,12 +32,6 @@ public class StagerTest {
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Mock private AbstractStageMojo stageMojo;
-
-  @Before
-  public void setup() throws IOException {
-    Path sourceDirectory = tempFolder.newFolder("source").toPath();
-    Mockito.when(stageMojo.getSourceDirectory()).thenReturn(sourceDirectory);
-  }
 
   @Test
   public void testNewStager_noOpStager() throws MojoExecutionException {

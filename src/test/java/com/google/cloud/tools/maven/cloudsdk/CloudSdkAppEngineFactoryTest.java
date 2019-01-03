@@ -30,8 +30,6 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkOutOfDateExc
 import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkVersionFileException;
 import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.maven.model.Build;
@@ -46,7 +44,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFactoryTest {
@@ -73,22 +71,16 @@ public class CloudSdkAppEngineFactoryTest {
   @InjectMocks private CloudSdkAppEngineFactory factory;
 
   @Before
-  public void wireUp() throws IOException {
+  public void wireUp() {
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
     when(mojoMock.getArtifactId()).thenReturn(ARTIFACT_ID);
     when(mojoMock.getArtifactVersion()).thenReturn(ARTIFACT_VERSION);
     when(mojoMock.getLog()).thenReturn(logMock);
 
-    when(mojoMock.getMavenProject()).thenReturn(projectMock);
-    when(projectMock.getBuild()).thenReturn(buildMock);
-    File outFolder = tempFolder.newFolder("tempOut");
-    when(buildMock.getDirectory()).thenReturn(outFolder.getAbsolutePath());
-
     doReturn(INSTALL_SDK_PATH)
         .when(cloudSdkDownloader)
-        .downloadIfNecessary(
-            Mockito.isNull(String.class), Mockito.eq(logMock), Mockito.anyBoolean());
+        .downloadIfNecessary(Mockito.isNull(), Mockito.eq(logMock), Mockito.anyBoolean());
     doReturn(INSTALL_SDK_PATH)
         .when(cloudSdkDownloader)
         .downloadIfNecessary(Mockito.anyString(), Mockito.eq(logMock), Mockito.anyBoolean());

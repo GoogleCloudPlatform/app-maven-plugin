@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.maven.cloudsdk;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkMojoTest {
@@ -61,7 +61,7 @@ public class CloudSdkMojoTest {
   }
 
   @Test
-  public void testGetPackaging() throws Exception {
+  public void testGetPackaging() {
     when(mavenProject.getPackaging()).thenReturn("this-is-a-test-packaging");
 
     assertEquals("this-is-a-test-packaging", mojo.getMavenProject().getPackaging());
