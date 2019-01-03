@@ -32,9 +32,7 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandl
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.maven.model.Build;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,8 +52,6 @@ public class CloudSdkAppEngineFactoryTest {
   private final String ARTIFACT_VERSION = "0.1.0";
 
   @Mock private CloudSdkMojo mojoMock;
-  @Mock private MavenProject projectMock;
-  @Mock private Build buildMock;
   @Mock private Log logMock;
 
   @Mock private CloudSdk cloudSdk;
