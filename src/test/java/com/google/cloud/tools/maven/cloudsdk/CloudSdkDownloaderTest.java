@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.maven.cloudsdk;
 
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -85,7 +84,6 @@ public class CloudSdkDownloaderTest {
   public void testDownloadCloudSdk_ignoreAppEngineComponent()
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
-    lenient().when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(false);
     downloader.downloadIfNecessary(version, log, false);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk, never()).newComponentInstaller();
