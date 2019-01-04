@@ -9,5 +9,5 @@ sudo /opt/google-cloud-sdk/bin/gcloud components update
 sudo /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
 
 cd github/app-maven-plugin
-./mvnw clean install cobertura:cobertura -B -U
+./mvnw clean install -B -U
 # bash <(curl -s https://codecov.io/bash)
