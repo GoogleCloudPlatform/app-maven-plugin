@@ -17,5 +17,5 @@ M2_HOME="$(pwd)"/apache-maven-3.5.0
 PATH=$PATH:$M2_HOME/bin
 
 cd github/app-maven-plugin
-./mvnw clean install cobertura:cobertura -B -U
+./mvnw clean install -B -U
 # bash <(curl -s https://codecov.io/bash)
