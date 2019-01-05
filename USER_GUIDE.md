@@ -162,7 +162,7 @@ The `deploy` configuration has the following parameters:
 | Parameter             | Description |
 | --------------------- | ----------- |
 | `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
-| `projectId`             | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG` or `APPENGINE_CONFIG`.\* |
+| `projectId`           | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG` or `APPENGINE_CONFIG`.\* |
 | `promote`             | Promote the deployed version to receive all traffic. |
 | `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
 | `stopPreviousVersion` | Stop the previously running version when deploying a new version that receives all traffic. |
