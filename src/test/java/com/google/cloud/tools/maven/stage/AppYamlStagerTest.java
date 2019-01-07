@@ -18,8 +18,8 @@ package com.google.cloud.tools.maven.stage;
 
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.api.deploy.AppEngineArchiveStaging;
-import com.google.cloud.tools.appengine.api.deploy.StageArchiveConfiguration;
+import com.google.cloud.tools.appengine.configuration.AppYamlProjectStageConfiguration;
+import com.google.cloud.tools.appengine.operations.AppYamlProjectStaging;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.stage.AppYamlStager.ConfigBuilder;
 import junitparams.JUnitParamsRunner;
@@ -40,9 +40,9 @@ public class AppYamlStagerTest {
 
   @Mock private CloudSdkAppEngineFactory appengineFactory;
   @Mock private MavenProject mavenProject;
-  @Mock private AppEngineArchiveStaging archiveStaging;
+  @Mock private AppYamlProjectStaging staging;
   @Mock private Log logMock;
-  @Mock private StageArchiveConfiguration stageArchiveConfiguration;
+  @Mock private AppYamlProjectStageConfiguration stagingConfiguration;
 
   @Mock private ConfigBuilder configBuilder;
   @Mock private AbstractStageMojo stageMojo;
@@ -54,8 +54,8 @@ public class AppYamlStagerTest {
     when(stageMojo.getMavenProject()).thenReturn(mavenProject);
     when(stageMojo.getLog()).thenReturn(logMock);
     when(stageMojo.getAppEngineFactory()).thenReturn(appengineFactory);
-    when(appengineFactory.appYamlStaging()).thenReturn(archiveStaging);
-    when(configBuilder.buildConfiguration()).thenReturn(stageArchiveConfiguration);
-    when(stageArchiveConfiguration.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
+    when(appengineFactory.appYamlStaging()).thenReturn(staging);
+    when(configBuilder.buildConfiguration()).thenReturn(stagingConfiguration);
+    when(stagingConfiguration.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
   }
 }

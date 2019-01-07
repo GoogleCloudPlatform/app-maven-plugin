@@ -16,25 +16,25 @@
 
 package com.google.cloud.tools.maven.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFile;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineArchiveStaging;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.appengine.cloudsdk.AppCfg;
-import com.google.cloud.tools.appengine.cloudsdk.AppEngineJavaComponentsNotInstalledException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineArchiveStaging;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAuth;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
-import com.google.cloud.tools.appengine.cloudsdk.Gcloud;
-import com.google.cloud.tools.appengine.cloudsdk.LocalRun;
-import com.google.cloud.tools.appengine.cloudsdk.process.LegacyProcessHandler;
-import com.google.cloud.tools.appengine.cloudsdk.process.NonZeroExceptionExitListener;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import com.google.cloud.tools.appengine.operations.AppCfg;
+import com.google.cloud.tools.appengine.operations.AppEngineWebXmlProjectStaging;
+import com.google.cloud.tools.appengine.operations.AppYamlProjectStaging;
+import com.google.cloud.tools.appengine.operations.Auth;
+import com.google.cloud.tools.appengine.operations.CloudSdk;
+import com.google.cloud.tools.appengine.operations.Deployment;
+import com.google.cloud.tools.appengine.operations.DevServer;
+import com.google.cloud.tools.appengine.operations.Gcloud;
+import com.google.cloud.tools.appengine.operations.GenRepoInfoFile;
+import com.google.cloud.tools.appengine.operations.LocalRun;
+import com.google.cloud.tools.appengine.operations.cloudsdk.AppEngineJavaComponentsNotInstalledException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkVersionFileException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.process.LegacyProcessHandler;
+import com.google.cloud.tools.appengine.operations.cloudsdk.process.NonZeroExceptionExitListener;
+import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandler;
+import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessOutputLineListener;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -74,31 +74,31 @@ public class CloudSdkAppEngineFactory {
   }
 
   /** Constructs an object used for auth */
-  public CloudSdkAuth auth() {
+  public Auth auth() {
     return getGcloud().newAuth(newDefaultProcessHandler());
   }
 
   /** Constructs an object used for appengine-web.xml based staging */
-  public AppEngineStandardStaging appengineWebXmlStaging() {
+  public AppEngineWebXmlProjectStaging appengineWebXmlStaging() {
     return getAppCfg().newStaging(newDefaultProcessHandler());
   }
 
   /** Constructs an object used for app.yaml based staging */
-  public AppEngineArchiveStaging appYamlStaging() {
-    return new CloudSdkAppEngineArchiveStaging();
+  public AppYamlProjectStaging appYamlStaging() {
+    return new AppYamlProjectStaging();
   }
 
   /** Constructs an object used for deployment */
-  public AppEngineDeployment deployment() {
+  public Deployment deployment() {
     return getGcloud().newDeployment(newDefaultProcessHandler());
   }
 
   /** Constructs a dev server for the run goal */
-  public AppEngineDevServer devServerRunSync(SupportedDevServerVersion version) {
+  public DevServer devServerRunSync(SupportedDevServerVersion version) {
     return createDevServerForVersion(version, newDefaultProcessHandler());
   }
 
-  AppEngineDevServer createDevServerForVersion(
+  DevServer createDevServerForVersion(
       SupportedDevServerVersion version, ProcessHandler processHandler) {
     switch (version) {
       case V1:
@@ -111,15 +111,14 @@ public class CloudSdkAppEngineFactory {
   }
 
   /** Constructs a dev server in async mode */
-  public AppEngineDevServer devServerRunAsync(
-      int startSuccessTimeout, SupportedDevServerVersion version) {
+  public DevServer devServerRunAsync(int startSuccessTimeout, SupportedDevServerVersion version) {
 
     ProcessHandler ph = newDevAppServerAsyncHandler(startSuccessTimeout);
     return createDevServerForVersion(version, ph);
   }
 
   /** Constructs a dev server for the stop goal */
-  public AppEngineDevServer devServerStop(SupportedDevServerVersion version) {
+  public DevServer devServerStop(SupportedDevServerVersion version) {
     return createDevServerForVersion(version, newDefaultProcessHandler());
   }
 
@@ -128,15 +127,28 @@ public class CloudSdkAppEngineFactory {
     return getGcloud().newGenRepoInfo(newDefaultProcessHandler());
   }
 
-  private CloudSdk buildCloudSdk() {
+  private CloudSdk buildCloudSdkMinimal() {
     return buildCloudSdk(
         mojo,
         new CloudSdkChecker(),
-        new CloudSdkDownloader(CloudSdkDownloader.newManagedSdkFactory()));
+        new CloudSdkDownloader(CloudSdkDownloader.newManagedSdkFactory()),
+        false);
+  }
+
+  @VisibleForTesting
+  CloudSdk buildCloudSdkWithAppEngineComponents() {
+    return buildCloudSdk(
+        mojo,
+        new CloudSdkChecker(),
+        new CloudSdkDownloader(CloudSdkDownloader.newManagedSdkFactory()),
+        true);
   }
 
   static CloudSdk buildCloudSdk(
-      CloudSdkMojo mojo, CloudSdkChecker cloudSdkChecker, CloudSdkDownloader cloudSdkDownloader) {
+      CloudSdkMojo mojo,
+      CloudSdkChecker cloudSdkChecker,
+      CloudSdkDownloader cloudSdkDownloader,
+      boolean requiresAppEngineComponents) {
 
     try {
       if (mojo.getCloudSdkHome() != null) {
@@ -146,12 +158,16 @@ public class CloudSdkAppEngineFactory {
         if (mojo.getCloudSdkVersion() != null) {
           cloudSdkChecker.checkCloudSdk(cloudSdk, mojo.getCloudSdkVersion());
         }
+        if (requiresAppEngineComponents) {
+          cloudSdkChecker.checkForAppEngine(cloudSdk);
+        }
         return cloudSdk;
       } else {
         // we need to use a managed cloud sdk
         return new CloudSdk.Builder()
             .sdkPath(
-                cloudSdkDownloader.downloadIfNecessary(mojo.getCloudSdkVersion(), mojo.getLog()))
+                cloudSdkDownloader.downloadIfNecessary(
+                    mojo.getCloudSdkVersion(), mojo.getLog(), requiresAppEngineComponents))
             .build();
       }
     } catch (CloudSdkNotFoundException
@@ -164,18 +180,18 @@ public class CloudSdkAppEngineFactory {
 
   /** Return a Gcloud instance using global configuration. */
   public Gcloud getGcloud() {
-    return Gcloud.builder(buildCloudSdk())
+    return Gcloud.builder(buildCloudSdkMinimal())
         .setMetricsEnvironment(mojo.getArtifactId(), mojo.getArtifactVersion())
         .setCredentialFile(mojo.getServiceAccountKeyFile())
         .build();
   }
 
   private AppCfg getAppCfg() {
-    return AppCfg.builder(buildCloudSdk()).build();
+    return AppCfg.builder(buildCloudSdkWithAppEngineComponents()).build();
   }
 
   private LocalRun getLocalRun() {
-    return LocalRun.builder(buildCloudSdk()).build();
+    return LocalRun.builder(buildCloudSdkWithAppEngineComponents()).build();
   }
 
   private ProcessHandler newDefaultProcessHandler() {

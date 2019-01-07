@@ -16,10 +16,10 @@
 
 package com.google.cloud.tools.maven.it;
 
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.appengine.cloudsdk.Gcloud;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
+import com.google.cloud.tools.appengine.operations.CloudSdk;
+import com.google.cloud.tools.appengine.operations.Gcloud;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.maven.it.verifier.TailingVerifier;
 import java.io.IOException;
 import java.util.Arrays;

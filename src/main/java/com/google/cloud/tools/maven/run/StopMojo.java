@@ -16,9 +16,9 @@
 
 package com.google.cloud.tools.maven.run;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.StopConfiguration;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkMojo;
 import com.google.common.annotations.VisibleForTesting;

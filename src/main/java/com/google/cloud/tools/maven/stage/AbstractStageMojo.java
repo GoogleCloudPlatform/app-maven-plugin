@@ -21,6 +21,8 @@ import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.maven.plugins.annotations.Parameter;
 
 public abstract class AbstractStageMojo extends CloudSdkMojo {
@@ -140,8 +142,8 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
   )
   private File appEngineDirectory;
 
-  @Parameter(alias = "stage.extraFilesDirectory", property = "app.stage.extraFilesDirectory")
-  private File extraFilesDirectory;
+  @Parameter(alias = "stage.extraFilesDirectories", property = "app.stage.extraFilesDirectories")
+  private List<File> extraFilesDirectories;
 
   /**
    * The directory containing the Dockerfile and other Docker resources.
@@ -235,8 +237,11 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
     return appEngineDirectory == null ? null : appEngineDirectory.toPath();
   }
 
-  public Path getExtraFilesDirectory() {
-    return extraFilesDirectory == null ? null : extraFilesDirectory.toPath();
+  /** Returns a nullable list of Path to user configured extra files directories. */
+  public List<Path> getExtraFilesDirectories() {
+    return extraFilesDirectories == null
+        ? null
+        : extraFilesDirectories.stream().map(File::toPath).collect(Collectors.toList());
   }
 
   public Path getDockerDirectory() {

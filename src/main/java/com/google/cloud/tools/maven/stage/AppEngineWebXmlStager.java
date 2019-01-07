@@ -16,8 +16,8 @@
 
 package com.google.cloud.tools.maven.stage;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.AppEngineWebXmlProjectStageConfiguration;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,7 +48,7 @@ public class AppEngineWebXmlStager implements Stager {
 
   @Override
   public void stage() throws MojoExecutionException {
-    StageStandardConfiguration config = configBuilder.buildConfiguration();
+    AppEngineWebXmlProjectStageConfiguration config = configBuilder.buildConfiguration();
     Path stagingDirectory = config.getStagingDirectory();
 
     stageMojo.getLog().info("Staging the application to: " + stagingDirectory);
@@ -82,8 +82,8 @@ public class AppEngineWebXmlStager implements Stager {
       this.stageMojo = stageMojo;
     }
 
-    StageStandardConfiguration buildConfiguration() throws MojoExecutionException {
-      return StageStandardConfiguration.builder(
+    AppEngineWebXmlProjectStageConfiguration buildConfiguration() throws MojoExecutionException {
+      return AppEngineWebXmlProjectStageConfiguration.builder(
               stageMojo.getSourceDirectory(), stageMojo.getStagingDirectory())
           .compileEncoding(stageMojo.getCompileEncoding())
           .deleteJsps(stageMojo.isDeleteJsps())

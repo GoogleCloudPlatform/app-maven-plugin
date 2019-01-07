@@ -16,14 +16,14 @@
 
 package com.google.cloud.tools.maven.genrepoinfo;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFile;
-import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFileConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.GenRepoInfoFileConfiguration;
+import com.google.cloud.tools.appengine.operations.GenRepoInfoFile;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import java.nio.file.Paths;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -35,7 +35,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /** {@link GenRepoInfoFileMojo} unit tests. */
 @RunWith(MockitoJUnitRunner.class)

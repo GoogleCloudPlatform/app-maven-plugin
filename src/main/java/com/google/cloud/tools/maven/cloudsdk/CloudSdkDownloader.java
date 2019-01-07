@@ -47,7 +47,7 @@ public class CloudSdkDownloader {
    *
    * @return The cloud SDK installation directory
    */
-  public Path downloadIfNecessary(String version, Log log) {
+  public Path downloadIfNecessary(String version, Log log, boolean requiresAppEngineComponents) {
     ManagedCloudSdk managedCloudSdk = managedCloudSdkFactory.apply(version);
     try {
       ProgressListener progressListener = new NoOpProgressListener();
@@ -57,7 +57,8 @@ public class CloudSdkDownloader {
         managedCloudSdk.newInstaller().install(progressListener, consoleListener);
       }
 
-      if (!managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)) {
+      if (requiresAppEngineComponents
+          && !managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)) {
         managedCloudSdk
             .newComponentInstaller()
             .installComponent(SdkComponent.APP_ENGINE_JAVA, progressListener, consoleListener);

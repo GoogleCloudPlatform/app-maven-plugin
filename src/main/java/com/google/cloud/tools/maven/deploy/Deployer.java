@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.maven.deploy;
 
-import com.google.cloud.tools.appengine.cloudsdk.Gcloud;
+import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.maven.config.AppEngineWebXmlConfigProcessor;
 import com.google.cloud.tools.maven.config.AppYamlConfigProcessor;
 import com.google.cloud.tools.maven.config.ConfigProcessor;

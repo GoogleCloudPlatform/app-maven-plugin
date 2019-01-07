@@ -19,8 +19,8 @@ package com.google.cloud.tools.maven.stage;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
-import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
+import com.google.cloud.tools.appengine.configuration.AppEngineWebXmlProjectStageConfiguration;
+import com.google.cloud.tools.appengine.operations.AppEngineWebXmlProjectStaging;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.stage.AppEngineWebXmlStager.ConfigBuilder;
 import com.google.common.base.Strings;
@@ -49,9 +49,9 @@ public class AppEngineWebXmlStagerTest {
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Mock private CloudSdkAppEngineFactory appengineFactory;
-  @Mock private AppEngineStandardStaging standardStaging;
+  @Mock private AppEngineWebXmlProjectStaging staging;
   @Mock private Log logMock;
-  @Mock private StageStandardConfiguration stageArchiveConfiguration;
+  @Mock private AppEngineWebXmlProjectStageConfiguration stagingConfiguration;
 
   @Mock private ConfigBuilder configBuilder;
   @Mock private AbstractStageMojo stageMojo;
@@ -63,9 +63,9 @@ public class AppEngineWebXmlStagerTest {
     MockitoAnnotations.initMocks(this);
     when(stageMojo.getLog()).thenReturn(logMock);
     when(stageMojo.getAppEngineFactory()).thenReturn(appengineFactory);
-    when(appengineFactory.appengineWebXmlStaging()).thenReturn(standardStaging);
-    when(configBuilder.buildConfiguration()).thenReturn(stageArchiveConfiguration);
-    when(stageArchiveConfiguration.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
+    when(appengineFactory.appengineWebXmlStaging()).thenReturn(staging);
+    when(configBuilder.buildConfiguration()).thenReturn(stagingConfiguration);
+    when(stagingConfiguration.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
   }
 
   @Test
@@ -76,7 +76,7 @@ public class AppEngineWebXmlStagerTest {
 
     // verify
     verify(appengineFactory).appengineWebXmlStaging();
-    verify(standardStaging).stageStandard(stageArchiveConfiguration);
+    verify(staging).stageStandard(stagingConfiguration);
     verify(logMock).info("Detected App Engine appengine-web.xml based application.");
   }
 

@@ -1,14 +1,20 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.0.0 (in release candidate)
+## 2.0.0-rc4
+### Changed
+* Old flex build path is now used for all app.yaml (standard and flex) based builds ([#337](../../pull/337))
+* Using `project` instead of `projectId` displays deprecation warning ([#337](../../pull/337))
+* Update to appengine-plugins-core 0.7.1 ([#344](../../pull/344))
+
+## 2.0.0-rc2
 ### Added
 * New `cloudSdkVersion` parameter to specify desired Cloud SDK version.
 * Cloud SDK and java app-engine components are automatically installed when `cloudSdkHome` is not provided. ([#247](../../issues/247))
 * Cloud SDK installation is verified when `cloudSdkHome` and `cloudSdkVersion` are configured. ([#248](../../issues/248))
 * New `<serviceAccountKeyFile>` configuration parameter, and `appengine:cloudSdkLogin` goal. ([#268](../../issues/268))
 * New `appengine:deployAll` goal to deploy application with all valid yaml configs simultaneously. ([#273](../../issues/273), [#277](../../issues/277))
-* Can set `project` and `version` to `GCLOUD_CONFIG` to delegate to gcloud or `APPENGINE_CONFIG` to delegate to appengine-web.xml. ([#305](../../issues/305))
+* Can set `projectId` and `version` to `GCLOUD_CONFIG` to delegate to gcloud or `APPENGINE_CONFIG` to delegate to appengine-web.xml. ([#305](../../issues/305))
 
 ### Changed
 * `appengine:stop` no longer fails if the stop request to server fails, but it will log an error. ([#309](https://github.com/GoogleCloudPlatform/app-maven-plugin/pull/309))

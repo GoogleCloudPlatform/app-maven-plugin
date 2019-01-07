@@ -19,8 +19,8 @@ package com.google.cloud.tools.maven.run;
 import static com.google.cloud.tools.maven.config.ConfigProcessor.APPENGINE_CONFIG;
 import static com.google.cloud.tools.maven.config.ConfigProcessor.GCLOUD_CONFIG;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.RunConfiguration;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.config.ConfigReader;
 import com.google.common.annotations.VisibleForTesting;

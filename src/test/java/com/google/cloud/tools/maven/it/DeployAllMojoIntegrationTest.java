@@ -16,8 +16,8 @@
 
 package com.google.cloud.tools.maven.it;
 
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.maven.it.verifier.FlexibleVerifier;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import java.io.IOException;

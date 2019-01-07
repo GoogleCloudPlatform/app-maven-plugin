@@ -18,7 +18,7 @@ package com.google.cloud.tools.maven.config;
 
 import static org.junit.Assert.fail;
 
-import com.google.cloud.tools.appengine.cloudsdk.Gcloud;
+import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.maven.deploy.AbstractDeployMojo;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AppEngineWebXmlConfigProcessorTest {

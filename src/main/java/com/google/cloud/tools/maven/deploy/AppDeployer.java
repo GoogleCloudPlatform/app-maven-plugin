@@ -16,9 +16,9 @@
 
 package com.google.cloud.tools.maven.deploy;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.configuration.DeployConfiguration;
+import com.google.cloud.tools.appengine.configuration.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.maven.config.ConfigProcessor;
 import com.google.cloud.tools.maven.stage.Stager;
 import com.google.common.annotations.VisibleForTesting;
@@ -178,7 +178,7 @@ public class AppDeployer implements Deployer {
           .promote(deployMojo.getPromote())
           .server(deployMojo.getServer())
           .stopPreviousVersion(deployMojo.getStopPreviousVersion())
-          .version(configProcessor.processVersion(deployMojo.getProjectId()))
+          .version(configProcessor.processVersion(deployMojo.getVersion()))
           .build();
     }
 

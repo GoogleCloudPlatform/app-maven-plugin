@@ -22,9 +22,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.appengine.cloudsdk.Gcloud;
+import com.google.cloud.tools.appengine.AppEngineException;
+import com.google.cloud.tools.appengine.operations.DevServer;
+import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.config.ConfigProcessor;
@@ -66,7 +66,7 @@ public class RunnerTest {
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Mock private CloudSdkAppEngineFactory appengineFactory;
-  @Mock private AppEngineDevServer devServer;
+  @Mock private DevServer devServer;
   @Mock private MavenProject mavenProject;
   @Mock private Log logMock;
   @Mock private ConfigReader configReader;
