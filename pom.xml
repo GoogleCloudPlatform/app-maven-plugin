@@ -105,7 +105,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.0.54-beta</version>
+      <version>2.23.4</version>
       <scope>test</scope>
     </dependency>
 
@@ -150,7 +150,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>default-descriptor</id>
@@ -169,8 +169,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.8.0</version>
         <configuration>
+          <!-- Use <release> instead when migrating to JDK 11. -->
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
@@ -262,13 +263,13 @@
         </executions>
       </plugin>
 
-      <!-- Findbugs -->
+      <!-- SpotBugs -->
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.3</version>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>3.1.10</version>
         <configuration>
-          <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+          <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
         </configuration>
         <executions>
           <execution>
@@ -307,7 +308,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>2.22.1</version>
         <configuration>
           <excludes>
             <exclude>**/*IntegrationTest.java</exclude>
@@ -319,7 +320,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>2.22.1</version>
         <configuration>
           <includes>
             <include>**/*IntegrationTest.java</include>
@@ -344,7 +345,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.7.201606060606</version>
+        <version>0.8.2</version>
         <executions>
           <execution>
             <goals>

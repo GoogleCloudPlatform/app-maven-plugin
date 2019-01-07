@@ -28,6 +28,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.maven.it.VerificationException;
@@ -55,51 +59,37 @@ public class AbstractRunMojoIntegrationTest extends AbstractMojoIntegrationTest 
   @Test
   @Parameters
   public void testRun(
-      final SupportedDevServerVersion version, String[] profiles, String expectedModuleName)
-      throws IOException, VerificationException, InterruptedException {
+      SupportedDevServerVersion version, String[] profiles, String expectedModuleName)
+      throws IOException, VerificationException, InterruptedException, ExecutionException {
 
-    final String name = "testRun" + version + Arrays.toString(profiles);
-    final Verifier verifier = createVerifier(name, version);
-    final StringBuilder urlContent = new StringBuilder();
+    String name = "testRun" + version + Arrays.toString(profiles);
+    Verifier verifier = createVerifier(name, version);
+    Arrays.stream(profiles)
+        .filter(profile -> !profile.isEmpty())
+        .map("-P"::concat)
+        .forEach(verifier::addCliOption);
 
-    Thread thread =
-        new Thread() {
-          @Override
-          public void run() {
-            try {
-              // wait up to 60 seconds for the server to start (retry every second)
-              urlContent.append(UrlUtils.getUrlContentWithRetries(getServerUrl(), 60000, 1000));
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            } finally {
+    ExecutorService executor = Executors.newSingleThreadExecutor(); // sequential execution
+    Future<String> urlContent =
+        // wait up to 5 minutes for the server to start (retry every second)
+        // it may take a long time when installing Cloud SDK components for the first time
+        executor.submit(() -> UrlUtils.getUrlContentWithRetries(getServerUrl(), 300000, 1000));
+    Future<Boolean> isUrlDown =
+        executor.submit(
+            () -> {
               // stop server
-              try {
-                Verifier stopVerifier = createVerifier(name + "_stop", version);
-                stopVerifier.executeGoal("appengine:stop");
-                // wait up to 5 seconds for the server to stop
-                assertTrue(UrlUtils.isUrlDownWithRetries(getServerUrl(), 5000, 100));
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
-          }
-        };
-    thread.setDaemon(true);
-    thread.start();
+              createVerifier(name + "_stop", version).executeGoal("appengine:stop");
+              // wait up to 5 seconds for the server to stop
+              return UrlUtils.isUrlDownWithRetries(getServerUrl(), 5000, 100);
+            });
+    executor.shutdown();
 
     // execute
-    for (String profile : profiles) {
-      if (!profile.isEmpty()) {
-        verifier.addCliOption("-P" + profile);
-      }
-    }
     verifier.executeGoals(Arrays.asList("package", "appengine:run"));
 
-    thread.join();
-
-    assertThat(
-        urlContent.toString(), containsString("Hello from the App Engine Standard project."));
-    assertThat(urlContent.toString(), containsString("TEST_VAR=testVariableValue"));
+    assertThat(urlContent.get(), containsString("Hello from the App Engine Standard project."));
+    assertThat(urlContent.get(), containsString("TEST_VAR=testVariableValue"));
+    assertTrue(isUrlDown.get());
     verifier.verifyErrorFreeLog();
     verifier.verifyTextInLog("Dev App Server is now running");
     verifier.verifyTextInLog("Module instance " + expectedModuleName + " is running");

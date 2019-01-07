@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkDownloaderTest {
@@ -57,7 +57,6 @@ public class CloudSdkDownloaderTest {
   @Before
   public void setup() {
     when(managedCloudSdkFactory.apply(version)).thenReturn(managedCloudSdk);
-    when(managedCloudSdkFactory.apply(null)).thenReturn(managedCloudSdk);
     when(managedCloudSdk.newInstaller()).thenReturn(installer);
     when(managedCloudSdk.newComponentInstaller()).thenReturn(componentInstaller);
     when(managedCloudSdk.newUpdater()).thenReturn(updater);
@@ -85,7 +84,6 @@ public class CloudSdkDownloaderTest {
   public void testDownloadCloudSdk_ignoreAppEngineComponent()
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
-    when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(false);
     downloader.downloadIfNecessary(version, log, false);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk, never()).newComponentInstaller();
