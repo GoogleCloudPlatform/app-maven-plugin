@@ -71,9 +71,9 @@ public class AbstractRunMojoIntegrationTest extends AbstractMojoIntegrationTest 
 
     ExecutorService executor = Executors.newSingleThreadExecutor(); // sequential execution
     Future<String> urlContent =
-        // wait up to 5 minutes for the server to start (retry every second)
+        // wait up to 8 minutes for the server to start (retry every second)
         // it may take a long time when installing Cloud SDK components for the first time
-        executor.submit(() -> UrlUtils.getUrlContentWithRetries(getServerUrl(), 300000, 1000));
+        executor.submit(() -> UrlUtils.getUrlContentWithRetries(getServerUrl(), 480000, 1000));
     Future<Boolean> isUrlDown =
         executor.submit(
             () -> {
