@@ -21,7 +21,6 @@ import com.google.cloud.tools.appengine.configuration.AppYamlProjectStageConfigu
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public class AppYamlStager implements Stager {
@@ -46,17 +45,12 @@ public class AppYamlStager implements Stager {
     stageMojo.getLog().info("Staging the application to: " + stagingDirectory);
     stageMojo.getLog().info("Detected App Engine app.yaml based application.");
 
-    // delete staging directory if it exists
-    if (Files.exists(stagingDirectory)) {
-      stageMojo.getLog().info("Deleting the staging directory: " + stagingDirectory);
+    if (!Files.exists(stagingDirectory)) {
       try {
-        FileUtils.deleteDirectory(stagingDirectory.toFile());
+        Files.createDirectories(stagingDirectory);
       } catch (IOException ex) {
-        throw new MojoExecutionException("Unable to delete staging directory.", ex);
+        throw new MojoExecutionException("Unable to create staging directory.", ex);
       }
-    }
-    if (!stagingDirectory.toFile().mkdir()) {
-      throw new MojoExecutionException("Unable to create staging directory");
     }
 
     try {
