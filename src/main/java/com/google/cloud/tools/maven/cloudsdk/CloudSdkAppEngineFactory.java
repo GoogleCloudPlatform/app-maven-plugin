@@ -23,9 +23,9 @@ import com.google.cloud.tools.appengine.operations.Auth;
 import com.google.cloud.tools.appengine.operations.CloudSdk;
 import com.google.cloud.tools.appengine.operations.Deployment;
 import com.google.cloud.tools.appengine.operations.DevServer;
+import com.google.cloud.tools.appengine.operations.DevServers;
 import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.appengine.operations.GenRepoInfoFile;
-import com.google.cloud.tools.appengine.operations.LocalRun;
 import com.google.cloud.tools.appengine.operations.cloudsdk.AppEngineJavaComponentsNotInstalledException;
 import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
 import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkOutOfDateException;
@@ -102,9 +102,9 @@ public class CloudSdkAppEngineFactory {
       SupportedDevServerVersion version, ProcessHandler processHandler) {
     switch (version) {
       case V1:
-        return getLocalRun().newDevAppServer1(processHandler);
+        return getDevServers().newDevAppServer1(processHandler);
       case V2ALPHA:
-        return getLocalRun().newDevAppServer2(processHandler);
+        return getDevServers().newDevAppServer2(processHandler);
       default:
         throw new IllegalArgumentException("Unsupported dev server version: " + version);
     }
@@ -190,8 +190,8 @@ public class CloudSdkAppEngineFactory {
     return AppCfg.builder(buildCloudSdkWithAppEngineComponents()).build();
   }
 
-  private LocalRun getLocalRun() {
-    return LocalRun.builder(buildCloudSdkWithAppEngineComponents()).build();
+  private DevServers getDevServers() {
+    return DevServers.builder(buildCloudSdkWithAppEngineComponents()).build();
   }
 
   private ProcessHandler newDefaultProcessHandler() {
