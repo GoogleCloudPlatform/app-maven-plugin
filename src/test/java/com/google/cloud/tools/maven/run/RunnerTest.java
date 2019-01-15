@@ -17,7 +17,7 @@
 package com.google.cloud.tools.maven.run;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.contains;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
