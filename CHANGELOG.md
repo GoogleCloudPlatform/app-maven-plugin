@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.0.0-rc5
+### Changed
+* `app.yaml` based builds do not delete staging directory when staging ([#361](../../pull/362))
+* Update to appengine-plugins-core 0.7.3 ([#361](../../pull/362))
+* `extraFileDirectory` -> `extraFileDirectories` ([#353](../../pull/353))
+* Only download appengine components of cloud sdk when running compat projects ([#352](../../pull/352))
+
 ## 2.0.0-rc4
 ### Changed
 * Old flex build path is now used for all app.yaml (standard and flex) based builds ([#337](../../pull/337))
