@@ -37,15 +37,11 @@ import junitparams.Parameters;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitParamsRunner.class)
 public class AbstractRunMojoIntegrationTest extends AbstractMojoIntegrationTest {
-
-  @Rule public ExpectedException expectedException = ExpectedException.none();
 
   private int serverPort;
   private int adminPort;
