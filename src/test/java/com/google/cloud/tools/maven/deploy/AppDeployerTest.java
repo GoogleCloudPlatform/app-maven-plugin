@@ -17,19 +17,13 @@
 package com.google.cloud.tools.maven.deploy;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.times;
 
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.DeployConfiguration;
 import com.google.cloud.tools.appengine.configuration.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.operations.Deployment;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
-import com.google.cloud.tools.maven.config.AppEngineWebXmlConfigProcessor;
-import com.google.cloud.tools.maven.config.AppYamlConfigProcessor;
-import com.google.cloud.tools.maven.config.ConfigProcessor;
 import com.google.cloud.tools.maven.deploy.AppDeployer.ConfigBuilder;
-import com.google.cloud.tools.maven.stage.AppEngineWebXmlStager;
-import com.google.cloud.tools.maven.stage.AppYamlStager;
 import com.google.cloud.tools.maven.stage.Stager;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -38,7 +32,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import junitparams.JUnitParamsRunner;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Assert;
@@ -47,106 +40,57 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(JUnitParamsRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class AppDeployerTest {
 
   @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Mock private ConfigBuilder configBuilder;
-  @Mock private ConfigProcessor configProcessor;
   @Mock private Stager stager;
   @Mock private AbstractDeployMojo deployMojo;
 
   private Path stagingDirectory;
-  private Path yamlConfigDirectory;
+  private Path appengineDirectory;
   @Mock private CloudSdkAppEngineFactory appEngineFactory;
   @Mock private Deployment appEngineDeployment;
   @Mock private DeployConfiguration deployConfiguration;
   @Mock private DeployProjectConfigurationConfiguration deployProjectConfigurationConfiguration;
   @Mock private Log mockLog;
 
-  @InjectMocks private AppDeployer testDeployer;
+  private AppDeployer testDeployer;
 
   @Before
   public void setup() throws IOException {
-    MockitoAnnotations.initMocks(this);
     stagingDirectory = tempFolder.newFolder("staging").toPath();
-    yamlConfigDirectory = tempFolder.newFolder("yaml-config").toPath();
+    appengineDirectory = tempFolder.newFolder("appengine").toPath();
+
+    testDeployer = new AppDeployer(deployMojo, stager, configBuilder, appengineDirectory);
 
     Mockito.when(deployMojo.getStagingDirectory()).thenReturn(stagingDirectory);
     Mockito.when(deployMojo.getAppEngineFactory()).thenReturn(appEngineFactory);
     Mockito.when(appEngineFactory.deployment()).thenReturn(appEngineDeployment);
-    Mockito.when(configBuilder.buildDeployConfiguration(Mockito.any()))
-        .thenReturn(deployConfiguration);
-    Mockito.when(configBuilder.buildDeployProjectConfigurationConfiguration())
+    Mockito.when(configBuilder.buildDeployProjectConfigurationConfiguration(appengineDirectory))
         .thenReturn(deployProjectConfigurationConfiguration);
-    Mockito.when(configProcessor.processAppEngineDirectory(deployMojo))
-        .thenReturn(yamlConfigDirectory);
     Mockito.when(deployMojo.getLog()).thenReturn(mockLog);
   }
 
   @Test
-  public void testNewDeployer_appengineWebXml() throws MojoExecutionException {
-    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
-    Mockito.when(deployMojo.isAppEngineWebXmlBased()).thenReturn(true);
-    Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
-    Mockito.when(deployMojo.getSourceDirectory()).thenReturn(tempFolder.getRoot().toPath());
-
-    AppDeployer deployer = (AppDeployer) new Deployer.Factory().newDeployer(deployMojo);
-    Mockito.verify(deployMojo).getAppEngineWebXml();
-    Assert.assertEquals(AppEngineWebXmlConfigProcessor.class, deployer.configProcessor.getClass());
-    Assert.assertEquals(AppEngineWebXmlStager.class, deployer.stager.getClass());
-  }
-
-  @Test
-  public void testNewDeployer_appYaml() throws MojoExecutionException {
-    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
-    Mockito.when(deployMojo.getArtifact()).thenReturn(tempFolder.getRoot().toPath());
-
-    AppDeployer deployer = (AppDeployer) new Deployer.Factory().newDeployer(deployMojo);
-    Mockito.verify(deployMojo, times(0)).getAppEngineWebXml();
-    Assert.assertEquals(AppYamlConfigProcessor.class, deployer.configProcessor.getClass());
-    Assert.assertEquals(AppYamlStager.class, deployer.stager.getClass());
-  }
-
-  @Test
-  public void testNewDeployer_noArtifact() {
-    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(true);
-    try {
-      new Deployer.Factory().newDeployer(deployMojo);
-      fail();
-    } catch (MojoExecutionException ex) {
-      Assert.assertEquals(
-          "\nCould not determine appengine environment, did you package your application?"
-              + "\nRun 'mvn package appengine:deploy'",
-          ex.getMessage());
-    }
-  }
-
-  @Test
-  public void testNewDeployer_noOpDeployer() throws MojoExecutionException {
-    Mockito.when(deployMojo.isAppEngineCompatiblePackaging()).thenReturn(false);
-    Assert.assertEquals(
-        NoOpDeployer.class, new Deployer.Factory().newDeployer(deployMojo).getClass());
-  }
-
-  @Test
   public void testDeploy() throws MojoExecutionException, AppEngineException {
+    Mockito.when(configBuilder.buildDeployConfiguration(ImmutableList.of(stagingDirectory)))
+        .thenReturn(deployConfiguration);
     testDeployer.deploy();
     Mockito.verify(stager).stage();
-    Mockito.verify(configBuilder).buildDeployConfiguration(ImmutableList.of(stagingDirectory));
     Mockito.verify(appEngineDeployment).deploy(deployConfiguration);
   }
 
   private List<Path> createStagedYamls(String... names) throws IOException {
     List<Path> createdFiles = new ArrayList<>();
     for (String name : names) {
-      createdFiles.add(Files.createFile(yamlConfigDirectory.resolve(name + ".yaml")));
+      createdFiles.add(Files.createFile(appengineDirectory.resolve(name + ".yaml")));
     }
     return createdFiles;
   }
@@ -164,11 +108,13 @@ public class AppDeployerTest {
             .addAll(createStagedYamls("cron", "dispatch", "dos", "index", "queue"))
             .build();
     // also create a file we'll ignore
-    Files.createFile(yamlConfigDirectory.resolve("ignored"));
+    Files.createFile(appengineDirectory.resolve("ignored"));
+
+    Mockito.when(configBuilder.buildDeployConfiguration(Mockito.eq(files)))
+        .thenReturn(deployConfiguration);
 
     testDeployer.deployAll();
     Mockito.verify(stager).stage();
-    Mockito.verify(configBuilder).buildDeployConfiguration(Mockito.eq(files));
     Mockito.verify(appEngineDeployment).deploy(deployConfiguration);
   }
 
@@ -181,7 +127,10 @@ public class AppDeployerTest {
             .addAll(createStagedYamls("dispatch", "dos", "queue"))
             .build();
     // also create a file we'll ignore
-    Files.createFile(yamlConfigDirectory.resolve("ignored"));
+    Files.createFile(appengineDirectory.resolve("ignored"));
+
+    Mockito.when(configBuilder.buildDeployConfiguration(Mockito.eq(files)))
+        .thenReturn(deployConfiguration);
 
     testDeployer.deployAll();
     Mockito.verify(stager).stage();
@@ -205,7 +154,7 @@ public class AppDeployerTest {
   public void testDeployCron() throws MojoExecutionException, AppEngineException {
     testDeployer.deployCron();
     Mockito.verify(stager).stage();
-    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration();
+    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration(appengineDirectory);
     Mockito.verify(appEngineDeployment).deployCron(deployProjectConfigurationConfiguration);
   }
 
@@ -213,7 +162,7 @@ public class AppDeployerTest {
   public void testDeployDos() throws MojoExecutionException, AppEngineException {
     testDeployer.deployDos();
     Mockito.verify(stager).stage();
-    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration();
+    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration(appengineDirectory);
     Mockito.verify(appEngineDeployment).deployDos(deployProjectConfigurationConfiguration);
   }
 
@@ -221,7 +170,7 @@ public class AppDeployerTest {
   public void testDeployDispatch() throws MojoExecutionException, AppEngineException {
     testDeployer.deployDispatch();
     Mockito.verify(stager).stage();
-    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration();
+    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration(appengineDirectory);
     Mockito.verify(appEngineDeployment).deployDispatch(deployProjectConfigurationConfiguration);
   }
 
@@ -229,7 +178,7 @@ public class AppDeployerTest {
   public void testDeployIndex() throws MojoExecutionException, AppEngineException {
     testDeployer.deployIndex();
     Mockito.verify(stager).stage();
-    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration();
+    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration(appengineDirectory);
     Mockito.verify(appEngineDeployment).deployIndex(deployProjectConfigurationConfiguration);
   }
 
@@ -237,7 +186,7 @@ public class AppDeployerTest {
   public void testDeployQueue() throws MojoExecutionException, AppEngineException {
     testDeployer.deployQueue();
     Mockito.verify(stager).stage();
-    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration();
+    Mockito.verify(configBuilder).buildDeployProjectConfigurationConfiguration(appengineDirectory);
     Mockito.verify(appEngineDeployment).deployQueue(deployProjectConfigurationConfiguration);
   }
 

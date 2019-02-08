@@ -16,13 +16,10 @@
 
 package com.google.cloud.tools.maven.run;
 
-import static com.google.cloud.tools.maven.config.ConfigProcessor.APPENGINE_CONFIG;
-import static com.google.cloud.tools.maven.config.ConfigProcessor.GCLOUD_CONFIG;
-
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.RunConfiguration;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
-import com.google.cloud.tools.maven.config.ConfigReader;
+import com.google.cloud.tools.maven.deploy.ConfigProcessor;
 import com.google.common.annotations.VisibleForTesting;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,9 +53,7 @@ public class Runner {
       runMojo
           .getAppEngineFactory()
           .devServerRunSync(convertedVersion)
-          .run(
-              configBuilder.buildRunConfiguration(
-                  processServices(), processProjectId(new ConfigReader())));
+          .run(configBuilder.buildRunConfiguration(processServices(), processProjectId()));
     } catch (AppEngineException ex) {
       throw new MojoExecutionException("Failed to run devappserver", ex);
     }
@@ -80,9 +75,7 @@ public class Runner {
       runMojo
           .getAppEngineFactory()
           .devServerRunAsync(startSuccessTimeout, convertedVersion)
-          .run(
-              configBuilder.buildRunConfiguration(
-                  processServices(), processProjectId(new ConfigReader())));
+          .run(configBuilder.buildRunConfiguration(processServices(), processProjectId()));
     } catch (AppEngineException ex) {
       throw new RuntimeException(ex);
     }
@@ -118,16 +111,10 @@ public class Runner {
     return services;
   }
 
-  @VisibleForTesting
-  String processProjectId(ConfigReader configReader) {
+  String processProjectId() {
     String projectId = runMojo.getProjectId();
-    if (projectId != null) {
-      if (projectId.equals(GCLOUD_CONFIG)) {
-        return configReader.getProjectId(runMojo.getAppEngineFactory().getGcloud());
-      } else if (projectId.equals(APPENGINE_CONFIG)) {
-        Path appengineWebXml = getAppDir().resolve("WEB-INF").resolve("appengine-web.xml");
-        return configReader.getProjectId(appengineWebXml);
-      }
+    if (ConfigProcessor.GCLOUD_CONFIG.equals(projectId)) {
+      return runMojo.getAppEngineFactory().newConfigReader().getProjectId();
     }
     return projectId;
   }

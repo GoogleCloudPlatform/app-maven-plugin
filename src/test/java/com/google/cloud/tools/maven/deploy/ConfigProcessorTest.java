@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.maven.config;
+package com.google.cloud.tools.maven.deploy;
 
 import static org.junit.Assert.fail;
 
-import com.google.cloud.tools.appengine.operations.Gcloud;
-import com.google.cloud.tools.maven.deploy.AbstractDeployMojo;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,16 +28,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AppEngineWebXmlConfigProcessorTest {
+public class ConfigProcessorTest {
+
   private static final String PROJECT_BUILD = "project-build";
   private static final String VERSION_BUILD = "version-build";
 
-  @Mock private Gcloud gcloud;
-  @Mock private Path appengineWebXml;
   @Mock private ConfigReader configReader;
-  @Mock private AbstractDeployMojo deployMojo;
 
-  @InjectMocks private AppEngineWebXmlConfigProcessor testProcessor;
+  @InjectMocks private ConfigProcessor testProcessor;
 
   @Test
   public void testProcessProjectId_fromBuildConfig() {
@@ -49,16 +44,19 @@ public class AppEngineWebXmlConfigProcessorTest {
 
   @Test
   public void testProcessProjectId_fromGcloud() {
-    Mockito.when(configReader.getProjectId(gcloud)).thenReturn("test-from-gcloud");
+    Mockito.when(configReader.getProjectId()).thenReturn("test-from-gcloud");
     Assert.assertEquals(
         "test-from-gcloud", testProcessor.processProjectId(ConfigProcessor.GCLOUD_CONFIG));
   }
 
   @Test
   public void testProcessProjectId_fromAppengineWebXml() {
-    Mockito.when(configReader.getProjectId(appengineWebXml)).thenReturn("test-from-xml");
-    Assert.assertEquals(
-        "test-from-xml", testProcessor.processProjectId(ConfigProcessor.APPENGINE_CONFIG));
+    try {
+      testProcessor.processProjectId(ConfigProcessor.APPENGINE_CONFIG);
+      fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertEquals(ConfigProcessor.PROJECT_ERROR, ex.getMessage());
+    }
   }
 
   @Test
@@ -67,7 +65,7 @@ public class AppEngineWebXmlConfigProcessorTest {
       testProcessor.processProjectId(null);
       fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineWebXmlConfigProcessor.PROJECT_ERROR, ex.getMessage());
+      Assert.assertEquals(ConfigProcessor.PROJECT_ERROR, ex.getMessage());
     }
   }
 
@@ -83,9 +81,12 @@ public class AppEngineWebXmlConfigProcessorTest {
 
   @Test
   public void testProcessVersion_fromAppengineWebXml() {
-    Mockito.when(configReader.getVersion(appengineWebXml)).thenReturn("test-from-xml");
-    Assert.assertEquals(
-        "test-from-xml", testProcessor.processVersion(ConfigProcessor.APPENGINE_CONFIG));
+    try {
+      testProcessor.processVersion(ConfigProcessor.APPENGINE_CONFIG);
+      fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertEquals(ConfigProcessor.VERSION_ERROR, ex.getMessage());
+    }
   }
 
   @Test
@@ -94,16 +95,7 @@ public class AppEngineWebXmlConfigProcessorTest {
       testProcessor.processVersion(null);
       fail();
     } catch (IllegalArgumentException ex) {
-      Assert.assertEquals(AppEngineWebXmlConfigProcessor.VERSION_ERROR, ex.getMessage());
+      Assert.assertEquals(ConfigProcessor.VERSION_ERROR, ex.getMessage());
     }
-  }
-
-  @Test
-  public void testProcessAppEngineDirectory() {
-    Path fakeStagingPath = Paths.get("fake", "staging", "path");
-    Mockito.when(deployMojo.getStagingDirectory()).thenReturn(fakeStagingPath);
-    Assert.assertEquals(
-        fakeStagingPath.resolve("WEB-INF").resolve("appengine-generated"),
-        testProcessor.processAppEngineDirectory(deployMojo));
   }
 }

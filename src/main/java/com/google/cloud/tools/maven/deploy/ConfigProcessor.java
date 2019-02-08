@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.maven.config;
+package com.google.cloud.tools.maven.deploy;
 
-import com.google.cloud.tools.appengine.operations.Gcloud;
-import com.google.cloud.tools.maven.deploy.AbstractDeployMojo;
+import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
 import com.google.common.annotations.VisibleForTesting;
-import java.nio.file.Path;
 
-public class AppYamlConfigProcessor implements ConfigProcessor {
+public class ConfigProcessor {
+  static final String APPENGINE_CONFIG = "APPENGINE_CONFIG";
+  public static final String GCLOUD_CONFIG = "GCLOUD_CONFIG";
 
-  private final Gcloud gcloud;
   private final ConfigReader configReader;
 
-  public AppYamlConfigProcessor(Gcloud gcloud, ConfigReader configReader) {
-    this.gcloud = gcloud;
+  public ConfigProcessor(ConfigReader configReader) {
     this.configReader = configReader;
   }
 
@@ -41,14 +39,17 @@ public class AppYamlConfigProcessor implements ConfigProcessor {
           + " to use project from your gcloud configuration\n"
           + "3. Using projectId = "
           + APPENGINE_CONFIG
-          + " is not allowed for app.yaml based projects";
+          + " has been deprecated.";
 
-  @Override
+  /**
+   * Process user configuration of "projectId". If set to GCLOUD_CONFIG then read from gcloud's
+   * global state. If set but not a keyword then just return the set value.
+   */
   public String processProjectId(String projectId) {
     if (projectId == null || projectId.trim().isEmpty() || projectId.equals(APPENGINE_CONFIG)) {
       throw new IllegalArgumentException(PROJECT_ERROR);
     } else if (projectId.equals(GCLOUD_CONFIG)) {
-      return configReader.getProjectId(gcloud);
+      return configReader.getProjectId();
     }
     return projectId;
   }
@@ -63,29 +64,18 @@ public class AppYamlConfigProcessor implements ConfigProcessor {
           + " to have gcloud generate a version for you\n"
           + "3. Using version = "
           + APPENGINE_CONFIG
-          + " is not allowed for app.yaml based projects";
+          + " has been deprecated";
 
-  @Override
-  public String processVersion(String version) {
+  /**
+   * Process user configuration of "version". If set to GCLOUD_CONFIG then allow gcloud to generate
+   * a version. If set but not a keyword then just return the set value.
+   */
+  String processVersion(String version) {
     if (version == null || version.trim().isEmpty() || version.equals(APPENGINE_CONFIG)) {
       throw new IllegalArgumentException(VERSION_ERROR);
     } else if (version.equals(GCLOUD_CONFIG)) {
       return null;
     }
     return version;
-  }
-
-  @Override
-  public Path processAppEngineDirectory(AbstractDeployMojo deployMojo) {
-    if (deployMojo.getAppEngineDirectory() == null) {
-      return deployMojo
-          .getMavenProject()
-          .getBasedir()
-          .toPath()
-          .resolve("src")
-          .resolve("main")
-          .resolve("appengine");
-    }
-    return deployMojo.getAppEngineDirectory();
   }
 }

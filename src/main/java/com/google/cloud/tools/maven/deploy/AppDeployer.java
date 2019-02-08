@@ -19,7 +19,6 @@ package com.google.cloud.tools.maven.deploy;
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.DeployConfiguration;
 import com.google.cloud.tools.appengine.configuration.DeployProjectConfigurationConfiguration;
-import com.google.cloud.tools.maven.config.ConfigProcessor;
 import com.google.cloud.tools.maven.stage.Stager;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
@@ -31,7 +30,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class AppDeployer implements Deployer {
 
   @VisibleForTesting final Stager stager;
-  @VisibleForTesting final ConfigProcessor configProcessor;
+  @VisibleForTesting final Path appengineDirectory;
   private final AbstractDeployMojo deployMojo;
   private final ConfigBuilder configBuilder;
 
@@ -39,12 +38,12 @@ public class AppDeployer implements Deployer {
   AppDeployer(
       AbstractDeployMojo deployMojo,
       Stager stager,
-      ConfigProcessor configProcessor,
-      ConfigBuilder configBuilder) {
+      ConfigBuilder configBuilder,
+      Path appengineDirectory) {
     this.deployMojo = deployMojo;
     this.stager = stager;
-    this.configProcessor = configProcessor;
     this.configBuilder = configBuilder;
+    this.appengineDirectory = appengineDirectory;
   }
 
   /** Deploy a single application (and no project configuration). */
@@ -76,9 +75,8 @@ public class AppDeployer implements Deployer {
 
     // Look for config yamls
     String[] configYamls = {"cron.yaml", "dispatch.yaml", "dos.yaml", "index.yaml", "queue.yaml"};
-    Path appengineConfigPath = configProcessor.processAppEngineDirectory(deployMojo);
     for (String yamlName : configYamls) {
-      Path yaml = appengineConfigPath.resolve(yamlName);
+      Path yaml = appengineDirectory.resolve(yamlName);
       if (Files.exists(yaml)) {
         deployMojo.getLog().info("deployAll: Preparing to deploy " + yamlName);
         computedDeployables.add(yaml);
@@ -102,7 +100,8 @@ public class AppDeployer implements Deployer {
       deployMojo
           .getAppEngineFactory()
           .deployment()
-          .deployCron(configBuilder.buildDeployProjectConfigurationConfiguration());
+          .deployCron(
+              configBuilder.buildDeployProjectConfigurationConfiguration(appengineDirectory));
     } catch (AppEngineException ex) {
       throw new MojoExecutionException("Failed to deploy", ex);
     }
@@ -115,7 +114,8 @@ public class AppDeployer implements Deployer {
       deployMojo
           .getAppEngineFactory()
           .deployment()
-          .deployDispatch(configBuilder.buildDeployProjectConfigurationConfiguration());
+          .deployDispatch(
+              configBuilder.buildDeployProjectConfigurationConfiguration(appengineDirectory));
     } catch (AppEngineException ex) {
       throw new MojoExecutionException("Failed to deploy", ex);
     }
@@ -128,7 +128,8 @@ public class AppDeployer implements Deployer {
       deployMojo
           .getAppEngineFactory()
           .deployment()
-          .deployDos(configBuilder.buildDeployProjectConfigurationConfiguration());
+          .deployDos(
+              configBuilder.buildDeployProjectConfigurationConfiguration(appengineDirectory));
     } catch (AppEngineException ex) {
       throw new MojoExecutionException("Failed to deploy", ex);
     }
@@ -141,7 +142,8 @@ public class AppDeployer implements Deployer {
       deployMojo
           .getAppEngineFactory()
           .deployment()
-          .deployIndex(configBuilder.buildDeployProjectConfigurationConfiguration());
+          .deployIndex(
+              configBuilder.buildDeployProjectConfigurationConfiguration(appengineDirectory));
     } catch (AppEngineException ex) {
       throw new MojoExecutionException("Failed to deploy", ex);
     }
@@ -154,7 +156,8 @@ public class AppDeployer implements Deployer {
       deployMojo
           .getAppEngineFactory()
           .deployment()
-          .deployQueue(configBuilder.buildDeployProjectConfigurationConfiguration());
+          .deployQueue(
+              configBuilder.buildDeployProjectConfigurationConfiguration(appengineDirectory));
     } catch (AppEngineException ex) {
       throw new MojoExecutionException("Failed to deploy", ex);
     }
@@ -182,9 +185,9 @@ public class AppDeployer implements Deployer {
           .build();
     }
 
-    DeployProjectConfigurationConfiguration buildDeployProjectConfigurationConfiguration() {
-      return DeployProjectConfigurationConfiguration.builder(
-              configProcessor.processAppEngineDirectory(deployMojo))
+    DeployProjectConfigurationConfiguration buildDeployProjectConfigurationConfiguration(
+        Path appengineDirectory) {
+      return DeployProjectConfigurationConfiguration.builder(appengineDirectory)
           .projectId(configProcessor.processProjectId(deployMojo.getProjectId()))
           .server(deployMojo.getServer())
           .build();

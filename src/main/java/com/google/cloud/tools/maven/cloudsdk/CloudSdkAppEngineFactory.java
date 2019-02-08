@@ -228,6 +228,10 @@ public class CloudSdkAppEngineFactory {
         .buildDevAppServerAsync(timeout);
   }
 
+  public ConfigReader newConfigReader() {
+    return new ConfigReader(getGcloud());
+  }
+
   /**
    * Default output listener that copies output to the Maven Mojo logger with a 'GCLOUD: ' prefix.
    */

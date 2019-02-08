@@ -16,16 +16,12 @@
 
 package com.google.cloud.tools.maven.deploy;
 
-import com.google.cloud.tools.appengine.operations.Gcloud;
-import com.google.cloud.tools.maven.config.AppEngineWebXmlConfigProcessor;
-import com.google.cloud.tools.maven.config.AppYamlConfigProcessor;
-import com.google.cloud.tools.maven.config.ConfigProcessor;
-import com.google.cloud.tools.maven.config.ConfigReader;
 import com.google.cloud.tools.maven.deploy.AppDeployer.ConfigBuilder;
 import com.google.cloud.tools.maven.stage.AppEngineWebXmlStager;
 import com.google.cloud.tools.maven.stage.AppYamlStager;
 import com.google.cloud.tools.maven.stage.Stager;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public interface Deployer {
@@ -40,21 +36,31 @@ public interface Deployer {
             "\nCould not determine appengine environment, did you package your application?"
                 + "\nRun 'mvn package appengine:deploy'");
       }
-      Gcloud gcloud = deployMojo.getAppEngineFactory().getGcloud();
+
+      ConfigProcessor configProcessor =
+          new ConfigProcessor(deployMojo.getAppEngineFactory().newConfigReader());
+      ConfigBuilder configBuilder = new ConfigBuilder(deployMojo, configProcessor);
+
       if (deployMojo.isAppEngineWebXmlBased()) {
         // deployments using appengine-web.xml
         Stager stager = AppEngineWebXmlStager.newAppEngineWebXmlStager(deployMojo);
-        ConfigProcessor configProcessor =
-            new AppEngineWebXmlConfigProcessor(
-                deployMojo.getAppEngineWebXml(), gcloud, new ConfigReader());
-        ConfigBuilder configBuilder = new ConfigBuilder(deployMojo, configProcessor);
-        return new AppDeployer(deployMojo, stager, configProcessor, configBuilder);
+        Path appengineDirectory =
+            deployMojo.getStagingDirectory().resolve("WEB-INF").resolve("appengine-generated");
+        return new AppDeployer(deployMojo, stager, configBuilder, appengineDirectory);
       } else {
         // deployments using app.yaml
         Stager stager = AppYamlStager.newAppYamlStager(deployMojo);
-        ConfigProcessor configProcessor = new AppYamlConfigProcessor(gcloud, new ConfigReader());
-        ConfigBuilder configBuilder = new ConfigBuilder(deployMojo, configProcessor);
-        return new AppDeployer(deployMojo, stager, configProcessor, configBuilder);
+        Path appengineDirctory =
+            (deployMojo.getAppEngineDirectory() == null)
+                ? deployMojo
+                    .getMavenProject()
+                    .getBasedir()
+                    .toPath()
+                    .resolve("src")
+                    .resolve("main")
+                    .resolve("appengine")
+                : deployMojo.getAppEngineDirectory();
+        return new AppDeployer(deployMojo, stager, configBuilder, appengineDirctory);
       }
     }
   }

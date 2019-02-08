@@ -27,8 +27,8 @@ import com.google.cloud.tools.appengine.operations.DevServer;
 import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
-import com.google.cloud.tools.maven.config.ConfigProcessor;
-import com.google.cloud.tools.maven.config.ConfigReader;
+import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
+import com.google.cloud.tools.maven.deploy.ConfigProcessor;
 import com.google.cloud.tools.maven.run.Runner.ConfigBuilder;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -89,6 +89,7 @@ public class RunnerTest {
     when(runMojo.getLog()).thenReturn(logMock);
     when(runMojo.getAppEngineFactory()).thenReturn(appengineFactory);
     when(appengineFactory.getGcloud()).thenReturn(gcloud);
+    when(appengineFactory.newConfigReader()).thenReturn(configReader);
   }
 
   private void setUpAppEngineWebXml() throws IOException {
@@ -196,30 +197,20 @@ public class RunnerTest {
   @Test
   public void testProcessProjectId() {
     Mockito.when(runMojo.getProjectId()).thenReturn("some-project");
-    String processedProjectId = testRunner.processProjectId(configReader);
+    String processedProjectId = testRunner.processProjectId();
     Assert.assertEquals("some-project", processedProjectId);
   }
 
   @Test
   public void testProcessProjectId_gcloud() {
-    Mockito.when(configReader.getProjectId(gcloud)).thenReturn("project-from-gcloud");
+    Mockito.when(configReader.getProjectId()).thenReturn("project-from-gcloud");
     Mockito.when(runMojo.getProjectId()).thenReturn(ConfigProcessor.GCLOUD_CONFIG);
-    String processedProjectId = testRunner.processProjectId(configReader);
+    String processedProjectId = testRunner.processProjectId();
     Assert.assertEquals("project-from-gcloud", processedProjectId);
   }
 
   @Test
-  public void testProcessProjectId_appengineWebXml() {
-    Mockito.when(configReader.getProjectId(appDir.resolve("WEB-INF").resolve("appengine-web.xml")))
-        .thenReturn("project-from-xml");
-    Mockito.when(runMojo.getProjectId()).thenReturn(ConfigProcessor.APPENGINE_CONFIG);
-
-    String processedProjectId = testRunner.processProjectId(configReader);
-    Assert.assertEquals("project-from-xml", processedProjectId);
-  }
-
-  @Test
   public void testProcessProjectId_nullIgnored() {
-    Assert.assertNull(testRunner.processProjectId(configReader));
+    Assert.assertNull(testRunner.processProjectId());
   }
 }
