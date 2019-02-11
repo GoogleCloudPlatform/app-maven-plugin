@@ -16,13 +16,13 @@
 
 package com.google.cloud.tools.maven.deploy;
 
+import static com.google.cloud.tools.maven.cloudsdk.ConfigReader.APPENGINE_CONFIG;
+import static com.google.cloud.tools.maven.cloudsdk.ConfigReader.GCLOUD_CONFIG;
+
 import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
 import com.google.common.annotations.VisibleForTesting;
 
 public class ConfigProcessor {
-  static final String APPENGINE_CONFIG = "APPENGINE_CONFIG";
-  public static final String GCLOUD_CONFIG = "GCLOUD_CONFIG";
-
   private final ConfigReader configReader;
 
   public ConfigProcessor(ConfigReader configReader) {

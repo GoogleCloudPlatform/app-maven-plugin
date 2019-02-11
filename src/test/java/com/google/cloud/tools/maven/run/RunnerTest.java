@@ -28,7 +28,6 @@ import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
-import com.google.cloud.tools.maven.deploy.ConfigProcessor;
 import com.google.cloud.tools.maven.run.Runner.ConfigBuilder;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -204,7 +203,7 @@ public class RunnerTest {
   @Test
   public void testProcessProjectId_gcloud() {
     Mockito.when(configReader.getProjectId()).thenReturn("project-from-gcloud");
-    Mockito.when(runMojo.getProjectId()).thenReturn(ConfigProcessor.GCLOUD_CONFIG);
+    Mockito.when(runMojo.getProjectId()).thenReturn(ConfigReader.GCLOUD_CONFIG);
     String processedProjectId = testRunner.processProjectId();
     Assert.assertEquals("project-from-gcloud", processedProjectId);
   }

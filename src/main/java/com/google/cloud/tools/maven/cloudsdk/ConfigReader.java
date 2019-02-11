@@ -24,6 +24,8 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandl
 import java.io.IOException;
 
 public class ConfigReader {
+  public static final String APPENGINE_CONFIG = "APPENGINE_CONFIG";
+  public static final String GCLOUD_CONFIG = "GCLOUD_CONFIG";
 
   private final Gcloud gcloud;
 

@@ -19,7 +19,7 @@ package com.google.cloud.tools.maven.run;
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.RunConfiguration;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
-import com.google.cloud.tools.maven.deploy.ConfigProcessor;
+import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
 import com.google.common.annotations.VisibleForTesting;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -113,7 +113,7 @@ public class Runner {
 
   String processProjectId() {
     String projectId = runMojo.getProjectId();
-    if (ConfigProcessor.GCLOUD_CONFIG.equals(projectId)) {
+    if (ConfigReader.GCLOUD_CONFIG.equals(projectId)) {
       return runMojo.getAppEngineFactory().newConfigReader().getProjectId();
     }
     return projectId;

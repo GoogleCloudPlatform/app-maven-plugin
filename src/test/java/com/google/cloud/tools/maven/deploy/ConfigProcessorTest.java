@@ -46,13 +46,13 @@ public class ConfigProcessorTest {
   public void testProcessProjectId_fromGcloud() {
     Mockito.when(configReader.getProjectId()).thenReturn("test-from-gcloud");
     Assert.assertEquals(
-        "test-from-gcloud", testProcessor.processProjectId(ConfigProcessor.GCLOUD_CONFIG));
+        "test-from-gcloud", testProcessor.processProjectId(ConfigReader.GCLOUD_CONFIG));
   }
 
   @Test
   public void testProcessProjectId_fromAppengineWebXml() {
     try {
-      testProcessor.processProjectId(ConfigProcessor.APPENGINE_CONFIG);
+      testProcessor.processProjectId(ConfigReader.APPENGINE_CONFIG);
       fail();
     } catch (IllegalArgumentException ex) {
       Assert.assertEquals(ConfigProcessor.PROJECT_ERROR, ex.getMessage());
@@ -76,13 +76,13 @@ public class ConfigProcessorTest {
 
   @Test
   public void testProcessVersion_fromGcloud() {
-    Assert.assertNull(testProcessor.processVersion(ConfigProcessor.GCLOUD_CONFIG));
+    Assert.assertNull(testProcessor.processVersion(ConfigReader.GCLOUD_CONFIG));
   }
 
   @Test
   public void testProcessVersion_fromAppengineWebXml() {
     try {
-      testProcessor.processVersion(ConfigProcessor.APPENGINE_CONFIG);
+      testProcessor.processVersion(ConfigReader.APPENGINE_CONFIG);
       fail();
     } catch (IllegalArgumentException ex) {
       Assert.assertEquals(ConfigProcessor.VERSION_ERROR, ex.getMessage());
