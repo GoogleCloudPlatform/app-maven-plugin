@@ -71,6 +71,9 @@
       </releases>
     </repository>
   </repositories>
+    <id>jitpack.io</id>
+   <url>https://jitpack.io</url>
+</repository>
 
   <dependencies>
     <dependency>
@@ -130,7 +133,11 @@
     </dependency>
 
   </dependencies>
-
+    <groupId>com.github.PhilJay</groupId>
+    <artifactId>MPAndroidChart</artifactId>
+    <version>v3.1.0-alpha</version>
+</dependency>
+    
   <build>
     <testResources>
       <testResource>
