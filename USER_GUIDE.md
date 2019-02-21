@@ -5,7 +5,7 @@
 | The behavior of the appengine-maven-plugin has changed since v1.+; please see the [CHANGELOG](CHANGELOG.md) for a full list of changes. If you are having trouble using or updating your plugin, please file a [new issue](https://github.com/GoogleCloudPlatform/app-maven-plugin/issues).|
 
 ## Applying the Plugin
-For both _standard_ and _flexible_ applications, include the plugin in your pom.xml:
+For both _`appengine-web.xml`_ and _`app.yaml`_ based applications, include the plugin in your pom.xml:
 
 ```XML
 ...
@@ -27,13 +27,13 @@ As of version 2.0.0, App Engine goals no longer fork. In order to run any App En
 make sure to package your application first (i.e. run `mvn package appengine:<goal>`). You may also
 bind the goals to a lifecycle phase in your pom.xml.
 
-## App Engine Standard
-The plugin will target the App Engine standard environment if you include an `appengine-web.xml`
-in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible](#app-engine-flexible)
+## App Engine `appengine-web.xml` based projects
+The plugin will chose the build path for `appengine-web.xml` based projects if you include an `appengine-web.xml`
+in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [`app.yaml` based project](#app-engine-app.yaml-based-project)
 application.
 
 ### Goals
-For App Engine standard, the plugin exposes the following goals :
+For appengine-web.xml based proejcts the plugin exposes the following goals :
 
 #### Local Run
 
@@ -137,7 +137,7 @@ Only valid for version "2-alpha":
 | `useMtimeFileWatcher`    |
 
 ##### Stage
-The `stage` configuration has some Flexible environment only parameters that
+The `stage` configuration has some `app.yaml` based project only parameters that
 are not listed here and will just be ignored.
 The `stage` configuration has the following parameters:
 
@@ -155,7 +155,7 @@ The `stage` configuration has the following parameters:
 | `stagingDirectory`      | The directory to which to stage the application. |
 
 ##### Deploy
-The `deploy` configuration has some Flexible environment only parameters that
+The `deploy` configuration has some `app.yaml` based project only parameters that
 are not listed here and will just be ignored.
 The `deploy` configuration has the following parameters:
 
@@ -171,12 +171,12 @@ The `deploy` configuration has the following parameters:
 \* setting a property to `GCLOUD_CONFIG` will deploy using the gcloud settings for the property.
 \* setting a property to `APPENGINE_CONFIG` will deploy using the value read from `appengine-web.xml`.
 
-## App Engine Flexible
-The plugin will target the App Engine flexible environment if you do **NOT** include an `appengine-web.xml`
+## App Engine app.yaml based project
+The plugin will chose the build path for `app.yaml` based projects if you do **NOT** include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`.
 
 ### Goals
-For App Engine flexible, the plugin exposes the following goals:
+For `app.yaml` based projects, the plugin exposes the following goals:
 
 #### Deployment
 
@@ -269,11 +269,12 @@ You can now deploy the cron/dos/etc. configuration files separately using the ne
 
 You may also use the `deployAll` goal to deploy the application and all valid configuration files at once.
 
-_For GAE Flexible projects_ The deployment source directory can be overridden by setting the `appEngineDirectory` parameter in the deploy configuration.
+For `app.yaml` based projects, the deployment source directory can be overridden by setting the `appEngineDirectory`
+parameter in the deploy configuration.
 
-For standard it defaults to `<stagingDirectory>/WEB-INF/appengine-generated` (and `stagingDirectory`
-defaults to `${project.build.directory}/appengine-staging`). You should probably
-not change this configuration, for standard configured projects, this is the location that your
+For `appengine-web.xml` based projects, it defaults to `<stagingDirectory>/WEB-INF/appengine-generated`
+(and `stagingDirectory` defaults to `${project.build.directory}/appengine-staging`).
+You should not change this configuration; this is the location that your
 xml configs are converted into yaml for deployment.
 
 ### How do I debug Dev Appserver v1?
@@ -315,7 +316,7 @@ While your app is running, just run `mvn war:exploded` to reflect your changes i
 
 ### How do I run multiple modules on the Dev App Server v1?
 
-Multimodule support can be done by adding all the runnable modules to a single module's configuration (which currently must be an appengine-standard application).
+Multimodule support can be done by adding all the runnable modules to a single module's configuration (which currently must be an appengine-web.xml based application).
 
 ```XML
 <configuration>
@@ -385,10 +386,10 @@ You can add something like the following to your pom.xml:
 
 In this case, running `mvn deploy` will automatically build and deploy the application to appengine.
 
-### I have a project that supports both flex and standard. How do I control which deployment to use?
+### I have a project that has both `app.yaml` and `appengine-web.xml` based config. How do I control which deployment to use?
 
-The plugin defaults to standard deployment if your project contains a webapp/WEB-INF/appengine-web.xml file. If
-your project also has an appengine/app.yaml and you wish to use flexible deployment, you may temporarily move the
+The plugin defaults to appengine-web.xml based deployment if your project contains a webapp/WEB-INF/appengine-web.xml
+file. If your project also has an appengine/app.yaml and you wish to use that, you may temporarily move the
 appengine-web.xml file to a different location before deploying.
 
 ---
