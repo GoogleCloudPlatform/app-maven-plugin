@@ -28,12 +28,12 @@ make sure to package your application first (i.e. run `mvn package appengine:<go
 bind the goals to a lifecycle phase in your pom.xml.
 
 ## App Engine `appengine-web.xml` based projects
-The plugin will chose the build path for `appengine-web.xml` based projects if you include an `appengine-web.xml`
+The plugin will choose the build path for `appengine-web.xml` based projects if you include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [`app.yaml` based project](#app-engine-app.yaml-based-project)
 application.
 
 ### Goals
-For appengine-web.xml based proejcts the plugin exposes the following goals :
+For appengine-web.xml based projects the plugin exposes the following goals :
 
 #### Local Run
 
@@ -172,7 +172,7 @@ The `deploy` configuration has the following parameters:
 \* setting a property to `APPENGINE_CONFIG` will deploy using the value read from `appengine-web.xml`.
 
 ## App Engine app.yaml based project
-The plugin will chose the build path for `app.yaml` based projects if you do **NOT** include an `appengine-web.xml`
+The plugin will choose the build path for `app.yaml` based projects if you do **NOT** include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`.
 
 ### Goals
@@ -388,8 +388,8 @@ In this case, running `mvn deploy` will automatically build and deploy the appli
 
 ### I have a project that has both `app.yaml` and `appengine-web.xml` based config. How do I control which deployment to use?
 
-The plugin defaults to appengine-web.xml based deployment if your project contains a webapp/WEB-INF/appengine-web.xml
-file. If your project also has an appengine/app.yaml and you wish to use that, you may temporarily move the
-appengine-web.xml file to a different location before deploying.
+The plugin defaults to `appengine-web.xml` based deployment if your project contains a `webapp/WEB-INF/appengine-web.xml`
+file. If your project also has an `src/main/appengine/app.yaml` file and you wish to use that, you may temporarily move the
+`appengine-web.xml` file to a different location before deploying.
 
 ---
