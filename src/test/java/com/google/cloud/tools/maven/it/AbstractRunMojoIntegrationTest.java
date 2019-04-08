@@ -20,7 +20,6 @@ import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.it.util.UrlUtils;
 import com.google.cloud.tools.maven.it.verifier.StandardVerifier;
 import com.google.cloud.tools.maven.util.SocketUtil;
@@ -54,12 +53,11 @@ public class AbstractRunMojoIntegrationTest extends AbstractMojoIntegrationTest 
 
   @Test
   @Parameters
-  public void testRun(
-      SupportedDevServerVersion version, String[] profiles, String expectedModuleName)
+  public void testRun(String[] profiles, String expectedModuleName)
       throws IOException, VerificationException, InterruptedException, ExecutionException {
 
-    String name = "testRun" + version + Arrays.toString(profiles);
-    Verifier verifier = createVerifier(name, version);
+    String name = "testRun" + Arrays.toString(profiles);
+    Verifier verifier = createVerifier(name);
     Arrays.stream(profiles)
         .filter(profile -> !profile.isEmpty())
         .map("-P"::concat)
@@ -74,7 +72,7 @@ public class AbstractRunMojoIntegrationTest extends AbstractMojoIntegrationTest 
         executor.submit(
             () -> {
               // stop server
-              createVerifier(name + "_stop", version).executeGoal("appengine:stop");
+              createVerifier(name + "_stop").executeGoal("appengine:stop");
               // wait up to 5 seconds for the server to stop
               return UrlUtils.isUrlDownWithRetries(getServerUrl(), 5000, 100);
             });
@@ -91,28 +89,19 @@ public class AbstractRunMojoIntegrationTest extends AbstractMojoIntegrationTest 
     verifier.verifyTextInLog("Module instance " + expectedModuleName + " is running");
   }
 
-  /** Provides parameters for {@link #testRun(SupportedDevServerVersion, String[], String)}. */
+  /** Provides parameters for {@link #testRun(String[], String)}. */
   @SuppressWarnings("unused")
   private Object[] parametersForTestRun() {
     List<Object[]> result = new ArrayList<>();
-    for (SupportedDevServerVersion serverVersion : SupportedDevServerVersion.values()) {
-      result.add(new Object[] {serverVersion, new String[0], "standard-project"});
-      result.add(
-          new Object[] {
-            serverVersion, new String[] {"base-it-profile", "services"}, "standard-project-services"
-          });
-    }
+    result.add(new Object[] {new String[0], "standard-project"});
+    result.add(
+        new Object[] {new String[] {"base-it-profile", "services"}, "standard-project-services"});
     return result.toArray(new Object[0]);
   }
 
-  private Verifier createVerifier(String name, SupportedDevServerVersion version)
-      throws IOException, VerificationException {
+  private Verifier createVerifier(String name) throws IOException, VerificationException {
     Verifier verifier = new StandardVerifier(name);
     verifier.setSystemProperty("app.devserver.port", Integer.toString(serverPort));
-    if (version == SupportedDevServerVersion.V2ALPHA) {
-      verifier.setSystemProperty("app.devserver.adminPort", Integer.toString(adminPort));
-      verifier.setSystemProperty("app.devserver.version", "2-alpha");
-    }
     return verifier;
   }
 

@@ -49,26 +49,6 @@ public class CloudSdkAppEngineFactory {
 
   private final CloudSdkMojo mojo;
 
-  /** Supported dev app server versions. */
-  public enum SupportedDevServerVersion {
-    V1,
-    V2ALPHA;
-
-    /**
-     * Parses {@code versionString} into a {@link SupportedDevServerVersion}. The aim is to let the
-     * users use lowercase in version strings.
-     */
-    public static SupportedDevServerVersion parse(String versionString) {
-      if ("1".equals(versionString)) {
-        return V1;
-      } else if ("2-alpha".equals(versionString)) {
-        return V2ALPHA;
-      } else {
-        throw new IllegalArgumentException("Unsupported version value: " + versionString);
-      }
-    }
-  }
-
   public CloudSdkAppEngineFactory(CloudSdkMojo mojo) {
     this.mojo = mojo;
   }
@@ -94,32 +74,18 @@ public class CloudSdkAppEngineFactory {
   }
 
   /** Constructs a dev server for the run goal */
-  public DevServer devServerRunSync(SupportedDevServerVersion version) {
-    return createDevServerForVersion(version, newDefaultProcessHandler());
-  }
-
-  DevServer createDevServerForVersion(
-      SupportedDevServerVersion version, ProcessHandler processHandler) {
-    switch (version) {
-      case V1:
-        return getDevServers().newDevAppServer1(processHandler);
-      case V2ALPHA:
-        return getDevServers().newDevAppServer2(processHandler);
-      default:
-        throw new IllegalArgumentException("Unsupported dev server version: " + version);
-    }
+  public DevServer devServerRunSync() {
+    return getDevServers().newDevAppServer(newDefaultProcessHandler());
   }
 
   /** Constructs a dev server in async mode */
-  public DevServer devServerRunAsync(int startSuccessTimeout, SupportedDevServerVersion version) {
-
-    ProcessHandler ph = newDevAppServerAsyncHandler(startSuccessTimeout);
-    return createDevServerForVersion(version, ph);
+  public DevServer devServerRunAsync(int startSuccessTimeout) {
+    return getDevServers().newDevAppServer(newDevAppServerAsyncHandler(startSuccessTimeout));
   }
 
   /** Constructs a dev server for the stop goal */
-  public DevServer devServerStop(SupportedDevServerVersion version) {
-    return createDevServerForVersion(version, newDefaultProcessHandler());
+  public DevServer devServerStop() {
+    return getDevServers().newDevAppServer(newDefaultProcessHandler());
   }
 
   /** Constructs an object used for the genRepoInfoFile goal */

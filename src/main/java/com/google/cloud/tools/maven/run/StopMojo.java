@@ -19,9 +19,7 @@ package com.google.cloud.tools.maven.run;
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.StopConfiguration;
 import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkMojo;
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -50,24 +48,10 @@ public class StopMojo extends CloudSdkMojo {
   @Parameter(alias = "devserver.port", property = "app.devserver.port")
   protected Integer port;
 
-  /** Host name to which the admin server was bound. (default: localhost) */
-  @Parameter(alias = "devserver.adminHost", property = "app.devserver.adminHost")
-  protected String adminHost;
-
-  /** Port to which the admin server was bound. (default: 8000) */
-  @Parameter(alias = "devserver.adminPort", property = "app.devserver.adminPort")
-  protected Integer adminPort;
-
   @Override
   public void execute() throws MojoExecutionException {
-    SupportedDevServerVersion convertedVersion = null;
     try {
-      convertedVersion = SupportedDevServerVersion.parse(devserverVersion);
-    } catch (IllegalArgumentException ex) {
-      throw new MojoExecutionException("Invalid version", ex);
-    }
-    try {
-      getAppEngineFactory().devServerStop(convertedVersion).stop(buildStopConfiguration());
+      getAppEngineFactory().devServerStop().stop(buildStopConfiguration());
     } catch (CloudSdkNotFoundException ex) {
       throw new MojoExecutionException("Stop failed", ex);
     } catch (AppEngineException ex) {
@@ -76,29 +60,6 @@ public class StopMojo extends CloudSdkMojo {
   }
 
   private StopConfiguration buildStopConfiguration() {
-    return StopConfiguration.builder()
-        .adminHost(processAdminHost())
-        .adminPort(processAdminPort())
-        .build();
-  }
-
-  @VisibleForTesting
-  String processAdminHost() {
-    // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/164
-    if (SupportedDevServerVersion.parse(devserverVersion) == SupportedDevServerVersion.V2ALPHA) {
-      return adminHost;
-    } else {
-      return host;
-    }
-  }
-
-  @VisibleForTesting
-  Integer processAdminPort() {
-    // https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/164
-    if (SupportedDevServerVersion.parse(devserverVersion) == SupportedDevServerVersion.V2ALPHA) {
-      return adminPort;
-    } else {
-      return port;
-    }
+    return StopConfiguration.builder().host(host).port(port).build();
   }
 }

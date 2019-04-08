@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.maven.run;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,20 +23,16 @@ import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.StopConfiguration;
 import com.google.cloud.tools.appengine.operations.DevServer;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
-import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory.SupportedDevServerVersion;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(JUnitParamsRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class StopMojoTest {
 
   private static final String ADMIN_PORT = "2";
@@ -52,35 +46,13 @@ public class StopMojoTest {
 
   @InjectMocks private StopMojo stopMojo;
 
-  @Before
-  public void setUp() {
-    MockitoAnnotations.initMocks(this);
-  }
-
   @Test
-  public void testInvalidVersionString() {
-    stopMojo.devserverVersion = "bogus-version";
-
-    try {
-      stopMojo.execute();
-      fail();
-    } catch (MojoExecutionException ex) {
-      Assert.assertEquals("Invalid version", ex.getMessage());
-    }
-  }
-
-  @Test
-  @Parameters({"1,V1", "2-alpha,V2ALPHA"})
-  public void testStop(String version, SupportedDevServerVersion mockVersion)
-      throws MojoExecutionException, AppEngineException {
+  public void testStop() throws MojoExecutionException, AppEngineException {
 
     // wire up
-    stopMojo.adminHost = "adminHost";
-    stopMojo.adminPort = 123;
     stopMojo.host = "host";
     stopMojo.port = 124;
-    stopMojo.devserverVersion = version;
-    when(factoryMock.devServerStop(mockVersion)).thenReturn(devServerMock);
+    when(factoryMock.devServerStop()).thenReturn(devServerMock);
 
     // invoke
     stopMojo.execute();
@@ -89,35 +61,7 @@ public class StopMojoTest {
     ArgumentCaptor<StopConfiguration> captor = ArgumentCaptor.forClass(StopConfiguration.class);
     verify(devServerMock).stop(captor.capture());
 
-    Assert.assertEquals(stopMojo.processAdminHost(), captor.getValue().getAdminHost());
-    Assert.assertEquals(stopMojo.processAdminPort(), captor.getValue().getAdminPort());
-  }
-
-  @Test
-  @Parameters({"host,adminhost,1,host", "host,adminhost,2-alpha,adminhost"})
-  public void testGetAdminHost(String host, String adminHost, String version, String expected) {
-    stopMojo.devserverVersion = version;
-    stopMojo.adminHost = adminHost;
-    stopMojo.host = host;
-
-    assertEquals(expected, stopMojo.processAdminHost());
-  }
-
-  @Test
-  @Parameters
-  public void testGetAdminPort(Integer port, Integer adminPort, String version, Integer expected) {
-    stopMojo.devserverVersion = version;
-    stopMojo.adminPort = adminPort;
-    stopMojo.port = port;
-
-    assertEquals(expected, stopMojo.processAdminPort());
-  }
-
-  @SuppressWarnings("unused") // used for testGetAdminPort()
-  private Object[] parametersForTestGetAdminPort() {
-    return new Object[] {
-      new Object[] {PORT, ADMIN_PORT, V1_VERSION, PORT},
-      new Object[] {PORT, ADMIN_PORT, V2_VERSION, ADMIN_PORT}
-    };
+    Assert.assertEquals("host", captor.getValue().getHost());
+    Assert.assertEquals(Integer.valueOf(124), captor.getValue().getPort());
   }
 }
