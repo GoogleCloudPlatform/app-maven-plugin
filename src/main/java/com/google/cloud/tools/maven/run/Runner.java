@@ -69,12 +69,7 @@ public class Runner {
   public void runAsync(int startSuccessTimeout) throws MojoExecutionException {
     runMojo
         .getLog()
-        .info(
-            "Waiting "
-                + startSuccessTimeout
-                + " seconds for the Dev App Server "
-                + runMojo.getDevserverVersion()
-                + " to start.");
+        .info("Waiting " + startSuccessTimeout + " seconds for the Dev App Server to start.");
     try {
       runMojo
           .getAppEngineFactory()
@@ -83,7 +78,7 @@ public class Runner {
     } catch (AppEngineException ex) {
       throw new RuntimeException(ex);
     }
-    runMojo.getLog().info("Dev App Server " + runMojo.getDevserverVersion() + " started.");
+    runMojo.getLog().info("Dev App Server started.");
     runMojo.getLog().info("Use the 'mvn appengine:stop' command to stop the server.");
   }
 
@@ -134,14 +129,14 @@ public class Runner {
     protected RunConfiguration buildRunConfiguration(List<Path> services, String projectId) {
 
       return RunConfiguration.builder(services)
-          .projectId(projectId)
-          .host(runMojo.getHost())
-          .port(runMojo.getPort())
           .additionalArguments(runMojo.getAdditionalArguments())
           .automaticRestart(runMojo.getAutomaticRestart())
           .defaultGcsBucketName(runMojo.getDefaultGcsBucketName())
+          .projectId(projectId)
           .environment(runMojo.getEnvironment())
+          .host(runMojo.getHost())
           .jvmFlags(runMojo.getJvmFlags())
+          .port(runMojo.getPort())
           .build();
     }
   }
