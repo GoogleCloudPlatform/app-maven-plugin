@@ -32,6 +32,7 @@ import java.util.Arrays;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Before;
+import org.junit.Test;
 
 public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
@@ -42,9 +43,8 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
     serverPort = SocketUtil.findPort();
   }
 
-  // @Test this test class is currently disabled
-  private void testRunAsync(String name)
-      throws IOException, VerificationException, InterruptedException {
+  @Test
+  public void testRunAsync() throws IOException, VerificationException, InterruptedException {
     String testName = "testRunAsync";
     try {
       Verifier verifier = createVerifier(testName);
