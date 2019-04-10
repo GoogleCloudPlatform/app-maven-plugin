@@ -71,6 +71,10 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    if (skip) {
+      getLog().info("Skipping appengine:genRepoInfoFile");
+      return;
+    }
     try {
       getAppEngineFactory()
           .genRepoInfoFile()

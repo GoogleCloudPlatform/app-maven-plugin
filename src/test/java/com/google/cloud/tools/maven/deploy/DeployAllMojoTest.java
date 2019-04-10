@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven.deploy;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,10 +33,21 @@ public class DeployAllMojoTest {
 
   @InjectMocks private DeployAllMojo testMojo;
 
+  @Before
+  public void setUp() throws MojoExecutionException {
+    Mockito.when(factory.newDeployer(testMojo)).thenReturn(deployer);
+  }
+
   @Test
   public void testExecute_smokeTest() throws MojoExecutionException {
-    Mockito.when(factory.newDeployer(testMojo)).thenReturn(deployer);
     testMojo.execute();
     Mockito.verify(deployer).deployAll();
+  }
+
+  @Test
+  public void testExecute_skipTest() throws MojoExecutionException {
+    testMojo.setSkip(true);
+    testMojo.execute();
+    Mockito.verifyNoMoreInteractions(deployer);
   }
 }

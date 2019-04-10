@@ -29,6 +29,10 @@ public class RunMojo extends AbstractRunMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:run");
+      return;
+    }
     factory.newRunner(this).run();
   }
 }

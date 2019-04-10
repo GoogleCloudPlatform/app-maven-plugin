@@ -38,6 +38,10 @@ public class RunAsyncMojo extends AbstractRunMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:start");
+      return;
+    }
     factory.newRunner(this).runAsync(startSuccessTimeout);
   }
 }

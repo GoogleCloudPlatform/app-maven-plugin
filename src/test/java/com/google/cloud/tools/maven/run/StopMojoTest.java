@@ -17,7 +17,6 @@
 package com.google.cloud.tools.maven.run;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.StopConfiguration;
@@ -25,26 +24,27 @@ import com.google.cloud.tools.appengine.operations.DevServer;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StopMojoTest {
 
-  private static final String ADMIN_PORT = "2";
-  private static final String PORT = "1";
-  private static final String V1_VERSION = "1";
-  private static final Object V2_VERSION = "2-alpha";
-
   @Mock private CloudSdkAppEngineFactory factoryMock;
-
   @Mock private DevServer devServerMock;
 
   @InjectMocks private StopMojo stopMojo;
+
+  @Before
+  public void setUp() throws MojoExecutionException {
+    Mockito.when(factoryMock.devServerStop()).thenReturn(devServerMock);
+  }
 
   @Test
   public void testStop() throws MojoExecutionException, AppEngineException {
@@ -52,7 +52,6 @@ public class StopMojoTest {
     // wire up
     stopMojo.host = "host";
     stopMojo.port = 124;
-    when(factoryMock.devServerStop()).thenReturn(devServerMock);
 
     // invoke
     stopMojo.execute();
@@ -63,5 +62,12 @@ public class StopMojoTest {
 
     Assert.assertEquals("host", captor.getValue().getHost());
     Assert.assertEquals(Integer.valueOf(124), captor.getValue().getPort());
+  }
+
+  @Test
+  public void testExecute_skipTest() throws MojoExecutionException {
+    stopMojo.setSkip(true);
+    stopMojo.execute();
+    Mockito.verifyNoMoreInteractions(devServerMock);
   }
 }

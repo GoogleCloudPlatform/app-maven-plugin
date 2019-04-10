@@ -28,6 +28,10 @@ public class DeployQueueMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:deployQueue");
+      return;
+    }
     deployerFactory.newDeployer(this).deployQueue();
   }
 }

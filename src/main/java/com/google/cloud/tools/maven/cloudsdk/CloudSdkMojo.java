@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.maven.cloudsdk;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.nio.file.Path;
 import org.apache.maven.model.Plugin;
@@ -45,6 +46,9 @@ public abstract class CloudSdkMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", readonly = true)
   private MavenProject mavenProject;
+
+  @Parameter(defaultValue = "false")
+  protected boolean skip;
 
   protected CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 
@@ -107,5 +111,11 @@ public abstract class CloudSdkMojo extends AbstractMojo {
 
   public MavenProject getMavenProject() {
     return mavenProject;
+  }
+
+  @VisibleForTesting
+  /* For use with tests only. */
+  public void setSkip(boolean skip) {
+    this.skip = skip;
   }
 }

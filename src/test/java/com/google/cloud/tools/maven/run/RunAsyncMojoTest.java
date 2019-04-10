@@ -17,6 +17,7 @@
 package com.google.cloud.tools.maven.run;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,11 +33,22 @@ public class RunAsyncMojoTest {
 
   @InjectMocks private RunAsyncMojo testMojo;
 
+  @Before
+  public void setUp() throws MojoExecutionException {
+    Mockito.when(factory.newRunner(testMojo)).thenReturn(runner);
+  }
+
   @Test
   public void testExecute_smokeTest() throws MojoExecutionException {
-    Mockito.when(factory.newRunner(testMojo)).thenReturn(runner);
     testMojo.startSuccessTimeout = 34;
     testMojo.execute();
     Mockito.verify(runner).runAsync(34);
+  }
+
+  @Test
+  public void testExecute_skipTest() throws MojoExecutionException {
+    testMojo.setSkip(true);
+    testMojo.execute();
+    Mockito.verifyNoMoreInteractions(runner);
   }
 }

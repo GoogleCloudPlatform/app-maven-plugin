@@ -19,6 +19,7 @@ package com.google.cloud.tools.maven.genrepoinfo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.AppEngineException;
@@ -78,5 +79,13 @@ public class GenRepoInfoFileMojoTest {
     }
 
     verify(genMock).generate(any());
+  }
+
+  @Test
+  public void testExecute_skipTest() throws MojoFailureException, MojoExecutionException {
+    genMojo.setSkip(true);
+    genMojo.execute();
+
+    verifyNoMoreInteractions(genMock);
   }
 }

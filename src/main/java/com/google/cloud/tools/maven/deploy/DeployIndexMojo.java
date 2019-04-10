@@ -28,6 +28,10 @@ public class DeployIndexMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:deployIndex");
+      return;
+    }
     deployerFactory.newDeployer(this).deployIndex();
   }
 }

@@ -28,6 +28,10 @@ public class DeployCronMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:deployCron");
+      return;
+    }
     deployerFactory.newDeployer(this).deployCron();
   }
 }

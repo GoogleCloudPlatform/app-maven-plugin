@@ -50,6 +50,10 @@ public class StopMojo extends CloudSdkMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:stop");
+      return;
+    }
     try {
       getAppEngineFactory().devServerStop().stop(buildStopConfiguration());
     } catch (CloudSdkNotFoundException ex) {

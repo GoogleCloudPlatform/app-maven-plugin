@@ -28,6 +28,10 @@ public class DeployDosMojo extends AbstractDeployMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:deployDos");
+      return;
+    }
     deployerFactory.newDeployer(this).deployDos();
   }
 }

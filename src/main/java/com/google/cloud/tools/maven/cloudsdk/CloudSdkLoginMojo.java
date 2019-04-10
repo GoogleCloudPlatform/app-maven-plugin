@@ -25,6 +25,10 @@ public class CloudSdkLoginMojo extends CloudSdkMojo {
 
   @Override
   public void execute() {
+    if (skip) {
+      getLog().info("Skipping appengine:cloudSdkLogin");
+      return;
+    }
     try {
       getAppEngineFactory().auth().login();
     } catch (AppEngineException ex) {

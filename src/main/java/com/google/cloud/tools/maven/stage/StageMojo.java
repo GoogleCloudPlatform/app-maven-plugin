@@ -29,6 +29,10 @@ public class StageMojo extends AbstractStageMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (skip) {
+      getLog().info("Skipping appengine:stage");
+      return;
+    }
     Stager.newStager(this).stage();
   }
 }
