@@ -8,7 +8,7 @@ set -x
 gcloud components update
 gcloud components install app-engine-java
 
-# Use adopt openjdk 8u202 until kokoro updates it's macos images
+# Use adopt openjdk 8u202 until kokoro updates its macos images (b/130225695)
 wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u202-b08/OpenJDK8U-jdk_x64_mac_hotspot_8u202b08.tar.gz
 tar -xzf OpenJDK8U-jdk_x64_mac_hotspot_8u202b08.tar.gz
 
