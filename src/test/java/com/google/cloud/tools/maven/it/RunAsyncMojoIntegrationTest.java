@@ -36,6 +36,7 @@ import org.junit.Test;
 
 public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
+  private static final String DEV_APP_SERVER_STARTED = "INFO:oejs.Server:main: Started";
   private int serverPort;
 
   @Before
@@ -67,10 +68,10 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
       assertTrue(Files.exists(expectedLog));
       String devAppServerOutput =
           new String(Files.readAllBytes(expectedLog), StandardCharsets.UTF_8);
-      assertTrue(devAppServerOutput.contains("Dev App Server is now running"));
+      assertTrue(devAppServerOutput.contains(DEV_APP_SERVER_STARTED));
 
       verifier.verifyErrorFreeLog();
-      verifier.verifyTextInLog("INFO:oejs.Server:main: Started");
+      verifier.verifyTextInLog(DEV_APP_SERVER_STARTED);
     } finally {
       Verifier stopVerifier = createVerifier(testName + "_stop");
       stopVerifier.executeGoal("appengine:stop");
