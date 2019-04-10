@@ -70,7 +70,7 @@ public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
       assertTrue(devAppServerOutput.contains("Dev App Server is now running"));
 
       verifier.verifyErrorFreeLog();
-      verifier.verifyTextInLog("Dev App Server is now running");
+      verifier.verifyTextInLog("INFO:oejs.Server:main: Started");
     } finally {
       Verifier stopVerifier = createVerifier(testName + "_stop");
       stopVerifier.executeGoal("appengine:stop");
