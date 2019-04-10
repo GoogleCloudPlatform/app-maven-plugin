@@ -36,20 +36,18 @@ import org.junit.Before;
 public class RunAsyncMojoIntegrationTest extends AbstractMojoIntegrationTest {
 
   private int serverPort;
-  private int adminPort;
 
   @Before
   public void initPorts() throws IOException {
     serverPort = SocketUtil.findPort();
-    adminPort = SocketUtil.findPort();
   }
 
+  // @Test this test class is currently disabled
   private void testRunAsync(String name)
       throws IOException, VerificationException, InterruptedException {
     String testName = "testRunAsync";
     try {
       Verifier verifier = createVerifier(testName);
-      verifier.setSystemProperty("app.devserver.port", Integer.toString(serverPort));
       verifier.setSystemProperty("app.devserver.startSuccessTimeout", "60");
       verifier.executeGoals(Arrays.asList("package", "appengine:start"));
 

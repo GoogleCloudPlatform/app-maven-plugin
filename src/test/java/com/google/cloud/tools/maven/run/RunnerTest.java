@@ -34,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import junitparams.JUnitParamsRunner;
 import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -48,9 +47,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(JUnitParamsRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RunnerTest {
 
   private static final Path STANDARD_PROJECT_WEBAPP =
@@ -77,7 +76,6 @@ public class RunnerTest {
   @Before
   public void setUp() throws IOException {
     appDir = tempFolder.newFolder("artifact").toPath();
-    MockitoAnnotations.initMocks(this);
     when(mavenProject.getBuild()).thenReturn(mock(Build.class));
     when(mavenProject.getBuild().getDirectory())
         .thenReturn(appDir.getParent().toAbsolutePath().toString());
@@ -85,7 +83,6 @@ public class RunnerTest {
     when(runMojo.getMavenProject()).thenReturn(mavenProject);
     when(runMojo.getLog()).thenReturn(logMock);
     when(runMojo.getAppEngineFactory()).thenReturn(appengineFactory);
-    when(appengineFactory.getGcloud()).thenReturn(gcloud);
     when(appengineFactory.newConfigReader()).thenReturn(configReader);
   }
 
