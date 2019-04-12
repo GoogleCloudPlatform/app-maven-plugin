@@ -1,11 +1,15 @@
 sudo: false
 language: java
-jdk:
-  - oraclejdk8
+matrix:
+  include:
+    - name: Oracle JDK 8
+      jdk: oraclejdk8
+    - name: OpenJDK 11
+      jdk: openjdk11
 cache:
   directories:
-   - $HOME/.m2
-   - $HOME/google-cloud-sdk
+    - $HOME/.m2
+    - $HOME/google-cloud-sdk
 env:
   global:
     - CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
