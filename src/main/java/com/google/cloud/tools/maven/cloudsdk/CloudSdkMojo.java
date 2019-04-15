@@ -19,6 +19,7 @@ package com.google.cloud.tools.maven.cloudsdk;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.nio.file.Path;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
@@ -49,6 +50,9 @@ public abstract class CloudSdkMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "false")
   protected boolean skip;
+
+  @Parameter(defaultValue = "${session}", readonly = true)
+  private MavenSession mavenSession;
 
   protected CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory(this);
 
@@ -111,6 +115,10 @@ public abstract class CloudSdkMojo extends AbstractMojo {
 
   public MavenProject getMavenProject() {
     return mavenProject;
+  }
+
+  public MavenSession getMavenSession() {
+    return mavenSession;
   }
 
   @VisibleForTesting

@@ -133,7 +133,10 @@ public class CloudSdkAppEngineFactory {
         return new CloudSdk.Builder()
             .sdkPath(
                 cloudSdkDownloader.downloadIfNecessary(
-                    mojo.getCloudSdkVersion(), mojo.getLog(), requiresAppEngineComponents))
+                    mojo.getCloudSdkVersion(),
+                    mojo.getLog(),
+                    requiresAppEngineComponents,
+                    mojo.getMavenSession().isOffline()))
             .build();
       }
     } catch (CloudSdkNotFoundException

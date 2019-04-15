@@ -47,8 +47,12 @@ public class CloudSdkDownloader {
    *
    * @return The cloud SDK installation directory
    */
-  public Path downloadIfNecessary(String version, Log log, boolean requiresAppEngineComponents) {
+  public Path downloadIfNecessary(
+      String version, Log log, boolean requiresAppEngineComponents, boolean offline) {
     ManagedCloudSdk managedCloudSdk = managedCloudSdkFactory.apply(version);
+    if (offline) { // in offline mode, don't download anything
+      return managedCloudSdk.getSdkHome();
+    }
     try {
       ProgressListener progressListener = new NoOpProgressListener();
       ConsoleListener consoleListener = new CloudSdkDownloaderConsoleListener(log);

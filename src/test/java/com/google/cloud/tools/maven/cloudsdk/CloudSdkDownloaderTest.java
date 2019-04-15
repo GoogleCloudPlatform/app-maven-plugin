@@ -18,6 +18,7 @@ package com.google.cloud.tools.maven.cloudsdk;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.managedcloudsdk.BadCloudSdkVersionException;
@@ -66,7 +67,7 @@ public class CloudSdkDownloaderTest {
   public void testDownloadCloudSdk_install()
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(false);
-    downloader.downloadIfNecessary(version, log, true);
+    downloader.downloadIfNecessary(version, log, true, false);
     verify(managedCloudSdk).newInstaller();
   }
 
@@ -75,7 +76,7 @@ public class CloudSdkDownloaderTest {
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
     when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(false);
-    downloader.downloadIfNecessary(version, log, true);
+    downloader.downloadIfNecessary(version, log, true, false);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk).newComponentInstaller();
   }
@@ -84,7 +85,7 @@ public class CloudSdkDownloaderTest {
   public void testDownloadCloudSdk_ignoreAppEngineComponent()
       throws ManagedSdkVerificationException, ManagedSdkVersionMismatchException {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
-    downloader.downloadIfNecessary(version, log, false);
+    downloader.downloadIfNecessary(version, log, false, false);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk, never()).newComponentInstaller();
   }
@@ -95,10 +96,17 @@ public class CloudSdkDownloaderTest {
     when(managedCloudSdk.isInstalled()).thenReturn(true);
     when(managedCloudSdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)).thenReturn(true);
     when(managedCloudSdk.isUpToDate()).thenReturn(false);
-    downloader.downloadIfNecessary(version, log, true);
+    downloader.downloadIfNecessary(version, log, true, false);
     verify(managedCloudSdk, never()).newInstaller();
     verify(managedCloudSdk, never()).newComponentInstaller();
     verify(managedCloudSdk).newUpdater();
+  }
+
+  @Test
+  public void testDownloadCloudSdk_offlineMode() {
+    downloader.downloadIfNecessary(version, log, true, true);
+    verify(managedCloudSdk).getSdkHome();
+    verifyNoMoreInteractions(managedCloudSdk);
   }
 
   @Test
