@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.0.0-rc6
+### Added
+* Allow configuring `skip` on plugin configuration ([#379](../../pull/379))
+
+### Changed
+* Remove support for `APPENGINE_CONFIG` option in `projectId` and `version` ([#368](../../pull/368))
+* Remove support for `v2-alpha` devappserver version ([#378](../../pull/378))
+
+### Fixed
+* Actually skip downloading/updating the cloud Sdk in offline mode ([#382](../../pull/382))
+
 ## 2.0.0-rc5
 ### Changed
 * `app.yaml` based builds do not delete staging directory when staging ([#361](../../pull/362))
@@ -32,8 +43,6 @@ All notable changes to this project will be documented in this file.
 `mvn package appengine:<goal>` or bind the goal to a lifecycle phase in your pom.xml. ([#301](../../issues/301))
 * Removed `deployables` parameter. To deploy specific configuration files, use the appropriate deploy goals
 (i.e. appengine:deployCron, appengine:deployIndex, etc.) ([#300](../../issues/300)).
-
-### Fixed
 
 ## 1.3.2
 ### Added
