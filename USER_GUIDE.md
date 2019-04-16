@@ -98,7 +98,6 @@ Goals: `run`,`start` and `stop` can be configured with the following parameters:
 
 | Parameter             | Description |
 | --------------------- | ----------- |
-| `devserverVersion`    | Server versions to use, options are "1" or "2-alpha" |
 | `environment`         | Environment variables to pass to the Dev App Server process |
 | `host`                | Application host address. |
 | `jvmFlags`            | JVM flags to pass to the App Server Java process. |
