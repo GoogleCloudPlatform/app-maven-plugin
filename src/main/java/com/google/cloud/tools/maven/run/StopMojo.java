@@ -28,18 +28,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo(name = "stop")
 public class StopMojo extends CloudSdkMojo {
 
-  /**
-   * Version of the dev app server to use to run the services. Supported values are "1" and
-   * "2-alpha". (default: "1")
-   */
-  @Parameter(
-    alias = "devserver.version",
-    property = "app.devserver.version",
-    required = true,
-    defaultValue = "1"
-  )
-  protected String devserverVersion;
-
   /** Host name to which application modules should bind. (default: localhost) */
   @Parameter(alias = "devserver.host", property = "app.devserver.host")
   protected String host;

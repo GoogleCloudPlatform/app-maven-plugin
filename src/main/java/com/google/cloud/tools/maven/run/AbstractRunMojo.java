@@ -51,8 +51,6 @@ public abstract class AbstractRunMojo extends CloudSdkMojo {
   /**
    * Restart instances automatically when files relevant to their module are changed. (default:
    * True)
-   *
-   * <p><i>Supported only for devserver version 2-alpha.</i>
    */
   @Parameter(alias = "devserver.automaticRestart", property = "app.devserver.automaticRestart")
   private Boolean automaticRestart;
