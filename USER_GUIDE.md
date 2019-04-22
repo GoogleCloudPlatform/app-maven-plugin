@@ -94,14 +94,10 @@ on OSX, and `%LOCALAPPDATA%/google/ct4j-cloud-sdk/<version>/google-cloud-sdk` on
 The Cloud SDK installation/verification occurs automatically before running any appengine goals.
 
 ##### Run configuration
-Note that only a subset are valid for Dev App Server version "1" and all are valid for Dev App Server
-version "2-alpha".
-
-Valid for versions "1" and "2-alpha":
+Goals: `run`,`start` and `stop` can be configured with the following parameters:
 
 | Parameter             | Description |
 | --------------------- | ----------- |
-| `devserverVersion`    | Server versions to use, options are "1" or "2-alpha" |
 | `environment`         | Environment variables to pass to the Dev App Server process |
 | `host`                | Application host address. |
 | `jvmFlags`            | JVM flags to pass to the App Server Java process. |
@@ -111,30 +107,6 @@ Valid for versions "1" and "2-alpha":
 | `additionalArguments` | Any additional arguments to be passed to the Dev App Server |
 | `automaticRestart`    | Automatically restart the server when explode-war directory has changed |
 | `projectId`           | Set a Google Cloud Project Id on the running development server |
-
-Only valid for version "2-alpha":
-
-| Parameter (2-alpha only) |
-| ------------------------ |
-| `adminHost`              |
-| `adminPort`              |
-| `allowSkippedFiles`      |
-| `apiPort`                |
-| `authDomain`             |
-| `clearDatastore`         |
-| `customEntrypoint`       |
-| `datastorePath`          |
-| `defaultGcsBucketName`   |
-| `devAppserverLogLevel`   |
-| `logLevel`               |
-| `maxModuleInstances`     |
-| `pythonStartupArgs`      |
-| `pythonStartupScript`    |
-| `runtime`                |
-| `skipSdkUpdateCheck`     |
-| `storagePath`            |
-| `threadsafeOverride`     |
-| `useMtimeFileWatcher`    |
 
 ##### Stage
 The `stage` configuration has some `app.yaml` based project only parameters that
@@ -162,14 +134,21 @@ The `deploy` configuration has the following parameters:
 | Parameter             | Description |
 | --------------------- | ----------- |
 | `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
-| `projectId`           | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG` or `APPENGINE_CONFIG`.\* |
+| `projectId`           | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG`.\* |
 | `promote`             | Promote the deployed version to receive all traffic. |
 | `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
 | `stopPreviousVersion` | Stop the previously running version when deploying a new version that receives all traffic. |
-| `version`             | The version of the app that will be created or replaced by this deployment. This also can be set to `GCLOUD_CONFIG` or `APPENGINE_CONFIG`.\* |
+| `version`             | The version of the app that will be created or replaced by this deployment. This also can be set to `GCLOUD_CONFIG`.\* |
 
 \* setting a property to `GCLOUD_CONFIG` will deploy using the gcloud settings for the property.
-\* setting a property to `APPENGINE_CONFIG` will deploy using the value read from `appengine-web.xml`.
+
+##### Misc
+The plugin can be further configured with these miscellaneous parameters:
+
+| Parameter             | Description |
+| --------------------- | ----------- |
+| `skip`                | If set to true, the plugin skips all appengine:goal executions |
+
 
 ## App Engine app.yaml based project
 The plugin will choose the build path for `app.yaml` based projects if you do **NOT** include an `appengine-web.xml`
@@ -253,6 +232,13 @@ The `deploy` configuration has the following parameters:
 
 \* setting a property to `GCLOUD_CONFIG` will deploy using the gcloud settings for the property.
 
+##### Misc
+The plugin can be further configured with these miscellaneous parameters:
+
+| Parameter             | Description |
+| --------------------- | ----------- |
+| `skip`                | If set to true, the plugin skips all appengine:goal executions |
+
 ---
 
 ## FAQ
@@ -329,18 +315,9 @@ Multimodule support can be done by adding all the runnable modules to a single m
 
 ### I want to use Dev Appserver 2 (alpha), how do I switch to it?
 
-Caution: The v2-alpha version of the development web server is not fully
-supported, and you may find errors when using this version.
+The v2-alpha Dev Appserver is no longer supported from this plugin.
 
-To switch to Dev App Server v2-alpha use the `devserverVersion` parameter.
-
-```XML
-<configuration>
-   <devserverVersion>2-alpha</devserverVersion>
-</configuration>
-```
-
-### How can I pass environment variables to the Dev Appserver (both v1 and v2-alpha)?
+### How can I pass environment variables to the Dev Appserver?
 
 You can pass environment variables directly to the Dev App Server:
 
@@ -352,7 +329,7 @@ You can pass environment variables directly to the Dev App Server:
 </configuration>
 ```
 
-### How can I pass additional arguments to the Dev Appserver (both v1 and v2-alpha)?
+### How can I pass additional arguments to the Dev Appserver?
 
 You can pass additional arguments directly to the Dev App Server:
 
