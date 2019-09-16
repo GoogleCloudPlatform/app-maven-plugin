@@ -370,7 +370,8 @@ file. If your project also has an `src/main/appengine/app.yaml` file and you wis
 
 ### How do I deploy a thin jar to App Engine?
 
-You can do this if you have an `app.yaml` based project and you have a custom `entrypoint` configured to start it.
+You can do this if you have an `app.yaml` based project that is not building a fat-jar and you have a
+custom `entrypoint` configured to start it.
 
 You will need to configure the stage goal to include your project's dependencies. You could use something like the
 [`maven-dependency-plugin:copy-dependency`](https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html)
@@ -412,7 +413,7 @@ example we might have an `app.yaml` that looks like:
 
 ```
 runtime: java11
-entrypoint: java -Xmx64m -cp "*" com.example.MyMainClass
+entrypoint: java -cp "*" com.example.MyMainClass
 ```
 
 ---
