@@ -368,12 +368,14 @@ The plugin defaults to `appengine-web.xml` based deployment if your project cont
 file. If your project also has an `src/main/appengine/app.yaml` file and you wish to use that, you may temporarily move the
 `appengine-web.xml` file to a different location before deploying.
 
-### How do I deploy an `app.yaml` based thin jar to appengine?
+### How do I deploy a thin jar to App Engine?
 
-You will probably need to stage the application to include it's dependencies. You might use something like the
+You can do this if you have an `app.yaml` based project and you have a custom `entrypoint` configured to start it.
+
+You will need to configure the stage goal to include your project's dependencies. You could use something like the
 [`maven-dependency-plugin:copy-dependency`](https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html)
 goal to copy dependencies into a directory and then configure that directory to be staged with your application using
-the `extraFilesDirectories` parameter. For example:
+the `extraFilesDirectories` parameter in the appengine plugin. For example:
 
 ```xml
 <plugin>
@@ -403,6 +405,14 @@ the `extraFilesDirectories` parameter. For example:
 </plugin>
 ```
 
-Then when you run `mvn package appengine:deploy` the dependencies are copied and included as part of the deployment.
+Then when you run `mvn package appengine:deploy` the dependencies are copied and included as part of the deployment
+
+Since the default entrypoint assumes a fat jar, you must define a custom entrypoint to run this application. In this
+example we might have an `app.yaml` that looks like:
+
+```
+runtime: java11
+entrypoint: java -Xmx64m -cp "*" com.example.MyMainClass
+```
 
 ---
