@@ -399,13 +399,13 @@ the `extraFilesDirectories` parameter in the appengine plugin. For example:
   <configuration>
     <!-- your config -->
     <extraFilesDirectories>
-       <extraFilesDirectory>${project.build.directory}/dependencies</extraFilesDirectory>
+      <extraFilesDirectory>${project.build.directory}/dependencies</extraFilesDirectory>
     </extraFilesDirectories>
   </configuration>
 </plugin>
 ```
 
-Then when you run `mvn package appengine:deploy` the dependencies are copied and included as part of the deployment
+Then when you run `mvn package appengine:deploy` the dependencies are copied and included as part of the deployment.
 
 Since the default entrypoint assumes a fat jar, you must define a custom entrypoint to run this application. In this
 example we might have an `app.yaml` that looks like:
