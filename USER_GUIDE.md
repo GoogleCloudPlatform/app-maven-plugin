@@ -368,4 +368,41 @@ The plugin defaults to `appengine-web.xml` based deployment if your project cont
 file. If your project also has an `src/main/appengine/app.yaml` file and you wish to use that, you may temporarily move the
 `appengine-web.xml` file to a different location before deploying.
 
+### How do I deploy an `app.yaml` based thin jar to appengine?
+
+You will probably need to stage the application to include it's dependencies. You might use something like the
+[`maven-dependency-plugin:copy-dependency`](https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html)
+goal to copy dependencies into a directory and then configure that directory to be staged with your application using
+the `extraFilesDirectories` parameter. For example:
+
+```xml
+<plugin>
+  <artifactId>maven-dependency-plugin</artifactId>
+  <executions>
+    <execution>
+      <phase>package</phase>
+      <goals>
+        <goal>copy-dependencies</goal>
+      </goals>
+      <configuration>
+        <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+<plugin>
+  <groupId>com.google.cloud.tools</groupId>
+  <artifactId>appengine-maven-plugin</artifactId>
+  <version>2.1.0</version>
+  <configuration>
+    <!-- your config -->
+    <extraFilesDirectories>
+       <extraFilesDirectory>${project.build.directory}/dependencies</extraFilesDirectory>
+    </extraFilesDirectories>
+  </configuration>
+</plugin>
+```
+
+Then when you run `mvn package appengine:deploy` the dependencies are copied and included as part of the deployment.
+
 ---
