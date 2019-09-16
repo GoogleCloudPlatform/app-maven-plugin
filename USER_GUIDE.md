@@ -147,7 +147,7 @@ The plugin can be further configured with these miscellaneous parameters:
 | `skip`                | If set to true, the plugin skips all appengine:goal executions |
 
 
-## App Engine app.yaml based project
+## App Engine `app.yaml` based project
 The plugin will choose the build path for `app.yaml` based projects if you do **NOT** include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`.
 
@@ -206,12 +206,13 @@ The Cloud SDK installation/verification occurs automatically before running any 
 ##### Stage
 The `stage` configuration has the following parameters:
 
-| Parameter            | Description |
-| -------------------- | ----------- |
-| `appEngineDirectory` | The directory that contains app.yaml. |
-| `dockerDirectory`    | The directory that contains Dockerfile and other docker context. |
-| `artifact`           | The artifact to deploy (a file, like a .jar or a .war). |
-| `stagingDirectory`   | The directory to which to stage the application |
+| Parameter               | Description |
+| ----------------------- | ----------- |
+| `appEngineDirectory`    | The directory that contains app.yaml. |
+| `dockerDirectory`       | The directory that contains Dockerfile and other docker context. |
+| `artifact`              | The artifact to deploy (a file, like a .jar or a .war). |
+| `stagingDirectory`      | The directory to which to stage the application. |
+| `extraFilesDirectories` | The list of directories to copy extra files from. |
 
 ##### Deploy
 The `deploy` configuration has the following parameters:
