@@ -31,7 +31,7 @@ You can now run commands like `mvn package appengine:deploy` in the root folder 
 Please see the [USER GUIDE](USER_GUIDE.md) for a full list of supported goals and configuration
 options.
 * [USER\_GUIDE for `app.yaml` based projects](USER_GUIDE.md#app-engine-appyaml-based-projects)
-* [USER\_GUIDE for `appengine-web.xml` based projects](USER_GUIDE.md#app-engine-appengine-webxml-based-project)
+* [USER\_GUIDE for `appengine-web.xml` based projects](USER_GUIDE.md#app-engine-appengine-webxml-based-projects)
 
 # Reference Documentation
 

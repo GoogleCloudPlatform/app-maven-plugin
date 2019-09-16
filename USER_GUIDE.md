@@ -147,7 +147,7 @@ The plugin can be further configured with these miscellaneous parameters:
 | `skip`                | If set to true, the plugin skips all appengine:goal executions |
 
 
-## App Engine `app.yaml` based project
+## App Engine `app.yaml` based projects
 The plugin will choose the build path for `app.yaml` based projects if you do **NOT** include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`.
 
