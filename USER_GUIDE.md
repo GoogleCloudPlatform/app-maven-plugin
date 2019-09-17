@@ -368,31 +368,12 @@ The plugin defaults to `appengine-web.xml` based deployment if your project cont
 file. If your project also has an `src/main/appengine/app.yaml` file and you wish to use that, you may temporarily move the
 `appengine-web.xml` file to a different location before deploying.
 
-### How do I deploy a thin jar to App Engine?
+### How do I deploy other files with my application to App Engine?
 
-You can do this if you have an `app.yaml` based project that is not building a fat-jar and you have a
-custom `entrypoint` configured to start it.
-
-You will need to configure the stage goal to include your project's dependencies. You could use something like the
-[`maven-dependency-plugin:copy-dependency`](https://maven.apache.org/plugins/maven-dependency-plugin/copy-dependencies-mojo.html)
-goal to copy dependencies into a directory and then configure that directory to be staged with your application using
-the `extraFilesDirectories` parameter in the appengine plugin. For example:
+When configuring an `app.yaml` based projects, the `extraFilesDirectories` configuration options lets
+you configure locations on your local drive that can be deployed with your application.
 
 ```xml
-<plugin>
-  <artifactId>maven-dependency-plugin</artifactId>
-  <executions>
-    <execution>
-      <phase>package</phase>
-      <goals>
-        <goal>copy-dependencies</goal>
-      </goals>
-      <configuration>
-        <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
 <plugin>
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-maven-plugin</artifactId>
@@ -400,20 +381,12 @@ the `extraFilesDirectories` parameter in the appengine plugin. For example:
   <configuration>
     <!-- your config -->
     <extraFilesDirectories>
-      <extraFilesDirectory>${project.build.directory}/dependencies</extraFilesDirectory>
+      <extraFilesDirectory>path/to/my/extras</extraFilesDirectory>
     </extraFilesDirectories>
   </configuration>
 </plugin>
 ```
 
-Then when you run `mvn package appengine:deploy` the dependencies are copied and included as part of the deployment.
-
-Since the default entrypoint assumes a fat jar, you must define a custom entrypoint to run this application. In this
-example we might have an `app.yaml` that looks like:
-
-```
-runtime: java11
-entrypoint: java -cp "*" com.example.MyMainClass
-```
+Then when you run `mvn package appengine:deploy` the extras are copied and included as part of the deployment.
 
 ---
