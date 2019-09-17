@@ -374,17 +374,11 @@ When configuring an `app.yaml` based project, the `extraFilesDirectories` config
 you configure locations on your local drive of files that will be deployed with your application.
 
 ```xml
-<plugin>
-  <groupId>com.google.cloud.tools</groupId>
-  <artifactId>appengine-maven-plugin</artifactId>
-  <version>2.1.0</version>
-  <configuration>
-    <!-- your config -->
-    <extraFilesDirectories>
-      <extraFilesDirectory>path/to/my/extras</extraFilesDirectory>
-    </extraFilesDirectories>
-  </configuration>
-</plugin>
+<configuration>
+  <extraFilesDirectories>
+    <extraFilesDirectory>path/to/my/extras</extraFilesDirectory>
+  </extraFilesDirectories>
+</configuration>
 ```
 
 Then when you run `mvn package appengine:deploy` the extras are staged with you application and included as part of the deployment.
