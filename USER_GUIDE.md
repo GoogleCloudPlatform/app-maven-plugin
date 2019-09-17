@@ -370,7 +370,7 @@ file. If your project also has an `src/main/appengine/app.yaml` file and you wis
 
 ### How do I deploy other files with my application to App Engine?
 
-When configuring an `app.yaml` based project, the `extraFilesDirectories` configuration options lets
+When configuring an `app.yaml` based project, the `extraFilesDirectories` configuration option lets
 you configure locations on your local drive of files that will be deployed with your application.
 
 ```xml
@@ -381,6 +381,6 @@ you configure locations on your local drive of files that will be deployed with 
 </configuration>
 ```
 
-Then when you run `mvn package appengine:deploy` the extras are staged with you application and included as part of the deployment.
+Then when you run `mvn package appengine:deploy` the contents of `path/to/my/extras` are staged with you application and included as part of the deployment.
 
 ---
