@@ -18,13 +18,11 @@ package com.google.cloud.tools.maven.run;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.operations.DevServer;
-import com.google.cloud.tools.appengine.operations.Gcloud;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
 import com.google.cloud.tools.maven.run.Runner.ConfigBuilder;
@@ -34,10 +32,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -63,10 +59,8 @@ public class RunnerTest {
 
   @Mock private CloudSdkAppEngineFactory appengineFactory;
   @Mock private DevServer devServer;
-  @Mock private MavenProject mavenProject;
   @Mock private Log logMock;
   @Mock private ConfigReader configReader;
-  @Mock private Gcloud gcloud;
   private Path appDir;
 
   @Mock private ConfigBuilder configBuilder;
@@ -76,11 +70,6 @@ public class RunnerTest {
   @Before
   public void setUp() throws IOException {
     appDir = tempFolder.newFolder("artifact").toPath();
-    when(mavenProject.getBuild()).thenReturn(mock(Build.class));
-    when(mavenProject.getBuild().getDirectory())
-        .thenReturn(appDir.getParent().toAbsolutePath().toString());
-    when(mavenProject.getBuild().getFinalName()).thenReturn(appDir.getFileName().toString());
-    when(runMojo.getMavenProject()).thenReturn(mavenProject);
     when(runMojo.getLog()).thenReturn(logMock);
     when(runMojo.getAppEngineFactory()).thenReturn(appengineFactory);
     when(appengineFactory.newConfigReader()).thenReturn(configReader);
@@ -96,6 +85,7 @@ public class RunnerTest {
 
     when(appengineFactory.devServerRunSync()).thenReturn(devServer);
     setUpAppEngineWebXml();
+    when(runMojo.getServices()).thenReturn(ImmutableList.of(appDir));
 
     testRunner.run();
 
@@ -108,6 +98,7 @@ public class RunnerTest {
 
     when(appengineFactory.devServerRunAsync(START_SUCCESS_TIMEOUT)).thenReturn(devServer);
     setUpAppEngineWebXml();
+    when(runMojo.getServices()).thenReturn(ImmutableList.of(appDir));
 
     testRunner.runAsync(START_SUCCESS_TIMEOUT);
 
@@ -120,16 +111,20 @@ public class RunnerTest {
   public void testProcessServices_singleService() throws MojoExecutionException {
     List<Path> userConfiguredServices = ImmutableList.of(STANDARD_PROJECT_WEBAPP);
     when(runMojo.getServices()).thenReturn(userConfiguredServices);
-    List<Path> processedServices = testRunner.processServices();
-    Assert.assertEquals(userConfiguredServices, processedServices);
+    testRunner.processServices();
+    // no exception pass
   }
 
   @Test
   public void testProcessServices_empty() throws MojoExecutionException {
     List<Path> userConfiguredServices = ImmutableList.of();
     when(runMojo.getServices()).thenReturn(userConfiguredServices);
-    List<Path> processedServices = testRunner.processServices();
-    Assert.assertEquals(ImmutableList.of(appDir), processedServices);
+    try {
+      testRunner.processServices();
+      fail();
+    } catch (IllegalStateException ex) {
+      Assert.assertEquals("No services found to run", ex.getMessage());
+    }
   }
 
   @Test
@@ -137,8 +132,8 @@ public class RunnerTest {
     List<Path> userConfiguredServices =
         ImmutableList.of(STANDARD_PROJECT_WEBAPP, STANDARD_PROJECT_WEBAPP2);
     when(runMojo.getServices()).thenReturn(userConfiguredServices);
-    List<Path> processedServices = testRunner.processServices();
-    Assert.assertEquals(userConfiguredServices, processedServices);
+    testRunner.processServices();
+    // no exception pass
   }
 
   @Test

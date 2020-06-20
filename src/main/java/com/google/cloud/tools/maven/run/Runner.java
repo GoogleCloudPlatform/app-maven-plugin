@@ -20,12 +20,10 @@ import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.RunConfiguration;
 import com.google.cloud.tools.maven.cloudsdk.ConfigReader;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
-import org.apache.maven.model.Build;
 import org.apache.maven.plugin.MojoExecutionException;
 
 public class Runner {
@@ -82,11 +80,6 @@ public class Runner {
     runMojo.getLog().info("Use the 'mvn appengine:stop' command to stop the server.");
   }
 
-  private Path getAppDir() {
-    Build build = runMojo.getMavenProject().getBuild();
-    return Paths.get(build.getDirectory()).resolve(build.getFinalName());
-  }
-
   static final String NON_STANDARD_APPLICATION_ERROR =
       "\nCould not find appengine-web.xml all services, perhaps you need to run "
           + "'mvn package appengine:run/start'."
@@ -94,11 +87,9 @@ public class Runner {
 
   @VisibleForTesting
   List<Path> processServices() throws MojoExecutionException {
-    Path appDir = getAppDir();
     List<Path> services = runMojo.getServices();
-    if (services == null || services.isEmpty()) {
-      return Collections.singletonList(appDir);
-    }
+
+    Preconditions.checkState(services != null && !services.isEmpty(), "No services found to run");
 
     // verify all are appengine-web.xml based applications
     for (Path service : services) {

@@ -19,9 +19,12 @@ package com.google.cloud.tools.maven.run;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkMojo;
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.maven.model.Build;
 import org.apache.maven.plugins.annotations.Parameter;
 
 public abstract class AbstractRunMojo extends CloudSdkMojo {
@@ -77,11 +80,17 @@ public abstract class AbstractRunMojo extends CloudSdkMojo {
   @Parameter(alias = "devserver.projectId", property = "app.devserver.projectId")
   private String projectId;
 
-  /** Return a list of Paths, but can return also return an empty list or null. */
+  /**
+   * Return a list of Paths to services to run. If none are specified by the user, the default
+   * application directory in the build output is used.
+   */
   public List<Path> getServices() {
-    return (services == null)
-        ? null
-        : services.stream().map(File::toPath).collect(Collectors.toList());
+    if (services == null || services.isEmpty()) {
+      Build build = getMavenProject().getBuild();
+      return Collections.singletonList(
+          Paths.get(build.getDirectory()).resolve(build.getFinalName()));
+    }
+    return services.stream().map(File::toPath).collect(Collectors.toList());
   }
 
   public String getHost() {
