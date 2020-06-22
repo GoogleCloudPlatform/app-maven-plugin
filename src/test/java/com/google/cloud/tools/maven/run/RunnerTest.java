@@ -116,6 +116,17 @@ public class RunnerTest {
   }
 
   @Test
+  public void testProcessServices_null() throws MojoExecutionException {
+    when(runMojo.getServices()).thenReturn(null);
+    try {
+      testRunner.processServices();
+      fail();
+    } catch (IllegalStateException ex) {
+      Assert.assertEquals("'services' is null", ex.getMessage());
+    }
+  }
+
+  @Test
   public void testProcessServices_empty() throws MojoExecutionException {
     List<Path> userConfiguredServices = ImmutableList.of();
     when(runMojo.getServices()).thenReturn(userConfiguredServices);
@@ -123,7 +134,7 @@ public class RunnerTest {
       testRunner.processServices();
       fail();
     } catch (IllegalStateException ex) {
-      Assert.assertEquals("No services found to run", ex.getMessage());
+      Assert.assertEquals("'services' is empty", ex.getMessage());
     }
   }
 

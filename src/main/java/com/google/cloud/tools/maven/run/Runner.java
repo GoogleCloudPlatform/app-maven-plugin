@@ -89,7 +89,8 @@ public class Runner {
   List<Path> processServices() throws MojoExecutionException {
     List<Path> services = runMojo.getServices();
 
-    Preconditions.checkState(services != null && !services.isEmpty(), "No services found to run");
+    Preconditions.checkState(services != null, "'services' is null") ;
+    Preconditions.checkState(!services.isEmpty(), "'services' is empty");
 
     // verify all are appengine-web.xml based applications
     for (Path service : services) {
