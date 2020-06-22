@@ -111,7 +111,7 @@ public class RunnerTest {
   public void testProcessServices_singleService() throws MojoExecutionException {
     List<Path> userConfiguredServices = ImmutableList.of(STANDARD_PROJECT_WEBAPP);
     when(runMojo.getServices()).thenReturn(userConfiguredServices);
-    testRunner.processServices();
+    Assert.assertEquals(userConfiguredServices, testRunner.processServices());
     // no exception pass
   }
 
@@ -132,7 +132,7 @@ public class RunnerTest {
     List<Path> userConfiguredServices =
         ImmutableList.of(STANDARD_PROJECT_WEBAPP, STANDARD_PROJECT_WEBAPP2);
     when(runMojo.getServices()).thenReturn(userConfiguredServices);
-    testRunner.processServices();
+    Assert.assertEquals(userConfiguredServices, testRunner.processServices());
     // no exception pass
   }
 
