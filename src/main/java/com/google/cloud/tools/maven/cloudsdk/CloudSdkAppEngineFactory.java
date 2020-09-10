@@ -159,6 +159,7 @@ public class CloudSdkAppEngineFactory {
     return Gcloud.builder(buildCloudSdkMinimal())
         .setMetricsEnvironment(mojo.getArtifactId(), mojo.getArtifactVersion())
         .setCredentialFile(mojo.getServiceAccountKeyFile())
+        .setVerbosity(mojo.getVerbosity())
         .build();
   }
 
