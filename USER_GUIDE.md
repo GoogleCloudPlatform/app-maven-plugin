@@ -74,7 +74,7 @@ If you wish to customize your configuration, the plugin can be configured using 
 | `serviceAccountKeyFile` | A Google project service account key file to run Cloud SDK operations requiring an authenticated user. |
 | `cloudSdkHome`          | Location of the Cloud SDK. |
 | `cloudSdkVersion`       | Desired version of the Cloud SDK. (e.g. "192.0.0") |
-| `verbosity`             | The verbosity level for logging when gcloud is run. See [gcloud docs](https://cloud.google.com/sdk/gcloud/reference#--verbosity) for allowed values. |
+| `verbosity`             | The verbosity level for logging when gcloud is run. See [gcloud docs](https://cloud.google.com/sdk/gcloud/reference#--verbosity) for allowed values. Can be set from the command line using the system property `gcloud.verbosity` |
 
 The Cloud SDK will be installed/updated/verified depending on which parameters are configured:
 
@@ -189,7 +189,7 @@ If you wish to customize your configuration, the plugin can be configured using 
 | `serviceAccountKeyFile` | A Google project service account key file to run Cloud SDK operations requiring an authenticated user. |
 | `cloudSdkHome`          | Location of the Cloud SDK. |
 | `cloudSdkVersion`       | Desired version of the Cloud SDK. (e.g. "192.0.0") |
-| `verbosity`             | The verbosity level for logging when gcloud is run. See [gcloud docs](https://cloud.google.com/sdk/gcloud/reference#--verbosity) for allowed values. |
+| `verbosity`             | The verbosity level for logging when gcloud is run. See [gcloud docs](https://cloud.google.com/sdk/gcloud/reference#--verbosity) for allowed values. Can be set from the command line using the system property `gcloud.verbosity` |
 
 The Cloud SDK will be installed/updated/verified depending on which parameters are configured:
 

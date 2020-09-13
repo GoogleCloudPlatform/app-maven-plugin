@@ -91,6 +91,7 @@ public class CloudSdkAppEngineFactoryTest {
     verify(mojoMock).getArtifactId();
     verify(mojoMock).getArtifactVersion();
     verify(mojoMock).getServiceAccountKeyFile();
+    verify(mojoMock).getVerbosity();
   }
 
   @Test
