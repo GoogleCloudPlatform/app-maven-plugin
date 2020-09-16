@@ -20,7 +20,7 @@ In your Maven App Engine Java app, add the following plugin to your pom.xml:
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
     <artifactId>appengine-maven-plugin</artifactId>
-    <version>2.3.0</version>
+    <version>2.4.0</version>
 </plugin>
 ```
 
