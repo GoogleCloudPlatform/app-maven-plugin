@@ -33,6 +33,6 @@ jobs:
         run: |
           mvn -B -U --fail-at-end clean verify
       - name: Test Coverage
-      uses: codecov/codecov-action@v1
-      with:
-         name: actions ${{matrix.java}}
+        uses: codecov/codecov-action@v1
+        with:
+           name: actions ${{matrix.java}}
