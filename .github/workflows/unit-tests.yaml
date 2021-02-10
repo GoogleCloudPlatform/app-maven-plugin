@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Run tests
         run: |
-          mvn -B -U --fail-at-end clean verify
+          ./mvnw -B -U --fail-at-end clean verify
       - name: Test Coverage
         uses: codecov/codecov-action@v1
         with:
