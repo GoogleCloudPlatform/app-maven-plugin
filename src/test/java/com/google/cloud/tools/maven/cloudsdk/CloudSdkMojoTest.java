@@ -39,9 +39,7 @@ public class CloudSdkMojoTest {
 
   @Mock private MavenProject mavenProject;
   @Mock private Properties properties;
-  @Mock private Plugin compilerPlugin;
-  @Mock private Xpp3Dom xpp3Dom;
-  @Mock private Xpp3Dom child;
+  @Mock private Plugin mockPlugin;
 
   @InjectMocks private CloudSdkMojoImpl mojo;
 
@@ -75,7 +73,7 @@ public class CloudSdkMojoTest {
   }
 
   @Test
-  public void testGetCompileMajorVersion_targetPropertySpecified() {
+  public void testGetCompileMajorVersion_targetProperty() {
     when(mavenProject.getProperties()).thenReturn(properties);
     when(properties.getProperty("maven.compiler.target")).thenReturn("1.7");
 
@@ -83,16 +81,18 @@ public class CloudSdkMojoTest {
   }
 
   @Test
-  public void testGetCompileMajorVersion_domVersion() {
-    // Target Property not set
+  public void testGetCompileMajorVersion_compilerPluginTarget() {
+    // maven.compiler.target property is null
     when(mavenProject.getProperties()).thenReturn(properties);
     when(properties.getProperty("maven.compiler.target")).thenReturn(null);
 
     when(mavenProject.getPlugin("org.apache.maven.plugins:maven-compiler-plugin"))
-        .thenReturn(compilerPlugin);
-    when(compilerPlugin.getConfiguration()).thenReturn(xpp3Dom);
-    when(xpp3Dom.getChild("target")).thenReturn(child);
-    when(child.getValue()).thenReturn("1.8");
+        .thenReturn(mockPlugin);
+    Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
+    when(mockPlugin.getConfiguration()).thenReturn(pluginConfiguration);
+    Xpp3Dom compilerTarget = new Xpp3Dom("target");
+    pluginConfiguration.addChild(compilerTarget);
+    compilerTarget.setValue("1.8");
 
     assertEquals("1.8", mojo.getCompileTargetVersion());
   }
