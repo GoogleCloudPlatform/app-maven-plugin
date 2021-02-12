@@ -19,10 +19,13 @@ package com.google.cloud.tools.maven.cloudsdk;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.Properties;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,6 +38,10 @@ public class CloudSdkMojoTest {
   @Mock private PluginDescriptor pluginDescriptorMock;
 
   @Mock private MavenProject mavenProject;
+  @Mock private Properties properties;
+  @Mock private Plugin compilerPlugin;
+  @Mock private Xpp3Dom xpp3Dom;
+  @Mock private Xpp3Dom child;
 
   @InjectMocks private CloudSdkMojoImpl mojo;
 
@@ -65,6 +72,29 @@ public class CloudSdkMojoTest {
     when(mavenProject.getPackaging()).thenReturn("this-is-a-test-packaging");
 
     assertEquals("this-is-a-test-packaging", mojo.getMavenProject().getPackaging());
+  }
+
+  @Test
+  public void testGetCompileMajorVersion_targetPropertySpecified() {
+    when(mavenProject.getProperties()).thenReturn(properties);
+    when(properties.getProperty("maven.compiler.target")).thenReturn("1.7");
+
+    assertEquals("1.7", mojo.getCompileTargetVersion());
+  }
+
+  @Test
+  public void testGetCompileMajorVersion_domVersion() {
+    // Target Property not set
+    when(mavenProject.getProperties()).thenReturn(properties);
+    when(properties.getProperty("maven.compiler.target")).thenReturn(null);
+
+    when(mavenProject.getPlugin("org.apache.maven.plugins:maven-compiler-plugin"))
+        .thenReturn(compilerPlugin);
+    when(compilerPlugin.getConfiguration()).thenReturn(xpp3Dom);
+    when(xpp3Dom.getChild("target")).thenReturn(child);
+    when(child.getValue()).thenReturn("1.8");
+
+    assertEquals("1.8", mojo.getCompileTargetVersion());
   }
 
   static class CloudSdkMojoImpl extends CloudSdkMojo {
