@@ -42,6 +42,12 @@ public class AppYamlStager implements Stager {
     AppYamlProjectStageConfiguration config = configBuilder.buildConfiguration();
     Path stagingDirectory = config.getStagingDirectory();
 
+    // Look for app.yaml
+    Path appYaml = stageMojo.getStagingDirectory().resolve("app.yaml");
+    if (!Files.exists(appYaml)) {
+      throw new MojoExecutionException("Failed to stage all: could not find app.yaml.");
+    }
+
     stageMojo.getLog().info("Staging the application to: " + stagingDirectory);
     stageMojo.getLog().info("Detected App Engine app.yaml based application.");
 
