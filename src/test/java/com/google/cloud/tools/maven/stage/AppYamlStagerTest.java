@@ -23,10 +23,13 @@ import com.google.cloud.tools.appengine.operations.AppYamlProjectStaging;
 import com.google.cloud.tools.maven.cloudsdk.CloudSdkAppEngineFactory;
 import com.google.cloud.tools.maven.stage.AppYamlStager.ConfigBuilder;
 import junitparams.JUnitParamsRunner;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -57,5 +60,17 @@ public class AppYamlStagerTest {
     when(appengineFactory.appYamlStaging()).thenReturn(staging);
     when(configBuilder.buildConfiguration()).thenReturn(stagingConfiguration);
     when(stagingConfiguration.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
+  }
+
+  @Test
+  public void noAppYaml() {
+    when(stageMojo.getStagingDirectory()).thenReturn(tempFolder.getRoot().toPath());
+    testStager = new AppYamlStager(stageMojo, configBuilder);
+
+    try {
+      testStager.stage();
+    } catch (MojoExecutionException ex) {
+      Assert.assertEquals("Failed to stage all: could not find app.yaml.", ex.getMessage());
+    }
   }
 }
