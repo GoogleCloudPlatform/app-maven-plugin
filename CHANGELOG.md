@@ -1,12 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.1
+### Changed
+* Update to appengine-plugins-core 0.9.5 ([#446](../../pull/446))
+  * Addresses the security advisories in the old commons-compress library ([appengine-plugins-core#875](
+    https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/875)).
+
 ## 2.4.0
 ### Added
 * `appengine.tools.verbosity` option for defining gcloud log verbosity ([#429](../../pull/429))
 
 ## 2.3.0
-### Added
+### Changed
 * Update to appengine-plugins-core 0.9.0 ([#422](../../pull/422))
   * Includes support for binary artifacts for app.yaml based deployments ([appengine-plugins-core:#840](https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/840))
 
