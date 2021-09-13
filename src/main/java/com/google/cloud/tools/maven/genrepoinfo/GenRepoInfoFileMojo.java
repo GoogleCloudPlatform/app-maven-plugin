@@ -44,18 +44,16 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo {
    * repository.
    */
   @Parameter(
-    alias = "genRepoInfoFile.sourceDirectory",
-    defaultValue = "${project.basedir}",
-    property = "app.genRepoInfoFile.sourceDirectory"
-  )
+      alias = "genRepoInfoFile.sourceDirectory",
+      defaultValue = "${project.basedir}",
+      property = "app.genRepoInfoFile.sourceDirectory")
   protected File sourceDirectory;
 
   /** Directory where the source context files will be generated. */
   @Parameter(
-    alias = "genRepoInfoFile.outputDirectory",
-    defaultValue = "${project.build.outputDirectory}",
-    property = "app.genRepoInfoFile.outputDirectory"
-  )
+      alias = "genRepoInfoFile.outputDirectory",
+      defaultValue = "${project.build.outputDirectory}",
+      property = "app.genRepoInfoFile.outputDirectory")
   protected File outputDirectory;
 
   /**
@@ -63,10 +61,9 @@ public class GenRepoInfoFileMojo extends CloudSdkMojo {
    * If {@code false}, the goal is aborted by generation errors.
    */
   @Parameter(
-    alias = "genRepoInfoFile.ignoreErrors",
-    defaultValue = "false",
-    property = "app.genRepoInfoFile.ignoreErrors"
-  )
+      alias = "genRepoInfoFile.ignoreErrors",
+      defaultValue = "false",
+      property = "app.genRepoInfoFile.ignoreErrors")
   protected boolean ignoreErrors;
 
   @Override

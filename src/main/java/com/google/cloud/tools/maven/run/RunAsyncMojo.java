@@ -28,10 +28,9 @@ public class RunAsyncMojo extends AbstractRunMojo {
 
   /** Number of seconds to wait for the server to start. Set to 0 to not wait. */
   @Parameter(
-    defaultValue = "30",
-    alias = "devserver.startSuccessTimeout",
-    property = "app.devserver.startSuccessTimeout"
-  )
+      defaultValue = "30",
+      alias = "devserver.startSuccessTimeout",
+      property = "app.devserver.startSuccessTimeout")
   protected int startSuccessTimeout;
 
   private Runner.Factory factory = new Factory();

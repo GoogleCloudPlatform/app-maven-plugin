@@ -60,9 +60,8 @@ public abstract class AbstractRunMojo extends CloudSdkMojo {
 
   /** Default Google Cloud Storage bucket name. (default: None) */
   @Parameter(
-    alias = "devserver.defaultGcsBucketName",
-    property = "app.devserver.defaultGcsBucketName"
-  )
+      alias = "devserver.defaultGcsBucketName",
+      property = "app.devserver.defaultGcsBucketName")
   private String defaultGcsBucketName;
 
   /** Environment variables passed to the devappserver process. */
@@ -71,9 +70,8 @@ public abstract class AbstractRunMojo extends CloudSdkMojo {
 
   /** Environment variables passed to the devappserver process. */
   @Parameter(
-    alias = "devserver.additionalArguments",
-    property = "app.devserver.additionalArguments"
-  )
+      alias = "devserver.additionalArguments",
+      property = "app.devserver.additionalArguments")
   private List<String> additionalArguments;
 
   /** The Google Cloud Platform project name to use for this invocation of the devserver. */

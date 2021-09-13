@@ -32,11 +32,10 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
   //////////////////////////////////
 
   @Parameter(
-    required = true,
-    defaultValue = "${project.build.directory}/appengine-staging",
-    alias = "stage.stagingDirectory",
-    property = "app.stage.stagingDirectory"
-  )
+      required = true,
+      defaultValue = "${project.build.directory}/appengine-staging",
+      alias = "stage.stagingDirectory",
+      property = "app.stage.stagingDirectory")
   File stagingDirectory;
 
   ///////////////////////////////////
@@ -59,11 +58,10 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
    * <p>Applies to App Engine standard environment only.
    */
   @Parameter(
-    required = true,
-    defaultValue = "${project.build.directory}/${project.build.finalName}",
-    alias = "stage.sourceDirectory",
-    property = "app.stage.sourceDirectory"
-  )
+      required = true,
+      defaultValue = "${project.build.directory}/${project.build.finalName}",
+      alias = "stage.sourceDirectory",
+      property = "app.stage.sourceDirectory")
   private File sourceDirectory;
 
   /**
@@ -136,10 +134,9 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
   ///////////////////////////////////
 
   @Parameter(
-    defaultValue = "${basedir}/src/main/appengine",
-    alias = "stage.appEngineDirectory",
-    property = "app.stage.appEngineDirectory"
-  )
+      defaultValue = "${basedir}/src/main/appengine",
+      alias = "stage.appEngineDirectory",
+      property = "app.stage.appEngineDirectory")
   private File appEngineDirectory;
 
   @Parameter(alias = "stage.extraFilesDirectories", property = "app.stage.extraFilesDirectories")
@@ -151,10 +148,9 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
    * <p>Applies to App Engine flexible environment only.
    */
   @Parameter(
-    defaultValue = "${basedir}/src/main/docker/",
-    alias = "stage.dockerDirectory",
-    property = "app.stage.dockerDirectory"
-  )
+      defaultValue = "${basedir}/src/main/docker/",
+      alias = "stage.dockerDirectory",
+      property = "app.stage.dockerDirectory")
   private File dockerDirectory;
 
   /**
@@ -163,10 +159,9 @@ public abstract class AbstractStageMojo extends CloudSdkMojo {
    * <p>Applies to App Engine app.yaml based applications.
    */
   @Parameter(
-    defaultValue = "${project.build.directory}/${project.build.finalName}.${project.packaging}",
-    alias = "stage.artifact",
-    property = "app.stage.artifact"
-  )
+      defaultValue = "${project.build.directory}/${project.build.finalName}.${project.packaging}",
+      alias = "stage.artifact",
+      property = "app.stage.artifact")
   private File artifact;
 
   public boolean isAppEngineCompatiblePackaging() {
