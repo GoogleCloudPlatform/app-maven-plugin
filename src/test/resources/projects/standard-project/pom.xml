@@ -27,7 +27,16 @@
           <jvmFlags>
             <!-- required for kokoro gcp_ubuntu b/37217450 -->
             <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
+            <jvmFlag>--add-opens</jvmFlag>
+            <jvmFlag>java.base/java.net=ALL-UNNAMED</jvmFlag>
+            <jvmFlag>--add-opens</jvmFlag>
+            <jvmFlag>java.base/sun.net.www.protocol.http=ALL-UNNAMED</jvmFlag>
+            <jvmFlag>--add-opens</jvmFlag>
+            <jvmFlag>java.base/sun.net.www.protocol.https=ALL-UNNAMED</jvmFlag>
+            <jvmFlag>-Duser.timezone='GMT-5'</jvmFlag>
           </jvmFlags>
+
+
           <environment>
             <TEST_VAR>testVariableValue</TEST_VAR>
           </environment>
@@ -46,7 +55,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <version>2.4</version>
+            <version>3.3.2</version>
             <configuration>
               <warSourceDirectory>${project.basedir}/src/main/${it.sourceWebAppDir}</warSourceDirectory>
               <webappDirectory>${project.build.directory}/${it.targetWebAppDir}</webappDirectory>
