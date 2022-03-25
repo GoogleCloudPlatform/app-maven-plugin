@@ -14,39 +14,79 @@
   <packaging>war</packaging>
   <name>App Engine Standard Project</name>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>com.google.cloud.tools</groupId>
-        <artifactId>appengine-maven-plugin</artifactId>
-        <version>${appengine-maven-plugin.version}</version>
-        <configuration>
-          <version>1</version>
-          <project>travis-app-maven-plugin</project>
-          <version>GCLOUD_VERSION</version>
-          <jvmFlags>
-            <!-- required for kokoro gcp_ubuntu b/37217450 -->
-            <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
-            <jvmFlag>--add-opens</jvmFlag>
-            <jvmFlag>java.base/java.net=ALL-UNNAMED</jvmFlag>
-            <jvmFlag>--add-opens</jvmFlag>
-            <jvmFlag>java.base/sun.net.www.protocol.http=ALL-UNNAMED</jvmFlag>
-            <jvmFlag>--add-opens</jvmFlag>
-            <jvmFlag>java.base/sun.net.www.protocol.https=ALL-UNNAMED</jvmFlag>
-            <jvmFlag>-Duser.timezone='GMT-5'</jvmFlag>
-          </jvmFlags>
-
-
-          <environment>
-            <TEST_VAR>testVariableValue</TEST_VAR>
-          </environment>
-          <project>travis-app-maven-plugin</project>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
   <profiles>
+    <profile>
+      <id>java8_and_below</id>
+      <activation>
+        <jdk>[,8]</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>appengine-maven-plugin</artifactId>
+            <version>${appengine-maven-plugin.version}</version>
+            <configuration>
+              <version>1</version>
+              <project>travis-app-maven-plugin</project>
+              <version>GCLOUD_VERSION</version>
+              <jvmFlags>
+                <!-- required for kokoro gcp_ubuntu b/37217450 -->
+                <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
+              </jvmFlags>
+
+              <environment>
+                <TEST_VAR>testVariableValue</TEST_VAR>
+              </environment>
+              <project>travis-app-maven-plugin</project>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>java9_and_up</id>
+      <activation>
+        <jdk>[9,]</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>appengine-maven-plugin</artifactId>
+            <version>${appengine-maven-plugin.version}</version>
+            <configuration>
+              <version>1</version>
+              <project>travis-app-maven-plugin</project>
+              <version>GCLOUD_VERSION</version>
+              <jvmFlags>
+                <!-- required for kokoro gcp_ubuntu b/37217450 -->
+                <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
+
+                <!-- Illegal reflective access disallowed since Java 16 -->
+                <jvmFlag>--add-opens</jvmFlag>
+                <jvmFlag>java.base/java.net=ALL-UNNAMED</jvmFlag>
+                <jvmFlag>--add-opens</jvmFlag>
+                <jvmFlag>java.base/sun.net.www.protocol.http=ALL-UNNAMED</jvmFlag>
+                <jvmFlag>--add-opens</jvmFlag>
+                <jvmFlag>java.base/sun.net.www.protocol.https=ALL-UNNAMED</jvmFlag>
+
+                <jvmFlag>-Duser.timezone='GMT-5'</jvmFlag>
+
+              </jvmFlags>
+
+              <environment>
+                <TEST_VAR>testVariableValue</TEST_VAR>
+              </environment>
+              <project>travis-app-maven-plugin</project>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <!-- base profile for integration tests using services to configure devappserver -->
     <profile>
       <id>base-it-profile</id>
