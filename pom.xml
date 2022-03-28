@@ -173,7 +173,6 @@
         <version>3.10.1</version>
         <configuration>
           <!-- Use <release> instead when migrating to JDK 11. -->
-          <!-- TBD: is this still needed -->
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
@@ -346,10 +345,10 @@
       </plugin>
 
       <!-- Code Coverage -->
-     <!-- <plugin>
+     <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.2</version>
+        <version>0.8.7</version>
         <executions>
           <execution>
             <goals>
@@ -369,7 +368,7 @@
             <exclude>**/*HelpMojo.*</exclude>
           </excludes>
         </configuration>
-      </plugin>-->
+      </plugin>
     </plugins>
   </build>
 
