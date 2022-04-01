@@ -66,12 +66,9 @@
                 <jvmFlag>-Djava.security.egd=file:/dev/urandom</jvmFlag>
 
                 <!-- Illegal reflective access disallowed since Java 16 -->
-                <jvmFlag>--add-opens</jvmFlag>
-                <jvmFlag>java.base/java.net=ALL-UNNAMED</jvmFlag>
-                <jvmFlag>--add-opens</jvmFlag>
-                <jvmFlag>java.base/sun.net.www.protocol.http=ALL-UNNAMED</jvmFlag>
-                <jvmFlag>--add-opens</jvmFlag>
-                <jvmFlag>java.base/sun.net.www.protocol.https=ALL-UNNAMED</jvmFlag>
+                <jvmFlag>--add-opens=java.base/java.net=ALL-UNNAMED</jvmFlag>
+                <jvmFlag>--add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED</jvmFlag>
+                <jvmFlag>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</jvmFlag>
 
                 <jvmFlag>-Duser.timezone='GMT-5'</jvmFlag>
 
