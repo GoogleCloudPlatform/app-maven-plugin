@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.4.2-SNAPSHOT
+
+### Changed
+
+* Update to appengine-plugins-core 0.9.7 allowing Java 17 jar deployment.
+
+
 ## 2.4.1
 ### Changed
 * Update to appengine-plugins-core 0.9.5 ([#446](../../pull/446))
