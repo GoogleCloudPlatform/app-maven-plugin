@@ -28,6 +28,7 @@ jobs:
 
       - name: Create tag for release and prepare branch for next development version
         run: |
+          git config --global --add safe.directory /github/workspace
           git checkout -b release-v${{ github.event.inputs.release_version }}
           git config user.email ${{ github.actor }}@users.noreply.github.com
           git config user.name ${{ github.actor }}
