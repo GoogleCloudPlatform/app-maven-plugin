@@ -12,9 +12,6 @@ jobs:
     name: Prepare release
     runs-on: ubuntu-latest
     steps:
-      - name: workaround for permissions
-        run: git config --global --add safe.directory /github/workspace
-        
       - name: Check out code
         uses: actions/checkout@v2.3.4
 
