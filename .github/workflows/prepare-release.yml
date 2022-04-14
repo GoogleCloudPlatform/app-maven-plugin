@@ -12,6 +12,9 @@ jobs:
     name: Prepare release
     runs-on: ubuntu-latest
     steps:
+      - name: workaround for permissions
+        run:  git config --global --add safe.directory /github/workspace
+        
       - name: Check out code
         uses: actions/checkout@v2.4.1
 
@@ -41,7 +44,7 @@ jobs:
 
           git push origin v${{ github.event.inputs.release_version }}
           git push origin release-v${{ github.event.inputs.release_version }}
-
+      
       - name: Create pull request
         uses: repo-sync/pull-request@v2.6
         id: create-pr
