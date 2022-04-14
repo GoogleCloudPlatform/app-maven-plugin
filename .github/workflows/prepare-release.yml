@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: workaround for permissions
-        run:  git config --global --add safe.directory /__w/app-maven-plugin/app-maven-plugin
+        run:  git config --global --add safe.directory /home/runner/work/app-maven-plugin/app-maven-plugin
         
       - name: Check out code
         uses: actions/checkout@v2.4.1
