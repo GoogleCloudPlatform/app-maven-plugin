@@ -1,7 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.4.2-SNAPSHOT
+## 2.4.3-SNAPSHOT
+
+## 2.4.2
 
 ### Changed
 
