@@ -1,7 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.4.3-SNAPSHOT
+## 2.4.4-SNAPSHOT
+
+## 2.4.3
+
+### Changed
+
+* Update to appengine-plugins-core 0.9.8 which includes [a version upgrade for gson to 2.8.9](https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/889) and fix for [`StringIndexOutOfBoundsException`](https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/890/files). 
 
 ## 2.4.2
 
