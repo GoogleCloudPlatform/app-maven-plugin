@@ -36,8 +36,10 @@ options.
 # Reference Documentation
 
 App Engine Standard Environment:
-* [Using Apache Maven and the App Engine Plugin (standard environment)](https://cloud.google.com/appengine/docs/java/tools/using-maven)
-* [App Engine Maven Plugin Goals and Parameters (standard environment)](https://cloud.google.com/appengine/docs/java/tools/maven-reference)
+* [(Java 8) Using Apache Maven and the App Engine Plugin (standard environment)](https://cloud.google.com/appengine/docs/legacy/standard/java/using-maven)
+* [(Java 8) App Engine Maven Plugin Goals and Parameters (standard environment)](https://cloud.google.com/appengine/docs/legacy/standard/java/maven-reference)
+* [Using Apache Maven and the App Engine Plugin (standard environment)](https://cloud.google.com/appengine/docs/standard/java-gen2/using-maven)
+* [App Engine Maven Plugin Goals and Parameters (standard environment)](https://cloud.google.com/appengine/docs/standard/java-gen2/maven-reference)
 
 App Engine Flexible Environment:
 * [Using Apache Maven and the App Engine Plugin (flexible environment)](https://cloud.google.com/appengine/docs/flexible/java/using-maven)
