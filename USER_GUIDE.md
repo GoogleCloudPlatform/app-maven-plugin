@@ -39,17 +39,6 @@ For appengine-web.xml based projects the plugin exposes the following goals :
 | `start`           | Start the application in the background. |
 | `stop`            | Stop a running application. |
 
-NOTE: To run locally on Java 17, you'll need to add the following plugin configuration:
-
-```
-<configuration>
-  <jvmFlags>
-    <jvmFlag>--add-opens=java.base/java.net=ALL-UNNAMED</jvmFlag>
-    <jvmFlag>--add-opens=java.base/sun.net.www.protocol.http=ALL-UNNAMED</jvmFlag>
-    <jvmFlag>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</jvmFlag>
-  </jvmFlags>
-</plugin>
-```
 
 #### Deployment
 
