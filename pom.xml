@@ -92,7 +92,7 @@
     <dependency>
       <groupId>com.google.cloud.tools</groupId>
       <artifactId>appengine-plugins-core</artifactId>
-      <version>0.9.8</version>
+      <version>0.9.9</version>
     </dependency>
 
     <dependency>
