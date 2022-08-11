@@ -1,5 +1,5 @@
 ![project status image](https://img.shields.io/badge/stability-stable-brightgreen.svg)
-[![Build Status](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin.svg)](http://travis-ci.org/GoogleCloudPlatform/app-maven-plugin)
+[![Unit Tests](https://github.com/GoogleCloudPlatform/app-maven-plugin/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/GoogleCloudPlatform/app-maven-plugin/actions/workflows/unit-tests.yaml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.cloud.tools/appengine-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.cloud.tools/appengine-maven-plugin)
 # Google App Engine Maven plugin
 
