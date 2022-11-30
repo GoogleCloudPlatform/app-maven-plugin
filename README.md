@@ -14,7 +14,7 @@ automatically installed by the plugin.
 
 # How to use
 
-In your Maven App Engine Java app, add the following plugin to your pom.xml:
+In your Maven App Engine Java app, add the following plugin to your `pom.xml`:
 
 ```XML
 <plugin>
