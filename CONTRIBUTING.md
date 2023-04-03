@@ -20,6 +20,12 @@ frustration later on.
 All submissions, including submissions by project members, require review. We
 use Github pull requests for this purpose.
 
+Before submitting a pull request, please make sure to:
+
+- Identify an existing [issue](https://github.com/GoogleCloudPlatform/app-maven-plugin/issues) to associate with
+  your proposed change, or [file a new issue](https://github.com/GoogleCloudPlatform/app-maven-plugin/issues/new).
+- Describe any implementation plans in the issue and wait for a review from the repository maintainers.
+
 ### The small print
 Contributions made by corporations are covered by a different agreement than
 the one above, the
