@@ -6,7 +6,7 @@ set -e
 set -x
 
 sudo -E /opt/google-cloud-sdk/bin/gcloud components update --quiet
-sudo -E /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
+sudo -E /opt/google-cloud-sdk/bin/gcloud components install app-engine-java --quiet
 
 cd github/app-maven-plugin
 ./mvnw -Prelease -B -U verify
