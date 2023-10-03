@@ -5,7 +5,7 @@ set -e
 # Display commands to stderr.
 set -x
 
-sudo -E /opt/google-cloud-sdk/bin/gcloud components update
+sudo -E /opt/google-cloud-sdk/bin/gcloud components update --quiet
 sudo -E /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
 
 cd github/app-maven-plugin
