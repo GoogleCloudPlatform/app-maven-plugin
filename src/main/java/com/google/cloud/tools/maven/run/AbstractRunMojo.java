@@ -100,7 +100,7 @@ public abstract class AbstractRunMojo extends CloudSdkMojo {
   }
 
   public List<String> getJvmFlags() {
-    return jvmFlags;
+    return Collections.unmodifiableList(jvmFlags);
   }
 
   public Boolean getAutomaticRestart() {
@@ -112,11 +112,11 @@ public abstract class AbstractRunMojo extends CloudSdkMojo {
   }
 
   public Map<String, String> getEnvironment() {
-    return environment;
+    return Collections.unmodifiableMap(environment);
   }
 
   public List<String> getAdditionalArguments() {
-    return additionalArguments;
+    return Collections.unmodifiableList(additionalArguments);
   }
 
   public String getProjectId() {
