@@ -3,6 +3,8 @@
   <Match>
     <Or>
       <Bug pattern="DM_STRING_CTOR"/>
+      <Bug pattern="EI_EXPOSE_REP"/>
+      <Bug pattern="EI_EXPOSE_REP2"/>
     </Or>
   </Match>
 </FindBugsFilter>
