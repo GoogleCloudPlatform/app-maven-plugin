@@ -28,7 +28,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /** Abstract Mojo from which all goals inherit. */
-public abstract class CloudSdkMojo extends AbstractMojo {
+public abstract class CloudSdkMojo extends AbstractMojo implements Cloneable {
 
   /** Optional parameter to configure the location of the Google Cloud SDK. */
   @Parameter(property = "cloudSdkHome", required = false)
@@ -126,12 +126,35 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   }
 
   public MavenSession getMavenSession() {
-    return mavenSession;
+    return mavenSession.clone();
   }
 
   @VisibleForTesting
   /* For use with tests only. */
   public void setSkip(boolean skip) {
     this.skip = skip;
+  }
+
+  @Override
+  public CloudSdkMojo clone() {
+    CloudSdkMojo clone;
+    try {
+      clone = (CloudSdkMojo) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError();
+    }
+
+    clone.deepCopy(this);
+    return clone;
+  }
+
+  private void deepCopy(CloudSdkMojo mojo) {
+    this.cloudSdkHome = mojo.cloudSdkHome;
+    this.cloudSdkVersion = mojo.cloudSdkVersion;
+    this.serviceAccountKeyFile = mojo.serviceAccountKeyFile;
+    this.verbosity = mojo.verbosity;
+    this.pluginDescriptor = mojo.pluginDescriptor;
+    this.mavenProject = mojo.mavenProject;
+    this.mavenSession = mojo.mavenSession;
   }
 }

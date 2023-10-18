@@ -36,7 +36,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -56,11 +55,11 @@ public class CloudSdkAppEngineFactoryTest {
 
   @Mock private CloudSdkDownloader cloudSdkDownloader;
   @Mock private CloudSdkChecker cloudSdkChecker;
-
-  @InjectMocks private CloudSdkAppEngineFactory factory;
+  private CloudSdkAppEngineFactory factory;
 
   @Before
   public void wireUp() {
+    when(mojoMock.clone()).thenReturn(mojoMock);
     when(mojoMock.getCloudSdkHome()).thenReturn(CLOUD_SDK_HOME);
     when(mojoMock.getCloudSdkVersion()).thenReturn(null);
     when(mojoMock.getArtifactId()).thenReturn(ARTIFACT_ID);
@@ -83,6 +82,7 @@ public class CloudSdkAppEngineFactoryTest {
             Mockito.eq(logMock),
             Mockito.<SdkComponent>anyList(),
             Mockito.anyBoolean());
+    factory = new CloudSdkAppEngineFactory(mojoMock);
   }
 
   @Test

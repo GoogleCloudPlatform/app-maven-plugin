@@ -53,7 +53,7 @@ public class CloudSdkAppEngineFactory {
   private final CloudSdkMojo mojo;
 
   public CloudSdkAppEngineFactory(CloudSdkMojo mojo) {
-    this.mojo = mojo;
+    this.mojo = mojo.clone();
   }
 
   /** Constructs an object used for auth. */
