@@ -56,7 +56,9 @@ public class AbstractRunMojoTest {
   @Before
   public void setUp() {
     Build build = Mockito.mock(Build.class);
-    Mockito.when(mavenProject.getBuild()).thenReturn(build);
+    MavenProject copy = new MavenProject();
+    copy.setBuild(build);
+    Mockito.when(mavenProject.clone()).thenReturn(copy);
     Mockito.when(build.getDirectory()).thenReturn("fake-build-dir");
     Mockito.when(build.getFinalName()).thenReturn("fake-final-name");
   }

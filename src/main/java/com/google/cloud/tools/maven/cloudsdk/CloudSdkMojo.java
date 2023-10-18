@@ -122,7 +122,7 @@ public abstract class CloudSdkMojo extends AbstractMojo {
   }
 
   public MavenProject getMavenProject() {
-    return mavenProject;
+    return mavenProject.clone();
   }
 
   public MavenSession getMavenSession() {

@@ -67,7 +67,9 @@ public class CloudSdkMojoTest {
 
   @Test
   public void testGetPackaging() {
-    when(mavenProject.getPackaging()).thenReturn("this-is-a-test-packaging");
+    MavenProject copy = new MavenProject();
+    copy.setPackaging("this-is-a-test-packaging");
+    when(mavenProject.clone()).thenReturn(copy);
 
     assertEquals("this-is-a-test-packaging", mojo.getMavenProject().getPackaging());
   }

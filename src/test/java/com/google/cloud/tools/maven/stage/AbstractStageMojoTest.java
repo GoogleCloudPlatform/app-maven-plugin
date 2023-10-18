@@ -57,7 +57,9 @@ public class AbstractStageMojoTest {
   @Test
   @Parameters({"pom", "ear", "rar", "par", "ejb", "maven-plugin", "eclipse-plugin"})
   public void testIsAppEngineCompatiblePackaging_false(String packaging) {
-    Mockito.when(mavenProject.getPackaging()).thenReturn(packaging);
+    MavenProject copy = new MavenProject();
+    copy.setPackaging(packaging);
+    Mockito.when(mavenProject.clone()).thenReturn(copy);
 
     Assert.assertFalse(testMojo.isAppEngineCompatiblePackaging());
   }
@@ -65,7 +67,9 @@ public class AbstractStageMojoTest {
   @Test
   @Parameters({"jar", "war"})
   public void testIsAppEngineCompatiblePackaging_true(String packaging) {
-    Mockito.when(mavenProject.getPackaging()).thenReturn(packaging);
+    MavenProject copy = new MavenProject();
+    copy.setPackaging(packaging);
+    Mockito.when(mavenProject.clone()).thenReturn(copy);
 
     Assert.assertTrue(testMojo.isAppEngineCompatiblePackaging());
   }
