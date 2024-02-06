@@ -1,3 +1,5 @@
+🚌 In February 2024, this library has moved to [appengine-plugins/app-maven-plugin](https://github.com/GoogleCloudPlatform/appengine-plugins/tree/main/app-maven-plugin). This repository will be archived in the future. Future releases will appear in the new repository (https://github.com/GoogleCloudPlatform/appengine-plugins/releases). The Maven artifact coordinates (com.google.cloud.tools:appengine-maven-plugin) remain the same.
+
 ![project status image](https://img.shields.io/badge/stability-stable-brightgreen.svg)
 [![Unit Tests](https://github.com/GoogleCloudPlatform/app-maven-plugin/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/GoogleCloudPlatform/app-maven-plugin/actions/workflows/unit-tests.yaml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.cloud.tools/appengine-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.cloud.tools/appengine-maven-plugin)
